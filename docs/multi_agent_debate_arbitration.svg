@@ -1,0 +1,115 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 44px; font-weight: 700; fill: #1A2A3A; }
+      .subtitle { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 22px; fill: #53657A; }
+      .section-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 26px; font-weight: 700; fill: #1A2A3A; }
+      .agent-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 22px; font-weight: 700; fill: #1A2A3A; }
+      .agent-sub { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 15px; fill: #4E6074; }
+      .small { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 14px; fill: #52657A; }
+      .center-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 27px; font-weight: 700; fill: #5A4010; }
+      .center-sub { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 16px; fill: #6A5A2B; }
+      .right-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 25px; font-weight: 700; fill: #6B1A1A; }
+      .right-item { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #2A3A4A; }
+      .footer { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #6B1A1A; }
+      .gold-title { fill: #5A4010; }
+      .red-title { fill: #6B1A1A; }
+
+      .panel { fill: #FAFCFF; stroke: #D6E0EC; stroke-width: 1.8; }
+      .center { fill: #FFFBF0; stroke: #C8A951; stroke-width: 2.4; }
+      .agent { fill: #F0F4FA; stroke: #5B7FA6; stroke-width: 2; }
+      .agent-red { fill: #FDF2F2; stroke: #B03030; stroke-width: 2.1; }
+      .mechanism { fill: #FDF7F7; stroke: #B03030; stroke-width: 2; }
+      .mechanism-node { fill: #FFFFFF; stroke: #D3A0A0; stroke-width: 1.5; }
+      .output { fill: #FFFDF6; stroke: #D6BD69; stroke-width: 2; }
+      .chip { fill: #F5F7FA; stroke: #AAB7C5; stroke-width: 1.4; }
+      .soft-line { fill: none; stroke: #C9D3DF; stroke-width: 1.5; stroke-dasharray: 6 7; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1920" height="1080"/>
+
+  <text class="title" x="960" y="62" text-anchor="middle">多智能体角色设计与仲裁机制</text>
+  <text class="subtitle" x="960" y="99" text-anchor="middle">不同审查角色围绕同一证据空间展开判断，显式暴露争议、风险与补证需求</text>
+
+  <rect class="panel" x="70" y="140" width="1450" height="735" rx="22"/>
+  <text class="section-title" x="795" y="190" text-anchor="middle">围绕共享证据空间的多角色审查委员会</text>
+
+  <!-- Shared evidence space -->
+  <ellipse class="center" cx="795" cy="500" rx="245" ry="145"/>
+  <text class="center-title" x="795" y="450" text-anchor="middle">共享证据空间</text>
+  <text class="center-sub" x="795" y="486" text-anchor="middle">EvidenceBundle / 政策条款</text>
+  <text class="center-sub" x="795" y="518" text-anchor="middle">诊断标签 / 置信度</text>
+  <text class="center-sub" x="795" y="550" text-anchor="middle">所有 Agent 使用同一事实输入</text>
+
+  <!-- Soft relationship lines -->
+  <path class="soft-line" d="M610 405 L475 315"/>
+  <path class="soft-line" d="M795 355 L795 285"/>
+  <path class="soft-line" d="M980 405 L1120 315"/>
+  <path class="soft-line" d="M610 595 L475 695"/>
+  <path class="soft-line" d="M795 645 L795 725"/>
+  <path class="soft-line" d="M980 595 L1120 695"/>
+
+  <!-- Agent cards around center -->
+  <rect class="agent-red" x="250" y="245" width="285" height="140" rx="18"/>
+  <text class="agent-title red-title" x="392" y="285" text-anchor="middle">严格合规 Agent</text>
+  <text class="agent-sub" x="392" y="318" text-anchor="middle">视角：政策硬约束</text>
+  <text class="agent-sub" x="392" y="348" text-anchor="middle">准入条件 / 排除条件 / 缺证风险</text>
+
+  <rect class="agent" x="652" y="210" width="285" height="140" rx="18"/>
+  <text class="agent-title" x="795" y="250" text-anchor="middle">宽松业务 Agent</text>
+  <text class="agent-sub" x="795" y="283" text-anchor="middle">视角：业务办理弹性</text>
+  <text class="agent-sub" x="795" y="313" text-anchor="middle">合理解释 / 边界情形 / 服务可及性</text>
+
+  <rect class="agent" x="1055" y="245" width="285" height="140" rx="18"/>
+  <text class="agent-title" x="1198" y="285" text-anchor="middle">探索补充 Agent</text>
+  <text class="agent-sub" x="1198" y="318" text-anchor="middle">视角：证据完整性</text>
+  <text class="agent-sub" x="1198" y="348" text-anchor="middle">缺失字段 / 补证方向 / 二次查询</text>
+
+  <rect class="agent" x="250" y="625" width="285" height="140" rx="18"/>
+  <text class="agent-title" x="392" y="665" text-anchor="middle">经验案例 Agent</text>
+  <text class="agent-sub" x="392" y="698" text-anchor="middle">视角：相似案例参照</text>
+  <text class="agent-sub" x="392" y="728" text-anchor="middle">典型情形 / 经验判断 / 争议解释</text>
+
+  <rect class="agent-red" x="652" y="690" width="285" height="140" rx="18"/>
+  <text class="agent-title red-title" x="795" y="730" text-anchor="middle">审计质询 Agent</text>
+  <text class="agent-sub" x="795" y="763" text-anchor="middle">视角：风险与责任</text>
+  <text class="agent-sub" x="795" y="793" text-anchor="middle">异常数据 / 政策滥用 / 审计追溯</text>
+
+  <rect class="agent-red" x="1055" y="625" width="285" height="140" rx="18"/>
+  <text class="agent-title red-title" x="1198" y="665" text-anchor="middle">仲裁 Agent</text>
+  <text class="agent-sub" x="1198" y="698" text-anchor="middle">视角：最终裁决</text>
+  <text class="agent-sub" x="1198" y="728" text-anchor="middle">共识 / 冲突 / 证据充分性 / 复核</text>
+
+  <!-- Right arbitration mechanism -->
+  <rect class="mechanism" x="1570" y="140" width="280" height="735" rx="22"/>
+  <text class="right-title" x="1710" y="196" text-anchor="middle">仲裁机制</text>
+
+  <rect class="mechanism-node" x="1605" y="255" width="210" height="58" rx="12"/>
+  <text class="right-item" x="1710" y="292" text-anchor="middle">共识检测</text>
+  <rect class="mechanism-node" x="1605" y="355" width="210" height="58" rx="12"/>
+  <text class="right-item" x="1710" y="392" text-anchor="middle">冲突识别</text>
+  <rect class="mechanism-node" x="1605" y="455" width="210" height="58" rx="12"/>
+  <text class="right-item" x="1710" y="492" text-anchor="middle">缺证保守处理</text>
+  <rect class="mechanism-node" x="1605" y="555" width="210" height="58" rx="12"/>
+  <text class="right-item" x="1710" y="592" text-anchor="middle">人工复核触发</text>
+  <rect class="mechanism-node" x="1605" y="655" width="210" height="58" rx="12"/>
+  <text class="right-item" x="1710" y="692" text-anchor="middle">条款级结论生成</text>
+
+  <!-- Structured output -->
+  <rect class="output" x="220" y="910" width="1480" height="82" rx="18"/>
+  <text class="section-title gold-title" x="455" y="960" text-anchor="middle">AgentJudgment</text>
+  <rect class="chip" x="620" y="932" width="140" height="38" rx="9"/>
+  <text class="small" x="690" y="957" text-anchor="middle">立场</text>
+  <rect class="chip" x="795" y="932" width="140" height="38" rx="9"/>
+  <text class="small" x="865" y="957" text-anchor="middle">结论</text>
+  <rect class="chip" x="970" y="932" width="140" height="38" rx="9"/>
+  <text class="small" x="1040" y="957" text-anchor="middle">理由</text>
+  <rect class="chip" x="1145" y="932" width="165" height="38" rx="9"/>
+  <text class="small" x="1228" y="957" text-anchor="middle">证据引用</text>
+  <rect class="chip" x="1345" y="932" width="165" height="38" rx="9"/>
+  <text class="small" x="1428" y="957" text-anchor="middle">风险标记</text>
+
+  <text class="footer" x="960" y="1032" text-anchor="middle">设计要点：多个 Agent 不是简单投票，而是以不同审查视角围绕同一证据空间发现争议、缺证和风险。</text>
+</svg>

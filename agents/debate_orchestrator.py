@@ -5,7 +5,7 @@ import json
 import uuid
 import time
 from datetime import UTC, datetime
-from typing import Generator
+from typing import Any, Generator
 
 from loguru import logger
 
@@ -26,6 +26,19 @@ from agents.decision_semantics import (
     aggregate_final_conclusion_from_judgments,
     build_item_semantics,
 )
+from agents.optimization_algorithms import (
+    aggregate_weighted_stances,
+    score_evidence_item,
+    sort_evidence_items,
+)
+from agents.debate_memory import (
+    Argument,
+    ArgumentGraph,
+    ArgumentStance,
+    AttackType,
+)
+from agents.attack_detector import AttackDetector
+from agents.optimization_algorithms import compute_argument_confidence
 from portrait import PersonaBuilder
 from agents.empirical_case_retriever import retrieve_empirical_cases
 from agents.debate_persistence import (
@@ -48,10 +61,13 @@ DEFAULT_POLICY_SCOPE = "灵活就业补贴政策规则"
 def project_evidence(bundle: EvidenceBundle, task_header: str = DEFAULT_TASK_HEADER, policy_scope: str = DEFAULT_POLICY_SCOPE) -> EvidenceProjection:
     """Reshape retrieved evidence into the summary-first debate format."""
 
+    # Sort evidence by quality score before building cards
+    sorted_items = sort_evidence_items(bundle.items)
+
     cards: list[EvidenceSummaryCard] = []
     uncertainty_markers: list[str] = []
 
-    for item in bundle.items:
+    for item in sorted_items:
         semantic = build_item_semantics(item)
         if semantic["semantic_decision_effect"] == "support":
             status = "supports"
@@ -62,6 +78,9 @@ def project_evidence(bundle: EvidenceBundle, task_header: str = DEFAULT_TASK_HEA
         else:
             status = "unresolved"
 
+        # Compute evidence quality score
+        ev_score = score_evidence_item(item)
+
         cards.append(
             EvidenceSummaryCard(
                 card_id=f"card_{item.rule_id}",
@@ -70,6 +89,10 @@ def project_evidence(bundle: EvidenceBundle, task_header: str = DEFAULT_TASK_HEA
                 status=status,
                 confidence=item.confidence,
                 artifact_refs=[item.evidence_id],
+                evidence_score=ev_score.score,
+                evidence_score_percent=ev_score.score_percent,
+                score_breakdown=ev_score.breakdown,
+                rank_reason=ev_score.rank_reason,
             )
         )
 
@@ -107,7 +130,13 @@ class DebateRecord:
         CONCLUSION_MISSING: 0,
     }
 
-    def __init__(self, judgments: list[AgentJudgment], round_num: int):
+    def __init__(
+        self,
+        judgments: list[AgentJudgment],
+        round_num: int,
+        projection: EvidenceProjection | None = None,
+        evidence_items: list | None = None,
+    ):
         self.round_num = round_num
         self.judgments = judgments
 
@@ -129,10 +158,52 @@ class DebateRecord:
             self.majority_count = 0
             self.consensus_rate = 0.0
 
-        self.is_consensus_reached = self.consensus_rate >= settings.consensus_threshold
+        # Weighted stance aggregation
+        weighted = aggregate_weighted_stances(judgments, projection)
+        self.weighted_stance = weighted["dominant_stance"]
+        self.weighted_confidence = weighted["weighted_confidence"]
+        self.weighted_scores = {
+            "support": weighted["weighted_support"],
+            "oppose": weighted["weighted_oppose"],
+            "pending": weighted["weighted_pending"],
+        }
+        self.agent_weights = {}  # agent_id → weight, computed per-judgment
+        evidence_score_map: dict[str, float] = {}
+        if projection:
+            for card in projection.cards:
+                eid = card.card_id.replace("card_", "")
+                evidence_score_map[eid] = card.evidence_score
+        for j in judgments:
+            refs = getattr(j, "evidence_refs", [])
+            avg_ev = sum(evidence_score_map.get(r, 0) for r in refs) / max(len(refs), 1)
+            self.agent_weights[j.agent_id] = round(j.confidence * 0.6 + (avg_ev / 100) * 0.4, 3)
+
+        # Dual consensus: consensus_rate AND weighted_confidence
+        self.is_consensus_reached = (
+            self.consensus_rate >= settings.consensus_threshold
+            and self.weighted_confidence >= settings.consensus_threshold
+        )
+
+        # Store references for get_final_conclusion
+        self._projection = projection
+        self._evidence_items = evidence_items
+
+        # Argumentation graph (populated by orchestrator after construction)
+        self.argument_graph: dict[str, Any] | None = None
+        self.argumentation_stance: str | None = None
+        self.argumentation_conclusion: str | None = None
+        self.argumentation_confidence: float = 0.0
+        self.argumentation_consensus_rate: float = 0.0
+        self.argumentation_consensus_reached: bool = False
 
     def get_final_conclusion(self) -> str:
-        return aggregate_final_conclusion_from_judgments(self.judgments)
+        if self.argumentation_consensus_reached and self.argumentation_conclusion:
+            return self.argumentation_conclusion
+        return aggregate_final_conclusion_from_judgments(
+            self.judgments,
+            projection=getattr(self, "_projection", None),
+            evidence_items=getattr(self, "_evidence_items", None),
+        )
 
     @classmethod
     def _effective_stance(cls, judgment: AgentJudgment) -> str:
@@ -149,7 +220,7 @@ class DebateRecord:
         return judgment.stance
 
     def to_dict(self) -> dict[str, object]:
-        return {
+        result = {
             "round_num": self.round_num,
             "judgments": [judgment.model_dump() for judgment in self.judgments],
             "total": self.total,
@@ -157,7 +228,19 @@ class DebateRecord:
             "majority_count": self.majority_count,
             "consensus_rate": self.consensus_rate,
             "is_consensus_reached": self.is_consensus_reached,
+            "weighted_stance": self.weighted_stance,
+            "weighted_confidence": self.weighted_confidence,
+            "weighted_scores": self.weighted_scores,
+            "agent_weights": self.agent_weights,
+            "argumentation_stance": self.argumentation_stance,
+            "argumentation_conclusion": self.argumentation_conclusion,
+            "argumentation_confidence": self.argumentation_confidence,
+            "argumentation_consensus_rate": self.argumentation_consensus_rate,
+            "argumentation_consensus_reached": self.argumentation_consensus_reached,
         }
+        if self.argument_graph is not None:
+            result["argument_graph"] = self.argument_graph
+        return result
 
 
 class DebateOrchestrator:
@@ -185,7 +268,7 @@ class DebateOrchestrator:
         return [case.to_prompt_dict() for case in retrieve_empirical_cases(projection)]
 
     def _policy_display(self, policy_id: str) -> tuple[str, str]:
-        """閺嶈宓?policy_id 鏉╂柨娲?(task_header, policy_scope) 閻劋绨幎鏇炲"""
+        """根据 policy_id 解析 (task_header, policy_scope) 显示名称。"""
         from policy.policy_router import get_policy
         cfg = get_policy(policy_id)
         if cfg:
@@ -300,9 +383,9 @@ class DebateOrchestrator:
                     {"log": f"  - [Rule: {item.rule_type}] {item.rule_name}", "status": "warning"},
                 )
                 time.sleep(0.15)
-            yield self._build_sse_event("system_trace", {"log": "[Agent: Text2SQL] Agent 鎺ョ鍙栬瘉闃熷垪锛屽璺姩鎬佷唬鐮佺敓鎴愪腑...", "status": "info"})
+            yield self._build_sse_event("system_trace", {"log": "[Agent: Text2SQL] Agent 接管取证据队列，多路动态代码生成中...", "status": "info"})
             time.sleep(0.5)
-            yield self._build_sse_event("system_trace", {"log": "[Sys] 搴曞眰璇佹嵁鐭╅樀鏋勫缓瀹屾瘯锛屾暟鎹€荤嚎宸插榻愶紝鎶曞叆杩涘叆浠茶搴?..", "status": "success"})
+            yield self._build_sse_event("system_trace", {"log": "[Sys] 底层证据矩阵构建完毕，数据总线已对齐，进入仲裁阶段...", "status": "success"})
             time.sleep(0.4)
         except Exception as e:
             logger.error(f"Trace generation failed: {e}")
@@ -311,17 +394,23 @@ class DebateOrchestrator:
                 {"log": f"[Plan] 取证规划阶段异常：{e}", "status": "danger"},
             )
 
-        # 鐪熸寮€濮嬫祦寮忔敹闆嗚瘉鎹細
+        # 真正开始流式收集证据：
         bundle = EvidenceBundle(id_card=id_card)
         for evidence_item in self.collector.collect_stream(id_card, policy_id=policy_id):
             bundle.items.append(evidence_item)
-            # 濮ｅ繑顐奸弻銉ュ毉娑撯偓閺夆槄绱濈亸鍗炲弿闁插繑甯归柅浣虹舶閸撳秶顏崚閿嬫煀 EvidenceBoard
+            # 实时推送取证结果到前端 EvidenceBoard
             yield self._build_sse_event("evidence", self._build_stream_evidence(bundle))
 
         history: list[DebateRecord] = []
         projection = project_evidence(bundle, task_header, policy_scope)
         persona = self._build_persona(bundle, policy_id, None)
         yield self._build_sse_event("persona_ready", persona)
+
+        # Initialize argumentation framework
+        arg_graph = ArgumentGraph()
+        attack_detector = AttackDetector()
+        previous_acceptable: set[str] = set()
+        arg_seq_counter = 0
 
         r0_judgments: list[AgentJudgment] = []
         for agent in self.agents:
@@ -342,7 +431,18 @@ class DebateOrchestrator:
             r0_judgments.append(judgment)
             yield self._build_sse_event("agent_judgment", self._judgment_to_payload(judgment))
 
-        last_record = DebateRecord(r0_judgments, 0)
+        last_record = DebateRecord(
+            r0_judgments, 0,
+            projection=projection,
+            evidence_items=bundle.items,
+        )
+
+        # Extract arguments from round 0
+        arg_seq_counter = self._extract_arguments_to_graph(
+            last_record.judgments, 0, arg_graph, projection,
+            attack_detector, arg_seq_counter,
+        )
+        self._update_record_argumentation(last_record, arg_graph)
         history.append(last_record)
 
         for round_idx in range(1, self.max_rounds + 1):
@@ -370,8 +470,31 @@ class DebateOrchestrator:
                 current_judgments.append(judgment)
                 yield self._build_sse_event("agent_judgment", self._judgment_to_payload(judgment))
 
-            last_record = DebateRecord(current_judgments, round_idx)
+            last_record = DebateRecord(
+                current_judgments, round_idx,
+                projection=projection,
+                evidence_items=bundle.items,
+            )
+
+            # Extract arguments from this round
+            arg_seq_counter = self._extract_arguments_to_graph(
+                last_record.judgments, round_idx, arg_graph, projection,
+                attack_detector, arg_seq_counter,
+            )
+            self._update_record_argumentation(last_record, arg_graph)
+
+            # Dynamic termination: check argumentation convergence
+            current_acceptable = arg_graph.compute_acceptable_set()
+            if current_acceptable == previous_acceptable and len(current_acceptable) > 0:
+                logger.info("Argumentation converged: acceptable set stable at round {}", round_idx)
+                break
+            previous_acceptable = current_acceptable
+
             history.append(last_record)
+
+        # Finalize argument statuses
+        arg_graph.finalize_arguments()
+        self._update_record_argumentation(last_record, arg_graph)
 
         arbiter_result = self._build_arbiter_result(bundle, history, last_record, task_header, policy_scope)
         adjudication_report = self._build_adjudication_report(
@@ -435,6 +558,13 @@ class DebateOrchestrator:
         projection = project_evidence(bundle, task_header, policy_scope)
         persona = self._build_persona(bundle, policy_id, None)
         yield self._build_sse_event("persona_ready", persona)
+
+        # Initialize argumentation framework
+        arg_graph = ArgumentGraph()
+        attack_detector = AttackDetector()
+        previous_acceptable: set[str] = set()
+        arg_seq_counter = 0
+
         r0_judgments: list[AgentJudgment] = []
         for agent in self.agents:
             try:
@@ -454,7 +584,18 @@ class DebateOrchestrator:
             r0_judgments.append(judgment)
             yield self._build_sse_event("agent_judgment", self._judgment_to_payload(judgment))
 
-        last_record = DebateRecord(r0_judgments, 0)
+        last_record = DebateRecord(
+            r0_judgments, 0,
+            projection=projection,
+            evidence_items=bundle.items,
+        )
+
+        # Extract arguments from round 0
+        arg_seq_counter = self._extract_arguments_to_graph(
+            last_record.judgments, 0, arg_graph, projection,
+            attack_detector, arg_seq_counter,
+        )
+        self._update_record_argumentation(last_record, arg_graph)
         history.append(last_record)
 
         for round_idx in range(1, self.max_rounds + 1):
@@ -481,8 +622,31 @@ class DebateOrchestrator:
                 current_judgments.append(judgment)
                 yield self._build_sse_event("agent_judgment", self._judgment_to_payload(judgment))
 
-            last_record = DebateRecord(current_judgments, round_idx)
+            last_record = DebateRecord(
+                current_judgments, round_idx,
+                projection=projection,
+                evidence_items=bundle.items,
+            )
+
+            # Extract arguments from this round
+            arg_seq_counter = self._extract_arguments_to_graph(
+                last_record.judgments, round_idx, arg_graph, projection,
+                attack_detector, arg_seq_counter,
+            )
+            self._update_record_argumentation(last_record, arg_graph)
+
+            # Dynamic termination: check argumentation convergence
+            current_acceptable = arg_graph.compute_acceptable_set()
+            if current_acceptable == previous_acceptable and len(current_acceptable) > 0:
+                logger.info("Argumentation converged: acceptable set stable at round {}", round_idx)
+                break
+            previous_acceptable = current_acceptable
+
             history.append(last_record)
+
+        # Finalize argument statuses
+        arg_graph.finalize_arguments()
+        self._update_record_argumentation(last_record, arg_graph)
 
         arbiter_result = self._build_arbiter_result(bundle, history, last_record, task_header, policy_scope)
         adjudication_report = self._build_adjudication_report(
@@ -528,8 +692,29 @@ class DebateOrchestrator:
     ) -> tuple[list[DebateRecord], DebateRecord]:
         history: list[DebateRecord] = []
 
-        current_record = self._run_round_zero(bundle, task_header, policy_scope, persona_context=persona_context)
+        # Cache projection to avoid recomputing each round
+        cached_projection = project_evidence(bundle, task_header, policy_scope)
+
+        # Initialize argumentation framework
+        arg_graph = ArgumentGraph()
+        attack_detector = AttackDetector()
+        previous_acceptable: set[str] = set()
+        arg_seq_counter = 0
+
+        current_record = self._run_round_zero(
+            bundle, task_header, policy_scope,
+            persona_context=persona_context,
+            cached_projection=cached_projection,
+        )
+
+        # Extract arguments from round 0 judgments
+        arg_seq_counter = self._extract_arguments_to_graph(
+            current_record.judgments, 0, arg_graph, cached_projection,
+            attack_detector, arg_seq_counter,
+        )
+        self._update_record_argumentation(current_record, arg_graph)
         history.append(current_record)
+
         if current_record.is_consensus_reached:
             return history, current_record
 
@@ -541,12 +726,207 @@ class DebateOrchestrator:
                 task_header,
                 policy_scope,
                 persona_context=persona_context,
+                cached_projection=cached_projection,
             )
+
+            # Extract arguments from this round
+            arg_seq_counter = self._extract_arguments_to_graph(
+                current_record.judgments, round_idx, arg_graph, cached_projection,
+                attack_detector, arg_seq_counter,
+            )
+            self._update_record_argumentation(current_record, arg_graph)
+
             history.append(current_record)
+
+            # Dynamic termination: check argumentation convergence
+            current_acceptable = arg_graph.compute_acceptable_set()
+            if current_acceptable == previous_acceptable and len(current_acceptable) > 0:
+                logger.info("Argumentation converged: acceptable set stable at round {}", round_idx)
+                break
+            previous_acceptable = current_acceptable
+
             if current_record.is_consensus_reached:
                 break
 
+        # Finalize argument statuses
+        arg_graph.finalize_arguments()
+        # Store final graph on last record
+        self._update_record_argumentation(current_record, arg_graph)
+
         return history, current_record
+
+    def _update_record_argumentation(
+        self,
+        record: DebateRecord,
+        arg_graph: ArgumentGraph,
+    ) -> None:
+        record.argument_graph = arg_graph.to_dict()
+        consensus = self._compute_argumentation_consensus(arg_graph)
+        record.argumentation_stance = consensus["stance"]
+        record.argumentation_conclusion = consensus["conclusion"]
+        record.argumentation_confidence = consensus["confidence"]
+        record.argumentation_consensus_rate = consensus["rate"]
+        record.argumentation_consensus_reached = consensus["reached"]
+        record.is_consensus_reached = record.is_consensus_reached or consensus["reached"]
+
+    def _compute_argumentation_consensus(self, arg_graph: ArgumentGraph) -> dict[str, Any]:
+        acceptable_ids = arg_graph.compute_acceptable_set()
+        accepted_args = [
+            arg_graph.arguments[arg_id]
+            for arg_id in acceptable_ids
+            if arg_id in arg_graph.arguments
+        ]
+        if not accepted_args:
+            return {
+                "stance": None,
+                "conclusion": None,
+                "confidence": 0.0,
+                "rate": 0.0,
+                "reached": False,
+            }
+
+        stance_groups: dict[ArgumentStance, list[Argument]] = {}
+        for arg in accepted_args:
+            stance_groups.setdefault(arg.stance, []).append(arg)
+
+        dominant_stance, dominant_args = max(
+            stance_groups.items(),
+            key=lambda item: (len(item[1]), sum(arg.confidence for arg in item[1])),
+        )
+        rate = len(dominant_args) / len(accepted_args)
+        confidence = sum(arg.confidence for arg in dominant_args) / max(len(dominant_args), 1)
+        conclusion = {
+            ArgumentStance.PASS: CONCLUSION_PASS,
+            ArgumentStance.REJECT: CONCLUSION_FAIL,
+            ArgumentStance.INSUFFICIENT: CONCLUSION_MISSING,
+        }[dominant_stance]
+        reached = (
+            rate >= settings.consensus_threshold
+            and confidence >= settings.consensus_threshold
+        )
+        return {
+            "stance": dominant_stance.value,
+            "conclusion": conclusion,
+            "confidence": round(confidence, 3),
+            "rate": round(rate, 3),
+            "reached": reached,
+        }
+
+    def _infer_argument_stance(
+        self,
+        judgment: AgentJudgment,
+        text: str = "",
+    ) -> ArgumentStance:
+        conclusion_map = {
+            CONCLUSION_PASS: ArgumentStance.PASS,
+            CONCLUSION_FAIL: ArgumentStance.REJECT,
+            CONCLUSION_MISSING: ArgumentStance.INSUFFICIENT,
+        }
+        conclusion = getattr(judgment, "conclusion", None)
+        if conclusion in conclusion_map:
+            return conclusion_map[conclusion]
+
+        stance_map = {
+            STANCE_SUPPORT: ArgumentStance.PASS,
+            STANCE_OPPOSE: ArgumentStance.REJECT,
+            STANCE_PENDING: ArgumentStance.INSUFFICIENT,
+        }
+        stance = getattr(judgment, "stance", None)
+        if stance in stance_map:
+            return stance_map[stance]
+
+        lowered = (text or "").lower()
+        compact = (text or "").replace(" ", "")
+        reject_markers = ("reject", "fail", "oppose", "不符合", "反对", "驳回", "不通过")
+        pass_markers = ("pass", "approve", "support", "符合", "支持", "通过")
+        missing_markers = ("insufficient", "missing", "pending", "数据缺失", "待定", "未证实", "无法确认")
+        if any(marker in lowered or marker in compact for marker in reject_markers):
+            return ArgumentStance.REJECT
+        if any(marker in lowered or marker in compact for marker in pass_markers):
+            return ArgumentStance.PASS
+        if any(marker in lowered or marker in compact for marker in missing_markers):
+            return ArgumentStance.INSUFFICIENT
+        return ArgumentStance.INSUFFICIENT
+
+    def _extract_arguments_to_graph(
+        self,
+        judgments: list[AgentJudgment],
+        round_num: int,
+        arg_graph: ArgumentGraph,
+        projection: EvidenceProjection,
+        attack_detector: AttackDetector,
+        seq_counter: int,
+    ) -> int:
+        """Extract structured arguments from judgments into the argument graph."""
+        # Build evidence score map for confidence computation
+        evidence_scores: dict[str, float] = {}
+        for card in projection.cards:
+            eid = card.card_id.replace("card_", "")
+            evidence_scores[eid] = card.evidence_score
+
+        new_args: list[Argument] = []
+
+        for judgment in judgments:
+            raw_args = getattr(judgment, "arguments", []) or []
+            if not raw_args:
+                # If agent didn't produce structured arguments, create one from judgment
+                fallback_text = (
+                    getattr(judgment, "key_finding", "")
+                    or getattr(judgment, "reasoning", "")[:100]
+                )
+                raw_args = [{
+                    "arg_text": fallback_text,
+                    "evidence_refs": getattr(judgment, "evidence_refs", []),
+                    "stance": self._infer_argument_stance(judgment, fallback_text).value,
+                    "attacks": [],
+                    "supported_by": [],
+                }]
+
+            for raw_arg in raw_args:
+                seq_counter += 1
+                arg_id = f"arg_{judgment.agent_id}_{round_num}_{seq_counter}"
+
+                # Parse stance
+                raw_stance = raw_arg.get("stance", "insufficient")
+                if isinstance(raw_stance, ArgumentStance):
+                    stance = raw_stance
+                else:
+                    stance = {
+                        "pass": ArgumentStance.PASS,
+                        "reject": ArgumentStance.REJECT,
+                        "insufficient": ArgumentStance.INSUFFICIENT,
+                        STANCE_SUPPORT: ArgumentStance.PASS,
+                        STANCE_OPPOSE: ArgumentStance.REJECT,
+                        STANCE_PENDING: ArgumentStance.INSUFFICIENT,
+                        CONCLUSION_PASS: ArgumentStance.PASS,
+                        CONCLUSION_FAIL: ArgumentStance.REJECT,
+                        CONCLUSION_MISSING: ArgumentStance.INSUFFICIENT,
+                    }.get(str(raw_stance).strip().lower(), ArgumentStance.INSUFFICIENT)
+
+                arg = Argument(
+                    arg_id=arg_id,
+                    text=raw_arg.get("arg_text", ""),
+                    source_agent=judgment.agent_id,
+                    round_num=round_num,
+                    evidence_refs=raw_arg.get("evidence_refs", []),
+                    stance=stance,
+                    confidence=0.0,  # will be computed objectively
+                    attacks=raw_arg.get("attacks", []),
+                    supported_by=raw_arg.get("supported_by", []),
+                )
+
+                # Compute objective confidence
+                arg.confidence = compute_argument_confidence(arg, projection, evidence_scores)
+                arg_graph.add_argument(arg)
+                new_args.append(arg)
+
+        # Detect attack relations
+        all_args = list(arg_graph.arguments.values())
+        detected_attacks = attack_detector.detect(all_args, projection)
+        for attack in detected_attacks:
+            arg_graph.add_attack(attack)
+
+        return seq_counter
 
     def _run_round_zero(
         self,
@@ -554,8 +934,9 @@ class DebateOrchestrator:
         task_header: str = DEFAULT_TASK_HEADER,
         policy_scope: str = DEFAULT_POLICY_SCOPE,
         persona_context: dict | None = None,
+        cached_projection: EvidenceProjection | None = None,
     ) -> DebateRecord:
-        projection = project_evidence(bundle, task_header, policy_scope)
+        projection = cached_projection or project_evidence(bundle, task_header, policy_scope)
         judgments: list[AgentJudgment] = []
         for agent in self.agents:
             try:
@@ -573,7 +954,11 @@ class DebateOrchestrator:
             except Exception as exc:
                 logger.error("{} round-0 judgment failed: {}", agent.AGENT_ROLE, exc)
                 judgments.append(self._create_fallback_judgment(agent, 0, str(exc)))
-        return DebateRecord(judgments, 0)
+        return DebateRecord(
+            judgments, 0,
+            projection=projection,
+            evidence_items=bundle.items,
+        )
 
     def _run_debate_round(
         self,
@@ -583,8 +968,9 @@ class DebateOrchestrator:
         task_header: str = DEFAULT_TASK_HEADER,
         policy_scope: str = DEFAULT_POLICY_SCOPE,
         persona_context: dict | None = None,
+        cached_projection: EvidenceProjection | None = None,
     ) -> DebateRecord:
-        projection = project_evidence(bundle, task_header, policy_scope)
+        projection = cached_projection or project_evidence(bundle, task_header, policy_scope)
         judgments: list[AgentJudgment] = []
         for agent in self.agents:
             try:
@@ -603,7 +989,11 @@ class DebateOrchestrator:
             except Exception as exc:
                 logger.error("{} debate response failed: {}", agent.AGENT_ROLE, exc)
                 judgments.append(self._create_fallback_judgment(agent, round_idx, str(exc)))
-        return DebateRecord(judgments, round_idx)
+        return DebateRecord(
+            judgments, round_idx,
+            projection=projection,
+            evidence_items=bundle.items,
+        )
 
     def _create_fallback_judgment(self, agent, round_idx: int, err_msg: str) -> AgentJudgment:
         return AgentJudgment(
@@ -614,14 +1004,16 @@ class DebateOrchestrator:
             stance=STANCE_PENDING,
             confidence=0.0,
             evidence_refs=[],
-            reasoning=f"缁崵绮洪柨娆掝嚖鐎佃壈鍤ч崚銈嗘焽婢惰精瑙? {err_msg}",
+            reasoning=f"Agent 执行异常，兜底判定生效：{err_msg}",
             dissent_points=[],
             key_finding="兜底判定：Agent 执行异常，结论降级为待定。",
         )
 
     def _build_stream_evidence(self, bundle: EvidenceBundle) -> list[dict[str, object]]:
-        return [
-            {
+        result = []
+        for item in bundle.items:
+            ev_score = score_evidence_item(item)
+            result.append({
                 "rule_id": item.rule_id,
                 "target": item.target,
                 "category": item.category,
@@ -634,10 +1026,13 @@ class DebateOrchestrator:
                 "result_summary": item.result_summary,
                 "sql": item.sql,
                 "result_raw": item.result_raw,
+                "evidence_score": ev_score.score,
+                "evidence_score_percent": ev_score.score_percent,
+                "score_breakdown": ev_score.breakdown,
+                "rank_reason": ev_score.rank_reason,
                 **build_item_semantics(item),
-            }
-            for item in bundle.items
-        ]
+            })
+        return result
 
     def _build_sse_event(self, event: str, data: object) -> str:
         return f"data: {json.dumps({'event': event, 'data': data}, ensure_ascii=False, default=str)}\n\n"

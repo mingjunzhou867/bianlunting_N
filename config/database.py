@@ -22,6 +22,7 @@ engine = create_engine(
     pool_size=5,
     max_overflow=10,
     echo=False,               # 设为 True 可打印所有 SQL（调试用）
+    connect_args={"charset": "utf8mb4"},
 )
 
 # Session 工厂

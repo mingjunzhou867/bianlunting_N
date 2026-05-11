@@ -762,15 +762,13 @@ onUnmounted(() => {
         <div class="header-inner">
           <div class="header-row">
             <div class="gov-title-wrap">
-              <img
-                class="brand-round-logo"
-                src="./assets/zhicetong-logo-new.png"
-                alt="智策通"
-              />
               <div class="brand-block">
-                <div class="header-title">智策通</div>
-                <div class="brand-divider"></div>
-                <div class="header-subtitle">基于大模型的多Agent辩论与T2SQL取证的政策研判系统</div>
+                <img
+                  class="brand-wordmark-logo"
+                  src="./assets/zhicetong-wordmark-cropped.png"
+                  alt="智策通惠民"
+                />
+                <div class="header-subtitle">基于大模型与证据链取证的政务资格审核系统</div>
               </div>
             </div>
             <div class="header-right">
@@ -807,7 +805,7 @@ onUnmounted(() => {
       <el-tabs v-model="activeTab" class="dashboard-tabs">
 
         <!-- ========== 视图一 ========== -->
-        <el-tab-pane label="🟦 视图一：用户输入 (Intent Input)" name="input">
+        <el-tab-pane label="视图一：用户输入" name="input">
           <el-scrollbar height="100%">
             <div class="input-view">
               <div class="flow-strip">
@@ -1192,7 +1190,7 @@ onUnmounted(() => {
         </el-tab-pane>
 
         <!-- ========== 视图二 ========== -->
-        <el-tab-pane label="🧠 视图二：取证规划中心 (Cognition Center)" name="cognition">
+        <el-tab-pane label="视图二：取证规划中心" name="cognition">
           <el-scrollbar height="100%">
             <div class="session-pane-inner">
               <el-alert v-if="liveError" type="error" :closable="false" show-icon class="session-alert">
@@ -1210,7 +1208,7 @@ onUnmounted(() => {
         </el-tab-pane>
 
         <!-- ========== 视图三 ========== -->
-        <el-tab-pane label="🏛️ 视图三：多智能体辩论庭 (Multi-Agent Tribunal)" name="tribunal">
+        <el-tab-pane label="视图三：多智能体辩论庭" name="tribunal">
           <el-scrollbar height="100%">
             <div class="session-pane-inner">
               <el-alert v-if="sessionError" type="warning" :closable="false" show-icon class="session-alert">
@@ -1228,7 +1226,7 @@ onUnmounted(() => {
         </el-tab-pane>
 
         <!-- ========== 视图四 ========== -->
-        <el-tab-pane label="⚖️ 视图四：裁决结果与补证复核 (Final Verdict)" name="verdict">
+        <el-tab-pane label="视图四：裁决结果与补证复核" name="verdict">
           <el-scrollbar height="100%">
             <div class="session-pane-inner">
               <el-alert v-if="sessionError" type="warning" :closable="false" show-icon class="session-alert">
@@ -1251,7 +1249,7 @@ onUnmounted(() => {
           </el-scrollbar>
         </el-tab-pane>
 
-        <el-tab-pane label="📚 历史会话 (History)" name="audit">
+        <el-tab-pane label="历史会话" name="audit">
           <div class="audit-pane-inner">
             <HistorySessionList
               :items="historyItems"
@@ -1377,7 +1375,17 @@ onUnmounted(() => {
 .brand-block {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  align-items: flex-start;
+  gap: 2px;
+}
+
+.brand-wordmark-logo {
+  width: min(380px, 34vw);
+  height: 56px;
+  object-fit: contain;
+  object-position: left center;
+  display: block;
+  mix-blend-mode: multiply;
 }
 
 .brand-round-logo {
@@ -1965,7 +1973,7 @@ onUnmounted(() => {
   margin-top: 8px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 36px;
   font-size: 11px;
 }
 
@@ -2888,12 +2896,12 @@ onUnmounted(() => {
 }
 
 .dashboard-tabs :deep(.el-tabs__item) {
-  height: 34px;
-  line-height: 34px;
-  padding: 0 14px !important;
+  height: 38px;
+  line-height: 38px;
+  padding: 0 18px !important;
   border-radius: 999px;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 15px;
   color: rgba(255, 255, 255, 0.74) !important;
   transition: all 0.2s ease-in-out;
   border: 1px solid transparent;

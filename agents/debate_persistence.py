@@ -91,17 +91,25 @@ def serialize_evidence_bundle(bundle: EvidenceBundle) -> list[dict[str, Any]]:
 def serialize_history(history: Sequence[Any]) -> list[dict[str, Any]]:
     serialized_history: list[dict[str, Any]] = []
     for record in history:
-        serialized_history.append(
-            {
-                "round_num": record.round_num,
-                "judgments": [_model_dump(judgment) for judgment in record.judgments],
-                "total": record.total,
-                "majority_stance": record.majority_stance,
-                "majority_count": record.majority_count,
-                "consensus_rate": record.consensus_rate,
-                "is_consensus_reached": record.is_consensus_reached,
-            }
-        )
+        entry = {
+            "round_num": record.round_num,
+            "judgments": [_model_dump(judgment) for judgment in record.judgments],
+            "total": record.total,
+            "majority_stance": record.majority_stance,
+            "majority_count": record.majority_count,
+            "consensus_rate": record.consensus_rate,
+            "is_consensus_reached": record.is_consensus_reached,
+        }
+        # Include argumentation graph if present
+        if getattr(record, "argument_graph", None) is not None:
+            entry["argument_graph"] = record.argument_graph
+        # Include weighted fields if present
+        if getattr(record, "weighted_confidence", None) is not None:
+            entry["weighted_confidence"] = record.weighted_confidence
+            entry["weighted_stance"] = record.weighted_stance
+            entry["weighted_scores"] = record.weighted_scores
+            entry["agent_weights"] = record.agent_weights
+        serialized_history.append(entry)
     return serialized_history
 
 

@@ -238,10 +238,10 @@ class EvidencePlanner:
 
     def _rule_type_for(self, question_type: QuestionType) -> str:
         mapping = {
-            QuestionType.BASIC: "蹇呴』婊¤冻",
-            QuestionType.EXCL: "蹇呴』鎺掗櫎",
-            QuestionType.INFER: "鐏垫椿璇勫垽",
-            QuestionType.CALC: "鐏垫椿璇勫垽",
+            QuestionType.BASIC: "必须满足",
+            QuestionType.EXCL: "必须排除",
+            QuestionType.INFER: "灵活判断",
+            QuestionType.CALC: "灵活判断",
         }
         return mapping[question_type]
 

@@ -79,24 +79,24 @@ def build_item_semantics(
             display_label = CLAUSE_STATUS_NO_RISK
             tag_type = "info" if missing_data else "warning"
     else:
-        if missing_data:
-            evidence_state = EVIDENCE_STATE_MISSING_DATA
-            decision_effect = DECISION_EFFECT_NEUTRAL
-            status = CLAUSE_STATUS_UNVERIFIED
-            display_label = CLAUSE_STATUS_UNVERIFIED
-            tag_type = "warning"
-        elif supports_conclusion is True:
+        if supports_conclusion is True and not missing_data:
             evidence_state = EVIDENCE_STATE_HIT
             decision_effect = DECISION_EFFECT_SUPPORT
             status = CONCLUSION_PASS
             display_label = CONCLUSION_PASS
             tag_type = "success"
-        elif supports_conclusion is False:
+        elif supports_conclusion is False and not missing_data:
             evidence_state = EVIDENCE_STATE_HIT
             decision_effect = DECISION_EFFECT_OPPOSE
             status = CONCLUSION_FAIL
             display_label = CONCLUSION_FAIL
             tag_type = "danger"
+        elif missing_data:
+            evidence_state = EVIDENCE_STATE_MISSING_DATA
+            decision_effect = DECISION_EFFECT_NEUTRAL
+            status = CLAUSE_STATUS_UNVERIFIED
+            display_label = CLAUSE_STATUS_UNVERIFIED
+            tag_type = "warning"
         else:
             evidence_state = EVIDENCE_STATE_UNKNOWN
             decision_effect = DECISION_EFFECT_NEUTRAL
@@ -130,7 +130,36 @@ def conclusion_tag_type(conclusion: str | None) -> str:
     return "warning"
 
 
-def aggregate_final_conclusion_from_judgments(judgments: list[Any]) -> str:
+def aggregate_final_conclusion_from_judgments(
+    judgments: list[Any],
+    *,
+    projection: Any | None = None,
+    evidence_items: list[Any] | None = None,
+    bundle: Any | None = None,
+    structured_rules: Any | None = None,
+) -> str:
+    """Aggregate judgments into a final conclusion.
+
+    When projection/evidence_items/bundle are provided, delegates to the
+    unified three-layer decision engine. Otherwise falls back to simple
+    majority voting for backward compatibility.
+    """
+    # Use unified decision engine when context is available
+    if projection is not None or evidence_items is not None or bundle is not None:
+        try:
+            from agents.unified_decision_engine import decide
+            verdict = decide(
+                judgments,
+                projection=projection,
+                evidence_items=evidence_items,
+                bundle=bundle,
+                structured_rules=structured_rules,
+            )
+            return verdict.conclusion
+        except Exception:
+            pass  # fall through to legacy logic
+
+    # Legacy simple majority voting
     def effective_stance(judgment: Any) -> str:
         conclusion = getattr(judgment, "conclusion", None)
         if conclusion == CONCLUSION_PASS:

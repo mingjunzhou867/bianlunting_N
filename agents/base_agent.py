@@ -6,7 +6,7 @@ import json
 import re
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Literal, get_args
+from typing import Any, Literal, get_args
 
 from loguru import logger
 from pydantic import BaseModel, Field
@@ -26,21 +26,28 @@ STANCE_OPPOSE = "反对通过"
 STANCE_PENDING = "待定"
 
 LEGACY_CONCLUSION_ALIASES = {
-    CONCLUSION_PASS: {CONCLUSION_PASS, "绗﹀悎", "缁楋箑鎮?", "閺€顖涘瘮", STANCE_SUPPORT, "鏀寔閫氳繃"},
-    CONCLUSION_FAIL: {CONCLUSION_FAIL, "涓嶇鍚?", "娑撳秶顑侀崥", "閸欏秴顕?", STANCE_OPPOSE, "鍙嶅閫氳繃"},
-    CONCLUSION_MISSING: {CONCLUSION_MISSING, "鏁版嵁缂哄け", "閺佺増宓佺紓鍝勩亼", "瀵板懎鐣?", STANCE_PENDING, "寰呭畾"},
+    CONCLUSION_PASS: {CONCLUSION_PASS, "符合", "通过", "达标", STANCE_SUPPORT, "支持通过"},
+    CONCLUSION_FAIL: {CONCLUSION_FAIL, "不符合", "未通过", "不达标", STANCE_OPPOSE, "反对通过"},
+    CONCLUSION_MISSING: {CONCLUSION_MISSING, "数据缺失", "信息不足", "待确认", STANCE_PENDING, "待定"},
 }
 
 LEGACY_STANCE_ALIASES = {
-    STANCE_SUPPORT: {STANCE_SUPPORT, "鏀寔閫氳繃", "閺€顖涘瘮闁俺绻?", CONCLUSION_PASS, "绗﹀悎"},
-    STANCE_OPPOSE: {STANCE_OPPOSE, "鍙嶅閫氳繃", "閸欏秴顕柅姘崇箖", CONCLUSION_FAIL, "涓嶇鍚?"},
-    STANCE_PENDING: {STANCE_PENDING, "寰呭畾", "瀵板懎鐣?", CONCLUSION_MISSING, "鏁版嵁缂哄け"},
+    STANCE_SUPPORT: {STANCE_SUPPORT, "支持通过", "达标", CONCLUSION_PASS, "符合"},
+    STANCE_OPPOSE: {STANCE_OPPOSE, "反对通过", "不达标", CONCLUSION_FAIL, "不符合"},
+    STANCE_PENDING: {STANCE_PENDING, "待定", "待确认", CONCLUSION_MISSING, "数据缺失"},
 }
 
 SHARED_CONTEXT = """
-你正在参与“灵活就业社保补贴资格认定”的多 Agent 讨论。
+你正在参与灵活就业社保补贴资格认定的多 Agent 讨论。
 你只能基于提供给你的证据做判断，不得虚构数据库事实。
 最终输出必须是单个 JSON 对象，字段必须完整，且不得输出代码块或额外解释。
+
+在 arguments 字段中列出你的核心论点（1-3个），每个论点是包含以下字段的 JSON 对象：
+- arg_text: 论点内容（一句话）
+- evidence_refs: 引用的 evidence_id 列表
+- stance: pass（支持通过）/ reject（反对通过）/ insufficient（数据不足）
+- attacks: 如果反对其他 Agent 的论点，填写被攻击论点的描述
+- supported_by: 如果支持其他 Agent 的论点，填写被支持论点的描述
 """.strip()
 
 
@@ -71,6 +78,10 @@ class AgentJudgment(BaseModel):
     reasoning: str = Field(description="Reasoning text")
     dissent_points: list[str] = Field(default_factory=list, description="Dissent points")
     key_finding: str = Field(default="", description="Most important finding")
+    arguments: list[dict[str, Any]] = Field(
+        default_factory=list,
+        description="Structured arguments with evidence_refs, attacks, supported_by",
+    )
 
 
 def format_evidence_bundle(bundle: EvidenceBundle) -> str:
@@ -258,6 +269,16 @@ class BaseAgent(ABC):
         judgment.debate_round = debate_round
         return judgment
 
+    @staticmethod
+    def _projection_has_only_supportive_or_missing_evidence(
+        projection: EvidenceProjection,
+    ) -> bool:
+        """Check if projection has only supports/missing cards (no contradicts)."""
+        for card in projection.cards:
+            if card.status == "contradicts":
+                return False
+        return True
+
     def _postprocess_judgment(
         self,
         judgment: AgentJudgment,
@@ -273,8 +294,21 @@ class BaseAgent(ABC):
             )
             judgment.stance = expected_stance
 
-        # Keep agent conclusion unchanged here to avoid repeated adjudication in
-        # agent post-processing, round aggregation, and final reports.
+        # For lenient/empirical agents: auto-upgrade MISSING → PASS when
+        # projection has no contradicts (only supports + missing)
+        if (
+            judgment.conclusion == CONCLUSION_MISSING
+            and self.AGENT_ID in ("agent_lenient", "agent_empirical")
+            and self._projection_has_only_supportive_or_missing_evidence(projection)
+        ):
+            logger.info(
+                "[{}] auto-upgrade MISSING -> PASS: no contradicts in projection",
+                self.AGENT_ID,
+            )
+            judgment.conclusion = CONCLUSION_PASS
+            judgment.stance = STANCE_SUPPORT
+            judgment.confidence = max(judgment.confidence, 0.65)
+
         judgment.confidence = max(0.0, min(1.0, float(judgment.confidence)))
 
         return judgment
@@ -311,6 +345,7 @@ class BaseAgent(ABC):
                 "reasoning",
                 "dissent_points",
                 "key_finding",
+                "arguments",
             ],
             "properties": {
                 "conclusion": {"type": "string", "enum": conclusion_enum},
@@ -320,6 +355,21 @@ class BaseAgent(ABC):
                 "reasoning": {"type": "string", "minLength": self.MIN_REASONING_CHARS},
                 "dissent_points": {"type": "array", "items": {"type": "string"}},
                 "key_finding": {"type": "string"},
+                "arguments": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "arg_text": {"type": "string"},
+                            "evidence_refs": {"type": "array", "items": {"type": "string"}},
+                            "stance": {"type": "string", "enum": ["pass", "reject", "insufficient"]},
+                            "attacks": {"type": "array", "items": {"type": "string"}},
+                            "supported_by": {"type": "array", "items": {"type": "string"}},
+                        },
+                        "required": ["arg_text", "evidence_refs", "stance", "attacks", "supported_by"],
+                        "additionalProperties": False,
+                    },
+                },
             },
         }
 
@@ -389,6 +439,7 @@ class BaseAgent(ABC):
             "reasoning",
             "dissent_points",
             "key_finding",
+            "arguments",
         }
         if not required_keys.issubset(payload.keys()):
             return False
@@ -419,6 +470,8 @@ class BaseAgent(ABC):
             return False
         if not isinstance(payload.get("key_finding"), str):
             return False
+        if not isinstance(payload.get("arguments"), list):
+            return False
         return True
 
     def _describe_invalid_judgment_payload(self, raw: str) -> str:
@@ -437,6 +490,7 @@ class BaseAgent(ABC):
             "reasoning",
             "dissent_points",
             "key_finding",
+            "arguments",
         )
         missing_keys = [key for key in required_keys if key not in payload]
         if missing_keys:
@@ -472,6 +526,8 @@ class BaseAgent(ABC):
 
         if not isinstance(payload.get("key_finding"), str):
             return f"invalid_key_finding_type={type(payload.get('key_finding')).__name__}"
+        if not isinstance(payload.get("arguments"), list):
+            return f"invalid_arguments_type={type(payload.get('arguments')).__name__}"
         return "unknown_contract_violation"
 
     def _preview_raw_output(self, raw: str, limit: int = 240) -> str:
@@ -511,6 +567,10 @@ class BaseAgent(ABC):
                 "evidence_refs 和 dissent_points 必须是字符串数组；如无内容必须输出 []。\n"
                 f"reasoning 必须是可读文本，且不少于 {self.MIN_REASONING_CHARS} 个字。\n"
                 f"原始输出：\n{current_raw}"
+            )
+            repair_user += (
+                "\n必须包含 arguments 字段；如果没有可结构化论点，输出空数组 []。"
+                "\narguments 中每个对象必须包含 arg_text, evidence_refs, stance, attacks, supported_by。"
             )
             repaired = llm_chat(
                 system_prompt=repair_system,
@@ -560,6 +620,7 @@ class BaseAgent(ABC):
             "reasoning": reasoning,
             "dissent_points": ["模型未返回可读推理文本"],
             "key_finding": key_finding,
+            "arguments": [],
         }
 
     def _call_llm_with_tools(
@@ -705,6 +766,7 @@ class BaseAgent(ABC):
                 reasoning=self._normalize_reasoning_safe(data.get("reasoning", ""), raw),
                 dissent_points=self._normalize_string_list(data.get("dissent_points", [])),
                 key_finding=self._normalize_text(data.get("key_finding", "")),
+                arguments=data.get("arguments", []),
             )
         except Exception as exc:
             logger.warning(
@@ -783,7 +845,7 @@ class BaseAgent(ABC):
         repaired = text.strip()
         repaired = re.sub(r"^```(?:json)?\s*", "", repaired, flags=re.IGNORECASE)
         repaired = re.sub(r"\s*```$", "", repaired)
-        repaired = repaired.replace("“", "\"").replace("”", "\"")
+        repaired = repaired.replace(""", "\"").replace(""", "\"")
         repaired = repaired.replace("‘", "'").replace("’", "'")
         repaired = re.sub(r",(\s*[}\]])", r"\1", repaired)
         repaired = re.sub(r"\bNone\b", "null", repaired)

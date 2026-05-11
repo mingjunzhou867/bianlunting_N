@@ -65,36 +65,36 @@ def _extract_projection_signals(projection: EvidenceProjection) -> list[str]:
     for card in projection.cards:
         text = f"{card.question} {card.finding}".strip()
         if card.status == "supports":
-            if any(token in text for token in ("??", "??")):
-                signals.add("??????????")
-            if any(token in text for token in ("????", "??")):
-                signals.add("??????????")
-            if any(token in text for token in ("??", "??")):
-                signals.add("????????")
-            if any(token in text for token in ("??", "??", "??")):
-                signals.add("????????????")
+            if any(token in text for token in ("失业登记", "失业")):
+                signals.add("存在失业登记")
+            if any(token in text for token in ("灵活就业", "灵活")):
+                signals.add("存在灵活就业登记")
+            if any(token in text for token in ("就业困难", "困难认定")):
+                signals.add("存在就业困难认定")
+            if any(token in text for token in ("社保补贴", "补贴资格", "补贴享受")):
+                signals.add("存在社保补贴资格")
         if card.status == "contradicts":
-            if any(token in text for token in ("??", "??", "?????")):
-                signals.add("??????????????")
-            if any(token in text for token in ("??", "??", "??")):
-                signals.add("????????")
-            signals.add("?????????")
+            if any(token in text for token in ("失业登记", "灵活就业", "法人股东")):
+                signals.add("排除条件触发")
+            if any(token in text for token in ("法人", "股东", "单位参保")):
+                signals.add("存在法人股东身份")
+            signals.add("资格直接否决")
         if card.status == "missing":
-            if any(token in text for token in ("??", "??")):
-                signals.add("????????")
-            if any(token in text for token in ("??", "??")):
-                signals.add("??????")
-            if any(token in text for token in ("????", "??")):
-                signals.add("????????")
+            if any(token in text for token in ("失业登记", "失业")):
+                signals.add("缺失失业登记")
+            if any(token in text for token in ("灵活就业", "灵活")):
+                signals.add("缺失灵活就业登记")
+            if any(token in text for token in ("就业困难", "困难认定")):
+                signals.add("缺失就业困难认定")
         if card.status == "unresolved":
-            signals.add("?????????")
-            if any(token in text for token in ("??", "??", "??")):
-                signals.add("????????")
-                signals.add("????????????")
-        if any(token in text for token in ("??", "??")) and card.status in {"supports", "unresolved"}:
-            signals.add("??????")
-        if any(token in text for token in ("??", "??")):
-            signals.add("????")
-    if not any(signal.startswith("??") or signal.startswith("??") for signal in signals):
-        signals.add("?????????")
+            signals.add("资格链不完整")
+            if any(token in text for token in ("就业困难", "困难认定", "社保补贴")):
+                signals.add("缺失就业困难认定")
+                signals.add("资格链断裂")
+        if any(token in text for token in ("缴费", "参保")) and card.status in {"supports", "unresolved"}:
+            signals.add("存在缴费记录")
+        if any(token in text for token in ("补贴", "享受")):
+            signals.add("存在补贴享受")
+    if not any(signal.startswith("缺") or signal.startswith("排") for signal in signals):
+        signals.add("资格链不完整")
     return list(signals)

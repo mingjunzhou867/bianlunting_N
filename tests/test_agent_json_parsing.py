@@ -7,7 +7,7 @@ from typing import get_args
 from unittest.mock import patch
 
 from agents.agent_explorer import ExploratoryAgent
-from agents.base_agent import AgentJudgment, BaseAgent, DebateToolPolicy
+from agents.base_agent import AgentJudgment, BaseAgent
 
 
 class DummyAgent(BaseAgent):
@@ -37,6 +37,7 @@ class AgentJsonParsingTests(unittest.TestCase):
                 "reasoning": "standard-json",
                 "dissent_points": [],
                 "key_finding": "ok",
+                "arguments": [],
             },
             ensure_ascii=False,
         )
@@ -94,8 +95,21 @@ class AgentJsonParsingTests(unittest.TestCase):
             "reasoning": self.long_reasoning,
             "dissent_points": [],
             "key_finding": "ok",
+            "arguments": [],
         }
         self.assertTrue(self.agent._is_valid_judgment_payload(payload))
+
+    def test_payload_contract_validator_requires_arguments_field(self) -> None:
+        payload = {
+            "conclusion": self.valid_conclusion,
+            "stance": self.valid_stance,
+            "confidence": 0.88,
+            "evidence_refs": ["RULE_001"],
+            "reasoning": self.long_reasoning,
+            "dissent_points": [],
+            "key_finding": "ok",
+        }
+        self.assertFalse(self.agent._is_valid_judgment_payload(payload))
 
     def test_payload_contract_validator_rejects_incomplete_payload(self) -> None:
         payload = {
@@ -106,7 +120,7 @@ class AgentJsonParsingTests(unittest.TestCase):
         }
         self.assertFalse(self.agent._is_valid_judgment_payload(payload))
 
-    def test_payload_contract_validator_accepts_legacy_mojibake_enums(self) -> None:
+    def test_payload_contract_validator_normalizes_unknown_enums_to_missing(self) -> None:
         payload = {
             "conclusion": "绗﹀悎",
             "stance": "鏀寔閫氳繃",
@@ -115,10 +129,11 @@ class AgentJsonParsingTests(unittest.TestCase):
             "reasoning": self.long_reasoning,
             "dissent_points": [],
             "key_finding": "ok",
+            "arguments": [],
         }
         self.assertTrue(self.agent._is_valid_judgment_payload(payload))
-        self.assertEqual(payload["conclusion"], "符合")
-        self.assertEqual(payload["stance"], "支持通过")
+        self.assertEqual(payload["conclusion"], "数据缺失")
+        self.assertEqual(payload["stance"], "待定")
 
     def test_payload_contract_validator_rejects_empty_reasoning(self) -> None:
         payload = {
@@ -148,6 +163,7 @@ class AgentJsonParsingTests(unittest.TestCase):
         payload = self.agent._build_fallback_payload("{bad_json")
         self.assertIn(payload["conclusion"], get_args(AgentJudgment.model_fields["conclusion"].annotation))
         self.assertIn(payload["stance"], get_args(AgentJudgment.model_fields["stance"].annotation))
+        self.assertEqual(payload["arguments"], [])
 
     def test_describe_invalid_payload_reports_missing_keys(self) -> None:
         reason = self.agent._describe_invalid_judgment_payload("{}")
@@ -165,6 +181,7 @@ class AgentJsonParsingTests(unittest.TestCase):
                 "reasoning": "太短",
                 "dissent_points": [],
                 "key_finding": "ok",
+                "arguments": [],
             },
             ensure_ascii=False,
         )
@@ -207,34 +224,12 @@ class AgentJsonParsingTests(unittest.TestCase):
                     "请输出 JSON",
                     tools=[{"type": "function", "function": {"name": "noop", "parameters": {"type": "object"}}}],
                     tool_registry=SimpleNamespace(execute=lambda *_args, **_kwargs: {}),
-                    tool_policy=DebateToolPolicy(allowed_tool_names=("noop",)),
                     max_iterations=1,
                 )
 
         self.assertEqual(raw, "{}")
         self.assertEqual(captured_calls[0]["response_format"], self.agent._judgment_response_format())
 
-    def test_filter_tools_by_policy_keeps_only_allowed_tools(self) -> None:
-        tools = [
-            {"type": "function", "function": {"name": "get_dict"}},
-            {"type": "function", "function": {"name": "text_to_sql"}},
-        ]
-
-        filtered = self.agent._filter_tools_by_policy(
-            tools,
-            DebateToolPolicy(allowed_tool_names=("get_dict",)),
-        )
-
-        self.assertEqual(len(filtered), 1)
-        self.assertEqual(filtered[0]["function"]["name"], "get_dict")
-
-    def test_tool_boundary_prompt_mentions_evidence_first_and_budget(self) -> None:
-        prompt = self.agent._build_tool_boundary_prompt(
-            DebateToolPolicy(max_tool_calls_per_turn=1, allowed_tool_names=("get_dict",))
-        )
-
-        self.assertIn("judge without tools if possible", prompt)
-        self.assertIn("Max tool calls this turn: 1", prompt)
 
 
 class ExplorerPromptContractTests(unittest.TestCase):

@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 44px; font-weight: 700; fill: #1A2A3A; }
+      .subtitle { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 21px; fill: #53657A; }
+      .section-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 30px; font-weight: 700; fill: #1A2A3A; }
+      .card-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 24px; font-weight: 700; fill: #1A2A3A; }
+      .card-text { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 17px; fill: #4E6074; }
+      .center-text { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 26px; font-weight: 700; fill: #5A4010; }
+      .center-sub { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 17px; fill: #6A5A2B; }
+      .footer { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #6B1A1A; }
+      .gold-title { fill: #5A4010; }
+      .red-title { fill: #6B1A1A; }
+
+      .panel { fill: #FAFCFF; stroke: #D6E0EC; stroke-width: 1.8; }
+      .panel-left { fill: #F7FAFE; stroke: #9EB3CB; stroke-width: 2; }
+      .panel-right { fill: #FFFCFC; stroke: #D8B4B4; stroke-width: 2; }
+      .card { fill: #F0F4FA; stroke: #5B7FA6; stroke-width: 2; }
+      .card-gold { fill: #FFFBF0; stroke: #C8A951; stroke-width: 2.1; }
+      .card-red { fill: #FDF2F2; stroke: #B03030; stroke-width: 2; }
+      .center-box { fill: #FFFDF6; stroke: #D6BD69; stroke-width: 2; }
+      .divider { stroke: #D6E0EC; stroke-width: 2; }
+    </style>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1920" height="1080"/>
+
+  <text class="title" x="960" y="62" text-anchor="middle">创新与应用价值</text>
+  <text class="subtitle" x="960" y="99" text-anchor="middle">以数据库事实约束大模型推理，面向政务资格认定形成可解释、可追溯的人机协同评审闭环</text>
+
+  <rect class="panel-left" x="90" y="145" width="770" height="770" rx="22"/>
+  <rect class="panel-right" x="1060" y="145" width="770" height="770" rx="22"/>
+  <line class="divider" x1="960" y1="168" x2="960" y2="895"/>
+
+  <text class="section-title" x="475" y="205" text-anchor="middle">核心创新</text>
+  <text class="section-title red-title" x="1445" y="205" text-anchor="middle">应用价值</text>
+
+  <!-- Innovation cards -->
+  <rect class="card-gold" x="145" y="255" width="305" height="215" rx="18"/>
+  <text class="card-title gold-title" x="298" y="306" text-anchor="middle">证据约束式</text>
+  <text class="card-title gold-title" x="298" y="340" text-anchor="middle">Text-to-SQL</text>
+  <text class="card-text" x="178" y="390">SQL 不只是查询工具，</text>
+  <text class="card-text" x="178" y="421">而是政策审查的事实来源。</text>
+
+  <rect class="card-gold" x="500" y="255" width="305" height="215" rx="18"/>
+  <text class="card-title gold-title" x="652" y="306" text-anchor="middle">EvidenceBundle</text>
+  <text class="card-title gold-title" x="652" y="340" text-anchor="middle">证据卡片机制</text>
+  <text class="card-text" x="533" y="390">统一承载 SQL、结果、</text>
+  <text class="card-text" x="533" y="421">摘要、诊断与置信度。</text>
+
+  <rect class="card" x="145" y="545" width="305" height="215" rx="18"/>
+  <text class="card-title" x="298" y="596" text-anchor="middle">多智能体</text>
+  <text class="card-title" x="298" y="630" text-anchor="middle">辩论式审查</text>
+  <text class="card-text" x="178" y="680">多角色围绕同一证据</text>
+  <text class="card-text" x="178" y="711">暴露争议与风险点。</text>
+
+  <rect class="card-red" x="500" y="545" width="305" height="215" rx="18"/>
+  <text class="card-title red-title" x="652" y="596" text-anchor="middle">保守仲裁与</text>
+  <text class="card-title red-title" x="652" y="630" text-anchor="middle">人工复核闭环</text>
+  <text class="card-text" x="533" y="680">对缺证、冲突、风险场景</text>
+  <text class="card-text" x="533" y="711">保留人工补证入口。</text>
+
+  <!-- Application cards -->
+  <rect class="card" x="1115" y="255" width="305" height="215" rx="18"/>
+  <text class="card-title" x="1268" y="316" text-anchor="middle">基层政务资格初审</text>
+  <text class="card-text" x="1148" y="380">降低人工查表、规则理解</text>
+  <text class="card-text" x="1148" y="411">和材料核验成本。</text>
+
+  <rect class="card-gold" x="1470" y="255" width="305" height="215" rx="18"/>
+  <text class="card-title gold-title" x="1622" y="316" text-anchor="middle">补贴政策主动筛查</text>
+  <text class="card-text" x="1503" y="380">面向社保、就业、企业数据</text>
+  <text class="card-text" x="1503" y="411">发现潜在服务对象。</text>
+
+  <rect class="card" x="1115" y="545" width="305" height="215" rx="18"/>
+  <text class="card-title" x="1268" y="596" text-anchor="middle">审核过程</text>
+  <text class="card-title" x="1268" y="630" text-anchor="middle">可解释展示</text>
+  <text class="card-text" x="1148" y="680">证据卡片、Agent 观点、</text>
+  <text class="card-text" x="1148" y="711">条款级结论同步呈现。</text>
+
+  <rect class="card-red" x="1470" y="545" width="305" height="215" rx="18"/>
+  <text class="card-title red-title" x="1622" y="596" text-anchor="middle">政务审计与</text>
+  <text class="card-title red-title" x="1622" y="630" text-anchor="middle">责任留痕</text>
+  <text class="card-text" x="1503" y="680">会话、证据、裁决报告</text>
+  <text class="card-text" x="1503" y="711">和复核记录可追溯。</text>
+
+  <!-- Center thesis -->
+  <rect class="center-box" x="735" y="805" width="450" height="92" rx="20"/>
+  <text class="center-text" x="960" y="843" text-anchor="middle">从“模型给答案”</text>
+  <text class="center-text" x="960" y="878" text-anchor="middle">转向“证据支撑裁决”</text>
+
+  <rect x="90" y="960" width="1740" height="1.5" fill="#E3E9F0"/>
+  <text class="footer" x="960" y="1002" text-anchor="middle">系统定位：面向政策资格认定的可信智能评审助手，而非替代人工的黑箱裁决器。</text>
+</svg>

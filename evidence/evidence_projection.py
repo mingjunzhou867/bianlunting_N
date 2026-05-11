@@ -20,6 +20,13 @@ class EvidenceSummaryCard(BaseModel):
         default_factory=list,
         description="Traceable evidence artifact references",
     )
+    evidence_score: float = Field(default=0.0, description="Evidence quality score 0-100")
+    evidence_score_percent: str = Field(default="0.0%", description="Score as percentage string")
+    score_breakdown: dict[str, float] = Field(
+        default_factory=dict,
+        description="Score breakdown by dimension",
+    )
+    rank_reason: str = Field(default="", description="Human-readable score ranking reason")
 
 
 class EvidenceProjection(BaseModel):

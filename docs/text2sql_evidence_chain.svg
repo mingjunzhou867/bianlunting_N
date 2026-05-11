@@ -1,0 +1,132 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <style>
+      .bg { fill: #ffffff; }
+      .title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 44px; font-weight: 700; fill: #1A2A3A; }
+      .subtitle { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 22px; fill: #53657A; }
+      .section-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 28px; font-weight: 700; fill: #1A2A3A; }
+      .module-title { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 21px; font-weight: 700; fill: #1A2A3A; }
+      .module-sub { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 15px; fill: #506176; }
+      .small { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 14px; fill: #52657A; }
+      .gold-title { fill: #5A4010; }
+      .red-title { fill: #6B1A1A; }
+      .note { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 18px; font-weight: 700; fill: #5A4010; }
+      .footer { font-family: "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif; font-size: 17px; fill: #5B6B7D; }
+
+      .panel { fill: #FAFCFF; stroke: #D6E0EC; stroke-width: 1.8; }
+      .panel-gold { fill: #FFFDF6; stroke: #D6BD69; stroke-width: 2; }
+      .module { fill: #F0F4FA; stroke: #5B7FA6; stroke-width: 2; }
+      .module-gold { fill: #FFFBF0; stroke: #C8A951; stroke-width: 2.1; }
+      .module-red { fill: #FDF2F2; stroke: #B03030; stroke-width: 2; }
+      .module-muted { fill: #F5F7FA; stroke: #8A9BB0; stroke-width: 1.7; }
+      .evidence-card { fill: #FFFFFF; stroke: #C8A951; stroke-width: 2; }
+      .field-chip { fill: #F5F7FA; stroke: #AAB7C5; stroke-width: 1.4; }
+      .diagnosis { fill: #FDF2F2; stroke: #B03030; stroke-width: 1.8; }
+
+      .arrow { fill: none; stroke: #5B7FA6; stroke-width: 2.2; stroke-linecap: round; marker-end: url(#arrow); }
+      .arrow-gold { fill: none; stroke: #C8A951; stroke-width: 2.3; stroke-linecap: round; marker-end: url(#arrowGold); }
+      .arrow-red { fill: none; stroke: #B03030; stroke-width: 2.2; stroke-linecap: round; marker-end: url(#arrowRed); }
+      .dash { stroke-dasharray: 7 7; }
+    </style>
+    <marker id="arrow" markerWidth="5.5" markerHeight="5.5" refX="4.8" refY="2.75" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L4.8,2.75 L1,4.5 Z" fill="#5B7FA6"/>
+    </marker>
+    <marker id="arrowGold" markerWidth="5.5" markerHeight="5.5" refX="4.8" refY="2.75" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L4.8,2.75 L1,4.5 Z" fill="#C8A951"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="5.5" markerHeight="5.5" refX="4.8" refY="2.75" orient="auto" markerUnits="strokeWidth">
+      <path d="M1,1 L4.8,2.75 L1,4.5 Z" fill="#B03030"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" x="0" y="0" width="1920" height="1080"/>
+
+  <text class="title" x="960" y="62" text-anchor="middle">Text-to-SQL 自动取证与证据标准化</text>
+  <text class="subtitle" x="960" y="99" text-anchor="middle">以数据库事实约束模型推理，将 SQL 查询结果转化为可审查、可追溯的证据卡片</text>
+
+  <!-- Top: Text-to-SQL evidence retrieval chain -->
+  <rect class="panel-gold" x="80" y="145" width="1760" height="390" rx="22"/>
+  <text class="section-title gold-title" x="140" y="198">一、Text-to-SQL 自动取证链路</text>
+  <text class="small" x="140" y="228">根据政策规则、目标人员和数据库 Schema 生成或选择 SQL，执行后获取真实业务记录，并对异常情况进行诊断。</text>
+
+  <rect class="module" x="130" y="290" width="210" height="82" rx="13"/>
+  <text class="module-title" x="235" y="322" text-anchor="middle">政策规则</text>
+  <text class="module-sub" x="235" y="350" text-anchor="middle">Rule ID / 取证需求</text>
+
+  <rect class="module" x="130" y="405" width="210" height="82" rx="13"/>
+  <text class="module-title" x="235" y="437" text-anchor="middle">目标人员</text>
+  <text class="module-sub" x="235" y="465" text-anchor="middle">身份证号 / 画像信息</text>
+
+  <rect class="module" x="405" y="348" width="230" height="82" rx="13"/>
+  <text class="module-title" x="520" y="380" text-anchor="middle">数据库 Schema</text>
+  <text class="module-sub" x="520" y="408" text-anchor="middle">表结构 / 字段 / 字典</text>
+
+  <rect class="module-gold" x="715" y="348" width="250" height="82" rx="13"/>
+  <text class="module-title gold-title" x="840" y="380" text-anchor="middle">SQL 生成或选择</text>
+  <text class="module-sub" x="840" y="408" text-anchor="middle">模板匹配 / 动态生成</text>
+
+  <rect class="module-gold" x="1045" y="348" width="250" height="82" rx="13"/>
+  <text class="module-title gold-title" x="1170" y="380" text-anchor="middle">SQL 执行</text>
+  <text class="module-sub" x="1170" y="408" text-anchor="middle">查询业务数据库事实</text>
+
+  <rect class="module-gold" x="1375" y="348" width="250" height="82" rx="13"/>
+  <text class="module-title gold-title" x="1500" y="380" text-anchor="middle">真实业务记录</text>
+  <text class="module-sub" x="1500" y="408" text-anchor="middle">社保 / 就业 / 企业数据</text>
+
+  <rect class="diagnosis" x="1375" y="455" width="250" height="54" rx="12"/>
+  <text class="module-title red-title" x="1500" y="489" text-anchor="middle">异常诊断</text>
+
+  <path class="arrow" d="M340 331 C365 331, 375 389, 405 389"/>
+  <path class="arrow" d="M340 446 C365 446, 375 389, 405 389"/>
+  <path class="arrow" d="M635 389 H715"/>
+  <path class="arrow-gold" d="M965 389 H1045"/>
+  <path class="arrow-gold" d="M1295 389 H1375"/>
+  <path class="arrow-red dash" d="M1500 430 V455"/>
+
+  <rect class="module-red" x="520" y="455" width="575" height="54" rx="12"/>
+  <text class="module-title red-title" x="808" y="489" text-anchor="middle">查无记录 / 字段缺失 / 表不存在 / SQL 错误 / 连接异常</text>
+
+  <!-- Bottom: evidence standardization -->
+  <rect class="panel" x="80" y="585" width="1760" height="360" rx="22"/>
+  <text class="section-title" x="140" y="638">二、证据标准化机制</text>
+  <text class="small" x="140" y="668">SQL 查询结果不直接交给智能体判断，而是统一封装为 EvidenceItem / EvidenceBundle，形成可引用的证据卡片。</text>
+
+  <rect class="module-gold" x="145" y="735" width="250" height="85" rx="14"/>
+  <text class="module-title gold-title" x="270" y="768" text-anchor="middle">SQL 查询结果</text>
+  <text class="module-sub" x="270" y="797" text-anchor="middle">原始行记录 / 执行状态</text>
+
+  <rect class="module-gold" x="485" y="720" width="310" height="115" rx="16"/>
+  <text class="module-title gold-title" x="640" y="757" text-anchor="middle">EvidenceItem</text>
+  <text class="module-sub" x="640" y="786" text-anchor="middle">单条规则对应的标准证据</text>
+  <text class="module-sub" x="640" y="811" text-anchor="middle">包含 SQL、摘要、诊断与置信度</text>
+
+  <rect class="evidence-card" x="885" y="665" width="360" height="230" rx="18"/>
+  <text class="module-title gold-title" x="1065" y="704" text-anchor="middle">EvidenceBundle</text>
+  <text class="module-sub" x="1065" y="731" text-anchor="middle">目标人员的一组证据卡片</text>
+
+  <rect class="field-chip" x="925" y="760" width="130" height="38" rx="9"/>
+  <text class="small" x="990" y="785" text-anchor="middle">规则编号</text>
+  <rect class="field-chip" x="1075" y="760" width="130" height="38" rx="9"/>
+  <text class="small" x="1140" y="785" text-anchor="middle">SQL</text>
+  <rect class="field-chip" x="925" y="813" width="130" height="38" rx="9"/>
+  <text class="small" x="990" y="838" text-anchor="middle">原始结果</text>
+  <rect class="field-chip" x="1075" y="813" width="130" height="38" rx="9"/>
+  <text class="small" x="1140" y="838" text-anchor="middle">结果摘要</text>
+  <rect class="field-chip" x="925" y="866" width="130" height="38" rx="9"/>
+  <text class="small" x="990" y="891" text-anchor="middle">诊断标签</text>
+  <rect class="field-chip" x="1075" y="866" width="130" height="38" rx="9"/>
+  <text class="small" x="1140" y="891" text-anchor="middle">置信度</text>
+
+  <rect class="module-red" x="1335" y="735" width="350" height="85" rx="14"/>
+  <text class="module-title red-title" x="1510" y="768" text-anchor="middle">证据约束审查</text>
+  <text class="module-sub" x="1510" y="797" text-anchor="middle">智能体围绕证据卡片进行判断</text>
+
+  <path class="arrow-gold" d="M395 778 H485"/>
+  <path class="arrow-gold" d="M795 778 H885"/>
+  <path class="arrow-red" d="M1245 778 H1335"/>
+
+  <text class="note" x="960" y="925" text-anchor="middle">后续智能体不能凭空判断，必须引用证据卡片中的事实、状态与诊断信息。</text>
+
+  <rect x="80" y="988" width="1760" height="1.5" fill="#E3E9F0"/>
+  <text class="footer" x="960" y="1028" text-anchor="middle">该页强调：Text-to-SQL 是事实取证引擎，EvidenceBundle 是多智能体辩论和保守仲裁的共同事实基础。</text>
+</svg>

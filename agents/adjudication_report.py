@@ -20,11 +20,24 @@ from agents.decision_semantics import (
     DECISION_EFFECT_OPPOSE,
     build_item_semantics,
 )
+from agents.optimization_algorithms import estimate_clause_confidence, score_evidence_item
 from evidence.evidence_model import EvidenceBundle, EvidenceItem
 from policy.policy_models import PolicyRule
 from policy.policy_router import get_policy
 
 _RULE_ID_RE = re.compile(r"[A-Z]+_\d+")
+
+
+def _average_clause_confidence(clause_results: list[dict[str, Any]]) -> float:
+    """Compute average confidence across all clause results."""
+    confidences = []
+    for row in clause_results:
+        conf = row.get("clause_confidence")
+        if conf is not None:
+            confidences.append(float(conf))
+    if not confidences:
+        return 0.0
+    return round(sum(confidences) / len(confidences), 4)
 
 
 def build_adjudication_report(
@@ -41,11 +54,20 @@ def build_adjudication_report(
     top_reason = _pick_top_reason(clause_results, final_record)
     next_actions = _build_next_actions(clause_results, final_record, top_reason)
 
+    # Compute weighted fields from final_record
+    weighted_stance = getattr(final_record, "weighted_stance", None)
+    weighted_confidence = getattr(final_record, "weighted_confidence", 0.0)
+    avg_clause_conf = _average_clause_confidence(clause_results)
+
     return {
         "summary": {
             "final_conclusion": final_record.get_final_conclusion(),
             "top_reason": top_reason,
             "confidence": round(float(arbiter_result.get("explanation_confidence", 0.0)) if arbiter_result else 0.0, 4),
+            "avg_clause_confidence": avg_clause_conf,
+            "weighted_stance": weighted_stance,
+            "weighted_confidence": round(float(weighted_confidence), 4),
+            "algorithm_version": "backend_optimization_v1",
         },
         "clause_results": clause_results,
         "debate_digest": debate_digest,
@@ -150,6 +172,11 @@ def _make_clause_entry(category: str, rule: PolicyRule, item: EvidenceItem | Non
     status = semantic["semantic_status"]
     reason = _resolve_clause_reason(item, status, semantic)
     missing_fields = _resolve_missing_fields(item, status, semantic)
+
+    # Evidence quality scoring
+    ev_score = score_evidence_item(item, category_hint=category)
+    clause_conf = estimate_clause_confidence(item, category_hint=category)
+
     return {
         "clause_id": rule.rule_id,
         "clause_text": clause_text,
@@ -159,6 +186,11 @@ def _make_clause_entry(category: str, rule: PolicyRule, item: EvidenceItem | Non
         "missing_fields": missing_fields,
         "action_hint": _resolve_action_hint(item, status, semantic),
         "category": category,
+        "evidence_score": ev_score.score,
+        "evidence_score_percent": ev_score.score_percent,
+        "score_breakdown": ev_score.breakdown,
+        "rank_reason": ev_score.rank_reason,
+        "clause_confidence": clause_conf,
         **semantic,
     }
 

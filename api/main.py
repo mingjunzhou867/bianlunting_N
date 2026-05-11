@@ -264,7 +264,7 @@ def run_debate_stream(request: DebateRequest) -> Any:
         )
     else:
         stream = orchestrator.run_debate_stream(request.id_card.strip(), policy_id=policy_id or DEFAULT_POLICY_ID)
-    return StreamingResponse(stream, media_type="text/event-stream")
+    return StreamingResponse(stream, media_type="text/event-stream; charset=utf-8")
 
 
 @app.get("/api/debates")
