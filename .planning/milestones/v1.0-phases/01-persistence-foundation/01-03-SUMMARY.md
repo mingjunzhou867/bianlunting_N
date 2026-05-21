@@ -6,9 +6,9 @@ Made persistence failures explicit and added focused regression coverage for the
 
 ## Delivered
 
-- [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py) now raises `DebatePersistenceError` when a completed-session write fails instead of silently swallowing the error
-- [tests/test_debate.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_debate.py) covers successful persistence hooks for both debate entry paths and explicit failure propagation
-- [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_persistence_contract.py) checks serializer output and DDL/runtime contract alignment
+- [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py) now raises `DebatePersistenceError` when a completed-session write fails instead of silently swallowing the error
+- [tests/test_debate.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_debate.py) covers successful persistence hooks for both debate entry paths and explicit failure propagation
+- [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_persistence_contract.py) checks serializer output and DDL/runtime contract alignment
 
 ## Verification
 

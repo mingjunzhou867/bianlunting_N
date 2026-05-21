@@ -37,11 +37,11 @@ The shipped `v1.0` system already provides:
 
 Relevant baseline assets:
 
-- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/sql_templates.py) — current static SQL baseline
-- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/evidence_collector.py) — current evidence execution path
-- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py) — current evidence-object shape
-- [base_agent.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/base_agent.py) — current downstream agent consumer pattern
-- [ADC310.json](/c:/Users/afrangry/PycharmProjects/bysj_t2s/dicts/ADC310.json) — example code-dictionary artifact
+- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/sql_templates.py) — current static SQL baseline
+- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/evidence_collector.py) — current evidence execution path
+- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py) — current evidence-object shape
+- [base_agent.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/base_agent.py) — current downstream agent consumer pattern
+- [ADC310.json](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/dicts/ADC310.json) — example code-dictionary artifact
 
 ## Decisions Locked In This Discussion
 

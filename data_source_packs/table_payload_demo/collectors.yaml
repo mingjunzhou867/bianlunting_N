@@ -1,0 +1,8 @@
+collectors:
+  - collector_id: table_payload
+    type: table_payload
+    entities:
+      - uploaded_record
+      - uploaded_table
+    supports_stream: true
+    description: 将请求体中的 records/tables 转换为 EvidenceBundle

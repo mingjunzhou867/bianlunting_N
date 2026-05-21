@@ -1,0 +1,9 @@
+type: mysql
+connection_ref: config/.env:local_mysql_demo
+env_keys:
+  host: LOCAL_MYSQL_DEMO_DB_HOST
+  port: LOCAL_MYSQL_DEMO_DB_PORT
+  user: LOCAL_MYSQL_DEMO_DB_USER
+  password: LOCAL_MYSQL_DEMO_DB_PASSWORD
+  database: LOCAL_MYSQL_DEMO_DB_NAME
+  charset: LOCAL_MYSQL_DEMO_DB_CHARSET

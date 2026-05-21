@@ -11,10 +11,10 @@ Identify the lowest-risk way to turn the user’s expanded architecture idea int
 
 ### 1. The current repo already has one stable reference chain, so Phase 4 should anchor itself to that baseline instead of redesigning from scratch
 
-- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/sql_templates.py) is the current evidence-query baseline
-- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/evidence_collector.py) is the current execution path from rule/query choice to evidence object
-- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py) is the current evidence contract that downstream agents already consume
-- [base_agent.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/base_agent.py) and the existing debate stack prove the repo already has a meaningful “evidence in, judgment out” boundary
+- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/sql_templates.py) is the current evidence-query baseline
+- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/evidence_collector.py) is the current execution path from rule/query choice to evidence object
+- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py) is the current evidence contract that downstream agents already consume
+- [base_agent.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/base_agent.py) and the existing debate stack prove the repo already has a meaningful “evidence in, judgment out” boundary
 
 Implication:
 

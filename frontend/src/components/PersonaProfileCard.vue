@@ -5,6 +5,11 @@ const props = defineProps({
 
 const toList = (value) => (Array.isArray(value) ? value : [])
 
+const maskSensitiveId = (value) => String(value ?? '').replace(
+  /(\d{6})[0-9A-Za-z]{8}([0-9A-Za-z]{4})/g,
+  '$1********$2',
+)
+
 const resolveRiskType = (riskLevel) => {
   if (riskLevel === 'low') return 'success'
   if (riskLevel === 'high') return 'danger'
@@ -87,14 +92,14 @@ const buildAttentionItems = (profile) => {
     <div class="persona-head">
       <div class="persona-head-left">
         <div class="persona-tag-row">
-          <el-tag v-if="profile.mock_persona_code" type="primary">画像 {{ profile.mock_persona_code }}</el-tag>
+          <el-tag v-if="profile.mock_persona_code" type="primary">样本 {{ profile.mock_persona_code }}</el-tag>
           <el-tag type="info" effect="plain">{{ profile.archetype || '未知类型' }}</el-tag>
           <el-tag :type="resolveRiskType(profile.risk_level)" effect="plain">
             争议强度：{{ resolveRiskLabel(profile.risk_level) }}
           </el-tag>
         </div>
-        <div class="persona-title">{{ profile.title || '未命名画像' }}</div>
-        <div class="persona-summary">{{ profile.summary_line || '暂无画像摘要' }}</div>
+        <div class="persona-title">{{ maskSensitiveId(profile.title || '证据驱动画像') }}</div>
+        <div class="persona-summary">{{ maskSensitiveId(profile.summary_line || '暂无证据摘要') }}</div>
       </div>
 
       <div class="persona-overview">
@@ -115,22 +120,22 @@ const buildAttentionItems = (profile) => {
 
     <div class="persona-focus-grid">
       <div class="focus-panel">
-        <div class="section-title">本案焦点</div>
+        <div class="section-title">取证摘要</div>
         <div v-if="buildFocusItems(profile).length" class="focus-list">
           <div v-for="item in buildFocusItems(profile)" :key="item.title" class="focus-item">
             <el-tag :type="item.type" effect="plain" size="small">{{ item.title }}</el-tag>
-            <div class="focus-text">{{ item.content }}</div>
+            <div class="focus-text">{{ maskSensitiveId(item.content) }}</div>
           </div>
         </div>
         <div v-else class="signal-empty">暂无焦点信息</div>
       </div>
 
       <div class="focus-panel">
-        <div class="section-title">辩论前应关注什么</div>
+        <div class="section-title">辩论前关注</div>
         <div v-if="buildAttentionItems(profile).length" class="attention-list">
           <div v-for="(item, index) in buildAttentionItems(profile)" :key="`${item.label}-${index}`" class="attention-item">
             <el-tag :type="item.type" effect="dark" size="small">{{ item.label }}</el-tag>
-            <div class="attention-text">{{ item.text }}</div>
+            <div class="attention-text">{{ maskSensitiveId(item.text) }}</div>
           </div>
         </div>
         <div v-else class="signal-empty">暂无额外提示</div>
@@ -139,60 +144,68 @@ const buildAttentionItems = (profile) => {
 
     <div class="persona-core-grid">
       <div class="core-block">
-        <div class="core-label">画像</div>
-        <div class="core-text">{{ profile.portrait || '暂无' }}</div>
+        <div class="core-label">生成依据</div>
+        <div class="core-text">{{ maskSensitiveId(profile.portrait || '暂无') }}</div>
       </div>
       <div class="core-block">
-        <div class="core-label">核心意图</div>
-        <div class="core-text">{{ profile.core_intent || '暂无' }}</div>
+        <div class="core-label">使用边界</div>
+        <div class="core-text">{{ maskSensitiveId(profile.core_intent || '暂无') }}</div>
       </div>
       <div class="core-block core-block--wide">
-        <div class="core-label">实质争议</div>
-        <div class="core-text">{{ profile.substantive_dispute || '暂无' }}</div>
+        <div class="core-label">主要缺口或争议</div>
+        <div class="core-text">{{ maskSensitiveId(profile.substantive_dispute || '暂无') }}</div>
       </div>
     </div>
 
     <div class="signal-grid">
       <div class="signal-block signal-positive">
-        <div class="signal-title">正向信号</div>
+        <div class="signal-title">支持事实</div>
         <ul v-if="toList(profile.positive_signals).length" class="signal-list">
-          <li v-for="item in toList(profile.positive_signals)" :key="item">{{ item }}</li>
+          <li v-for="item in toList(profile.positive_signals)" :key="item">{{ maskSensitiveId(item) }}</li>
         </ul>
         <div v-else class="signal-empty">暂无</div>
       </div>
 
       <div class="signal-block signal-risk">
-        <div class="signal-title">风险信号</div>
+        <div class="signal-title">反向或风险</div>
         <ul v-if="toList(profile.risk_signals).length" class="signal-list">
-          <li v-for="item in toList(profile.risk_signals)" :key="item">{{ item }}</li>
+          <li v-for="item in toList(profile.risk_signals)" :key="item">{{ maskSensitiveId(item) }}</li>
         </ul>
         <div v-else class="signal-empty">暂无</div>
       </div>
 
       <div class="signal-block signal-missing">
-        <div class="signal-title">缺失信号</div>
+        <div class="signal-title">证据缺口</div>
         <ul v-if="toList(profile.missing_signals).length" class="signal-list">
-          <li v-for="item in toList(profile.missing_signals)" :key="item">{{ item }}</li>
+          <li v-for="item in toList(profile.missing_signals)" :key="item">{{ maskSensitiveId(item) }}</li>
         </ul>
         <div v-else class="signal-empty">暂无</div>
       </div>
     </div>
 
     <div v-if="toList(profile.dispute_points).length" class="persona-section">
-      <div class="section-title">争议拆解</div>
+      <div class="section-title">待辩焦点</div>
       <div class="dispute-points">
         <div v-for="item in toList(profile.dispute_points)" :key="item" class="dispute-chip">
-          {{ item }}
+          {{ maskSensitiveId(item) }}
         </div>
       </div>
     </div>
 
     <div v-if="toList(profile.fact_cards).length" class="persona-section">
-      <div class="section-title">案件事实底卡</div>
+      <div class="section-title">关键证据事实</div>
       <div class="fact-grid">
         <div v-for="fact in toList(profile.fact_cards)" :key="`${fact.label}-${fact.value}`" class="fact-card">
-          <div class="fact-label">{{ fact.label }}</div>
-          <div class="fact-value">{{ fact.value }}</div>
+          <div class="fact-meta">
+            <div class="fact-label">{{ fact.label }}</div>
+            <el-tag v-if="fact.source" size="small" effect="plain">
+              {{ fact.source === 'evidence' ? '证据' : (fact.source === 'database_fallback' ? '兜底' : '推断') }}
+            </el-tag>
+          </div>
+          <div class="fact-value">{{ maskSensitiveId(fact.value) }}</div>
+          <div v-if="toList(fact.evidence_refs).length" class="fact-refs">
+            {{ toList(fact.evidence_refs).join('、') }}
+          </div>
         </div>
       </div>
     </div>
@@ -274,7 +287,7 @@ const buildAttentionItems = (profile) => {
 }
 
 .signal-grid {
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
 .focus-panel,
@@ -362,7 +375,7 @@ const buildAttentionItems = (profile) => {
 }
 
 .dispute-chip {
-  padding: 8px 10px;
+  padding: 10px 14px;
   border-radius: 999px;
   background: rgba(197, 139, 43, 0.12);
   color: #C58B2B;
@@ -373,8 +386,8 @@ const buildAttentionItems = (profile) => {
 .fact-grid {
   margin-top: 10px;
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 10px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
 }
 
 .fact-label {
@@ -382,11 +395,26 @@ const buildAttentionItems = (profile) => {
   color: var(--text-muted);
 }
 
+.fact-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
 .fact-value {
   margin-top: 8px;
   color: var(--text-primary);
   line-height: 1.7;
   word-break: break-word;
+}
+
+.fact-refs {
+  margin-top: 8px;
+  color: var(--text-dim);
+  font-size: 12px;
+  line-height: 1.5;
+  word-break: break-all;
 }
 
 @media (max-width: 1200px) {
@@ -400,9 +428,7 @@ const buildAttentionItems = (profile) => {
   }
 
   .persona-focus-grid,
-  .persona-core-grid,
-  .signal-grid,
-  .fact-grid {
+  .persona-core-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -413,6 +439,13 @@ const buildAttentionItems = (profile) => {
   .signal-grid,
   .fact-grid,
   .persona-overview {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 960px) {
+  .signal-grid,
+  .fact-grid {
     grid-template-columns: 1fr;
   }
 }

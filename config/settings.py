@@ -41,8 +41,19 @@ class Settings(BaseSettings):
     db_port: int = 3306
     db_user: str = "root"
     db_password: str = ""
-    db_name: str = "bysj_t2s"
+    db_name: str = "zhicetong_t2s"
     db_charset: str = "utf8mb4"
+
+    # ----------------------------------------------------------
+    # 本地示例业务数据源配置
+    # DB_* 保留给系统库/历史持久化；local_mysql_demo_* 专用于取证样本库。
+    # ----------------------------------------------------------
+    local_mysql_demo_db_host: str = ""
+    local_mysql_demo_db_port: int = 0
+    local_mysql_demo_db_user: str = ""
+    local_mysql_demo_db_password: str = ""
+    local_mysql_demo_db_name: str = "zhicetong_t2s"
+    local_mysql_demo_db_charset: str = "utf8mb4"
 
     # ----------------------------------------------------------
     # 系统运行参数
@@ -63,6 +74,17 @@ class Settings(BaseSettings):
             f"@{self.db_host}:{self.db_port}/{self.db_name}"
             f"?charset={self.db_charset}"
         )
+
+    @property
+    def local_mysql_demo_db_url(self) -> str:
+        """SQLAlchemy URL for the local demo business data source."""
+        host = self.local_mysql_demo_db_host or self.db_host
+        port = self.local_mysql_demo_db_port or self.db_port
+        user = self.local_mysql_demo_db_user or self.db_user
+        password = self.local_mysql_demo_db_password if self.local_mysql_demo_db_password else self.db_password
+        name = self.local_mysql_demo_db_name or "zhicetong_t2s"
+        charset = self.local_mysql_demo_db_charset or self.db_charset
+        return f"mysql+pymysql://{user}:{password}@{host}:{port}/{name}?charset={charset}"
 
     @property
     def use_openai_compat(self) -> bool:

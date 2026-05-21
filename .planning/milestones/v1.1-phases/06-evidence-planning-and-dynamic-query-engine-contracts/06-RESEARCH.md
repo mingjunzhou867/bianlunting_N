@@ -13,9 +13,9 @@ Find the safest way to formalize evidence planning, dynamic query generation, bo
 
 The existing assets in:
 
-- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/sql_templates.py)
-- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/evidence_collector.py)
-- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py)
+- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/sql_templates.py)
+- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/evidence_collector.py)
+- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py)
 
 already imply:
 

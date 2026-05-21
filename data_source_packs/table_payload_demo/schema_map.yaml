@@ -1,0 +1,19 @@
+entities:
+  uploaded_record:
+    table: request.table_payload.records
+    id_field: target_id_card
+    description: 请求体中直接提供的证据记录
+    fields:
+      applicant_id: target_id_card
+      rule_id: rule_id
+      target: target
+      category: category
+      result_summary: result_summary
+      supports_conclusion: supports_conclusion
+  uploaded_table:
+    table: request.table_payload.tables
+    id_field: target_id_card
+    description: 请求体中按表名提供的表格行
+    fields:
+      applicant_id: target_id_card
+      source_table: source_table

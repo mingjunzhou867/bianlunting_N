@@ -47,6 +47,28 @@ class TestEvidencePlanner(unittest.TestCase):
         self.assertFalse(hasattr(first, "sql"))
         self.assertTrue(all("SELECT " not in note for note in first.notes_for_query_generation))
 
+    def test_policy_pack_requirements_drive_runtime_plan(self) -> None:
+        plan = plan_evidence("42090219760310000D", "POLICY_001")
+
+        self.assertGreaterEqual(len(plan.items), 7)
+        life_status = next(item for item in plan.items if item.question_id == "life_status")
+        self.assertEqual(life_status.rule_id, "P001_MUST_001")
+        self.assertIn("person", life_status.evidence_targets)
+        self.assertIn("person.life_status", life_status.allowed_fields)
+        self.assertIn("policy_pack_id:flexible_employment_subsidy", life_status.notes_for_query_generation)
+        self.assertIn("requirement_id:life_status", life_status.notes_for_query_generation)
+        recent_unit_payment = next(item for item in plan.items if item.question_id == "recent_unit_payment")
+        self.assertIn("social_insurance_payment.insurer_status", recent_unit_payment.allowed_fields)
+
+    def test_policy_pack_plan_keeps_rules_without_explicit_requirement(self) -> None:
+        plan = plan_evidence("42090219760310000D", "POLICY_001")
+
+        rule_ids = {item.rule_id for item in plan.items}
+        self.assertIn("P001_FLEX_005", rule_ids)
+        historical_subsidy = next(item for item in plan.items if item.rule_id == "P001_FLEX_005")
+        self.assertIn("subsidy_payment_history", historical_subsidy.evidence_targets)
+        self.assertTrue(historical_subsidy.sql_template)
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -66,7 +66,7 @@ CENTER - "规则-数据映射层":
 A diamond shape labeled "EvidencePlanner" with arrows pointing to it from the left and pointing to the right.
 Below it, a box labeled "SQL模板 / 动态SQL生成" with fields: evidence_targets, relevant_fields, sql_template
 
-RIGHT SIDE - "业务数据库 (MySQL bysj)":
+RIGHT SIDE - "业务数据库 (MySQL zhicetong_t2s)":
 A vertical stack of database cylinder icons with table names:
 1. "person (人员信息)" - fields: id_card, name, age, gender
 2. "company_info (企业信息)" - fields: company_id, business_type

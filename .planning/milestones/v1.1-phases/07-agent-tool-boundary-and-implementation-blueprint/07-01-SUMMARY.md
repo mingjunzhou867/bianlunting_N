@@ -11,8 +11,8 @@ Completed the formal debate-agent input contract for the expanded architecture.
 
 Artifacts produced:
 
-- [07-AGENT-EVIDENCE-PROJECTION-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-AGENT-EVIDENCE-PROJECTION-CONTRACT.md)
-- [07-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-CONTEXT.md)
+- [07-AGENT-EVIDENCE-PROJECTION-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-AGENT-EVIDENCE-PROJECTION-CONTRACT.md)
+- [07-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-CONTEXT.md)
 
 Key outcomes:
 

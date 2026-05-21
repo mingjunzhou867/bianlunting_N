@@ -215,7 +215,7 @@ This makes later explanation and audit possible without storing static SQL as th
 
 ## Relationship To Existing Static Assets
 
-The current codebase already contains a predecessor in [sql_templates.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/sql_templates.py).
+The current codebase already contains a predecessor in [sql_templates.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/sql_templates.py).
 
 That predecessor expresses:
 

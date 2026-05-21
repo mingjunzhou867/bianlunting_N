@@ -182,14 +182,14 @@ const resolveEmptyText = (item) => {
 .head-left {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 6px;
 }
 
 .category-badge {
   display: inline-block;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 700;
-  padding: 2px 8px;
+  padding: 3px 10px;
   border-radius: 99px;
   letter-spacing: 0.4px;
 }
@@ -235,8 +235,8 @@ const resolveEmptyText = (item) => {
 .evidence-steps {
   display: flex;
   flex-direction: column;
-  padding: 16px 18px;
-  gap: 12px;
+  padding: 18px 20px;
+  gap: 14px;
 }
 
 .step {
@@ -247,10 +247,10 @@ const resolveEmptyText = (item) => {
 
 .step-badge {
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 800;
   display: flex;
   align-items: center;
@@ -295,8 +295,8 @@ const resolveEmptyText = (item) => {
 
 .step-type {
   font-weight: 600;
-  font-size: 10px;
-  padding: 1px 6px;
+  font-size: 11px;
+  padding: 2px 7px;
   border-radius: 4px;
   background: rgba(148, 163, 184, 0.15);
   color: var(--text-muted);
@@ -357,7 +357,7 @@ const resolveEmptyText = (item) => {
 .result-table th,
 .result-table td {
   border: 1px solid rgba(148, 163, 184, 0.14);
-  padding: 6px 8px;
+  padding: 8px 10px;
   text-align: left;
   vertical-align: top;
 }
@@ -383,7 +383,7 @@ const resolveEmptyText = (item) => {
   background: rgba(160, 106, 42, 0.12);
   border: 1px solid rgba(160, 106, 42, 0.34);
   border-radius: 8px;
-  padding: 8px 10px;
+  padding: 10px 12px;
 }
 
 .step-summary {

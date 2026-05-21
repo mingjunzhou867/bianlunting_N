@@ -84,6 +84,7 @@ class DebateOrchestratorPersistenceTests(unittest.TestCase):
         self.orchestrator = DebateOrchestrator()
         self.orchestrator.collector.collect_all = lambda _id_card, policy_id="POLICY_001": self.bundle
         self.orchestrator.collector.collect_stream = lambda _id_card, policy_id="POLICY_001": iter(self.bundle.items)
+        self.orchestrator._current_policy_name = "灵活就业社保补贴资格认定"
         self.orchestrator.agents = [
             StubAgent("agent_1", "strict", PASS_CONCLUSION, SUPPORT_STANCE),
             StubAgent("agent_2", "lenient", PASS_CONCLUSION, SUPPORT_STANCE),
@@ -99,6 +100,7 @@ class DebateOrchestratorPersistenceTests(unittest.TestCase):
         self.assertEqual(result["id_card"], self.bundle.id_card)
         self.assertEqual(result["final_conclusion"], PASS_CONCLUSION)
         self.assertEqual(result["final_stance"], SUPPORT_STANCE)
+        self.assertEqual(result["data_source_id"], "local_mysql_demo")
         self.assertEqual(result["rounds_taken"], 0)
         self.assertEqual(len(result["history"]), 1)
         self.assertIn("arbiter_result", result)
@@ -107,6 +109,7 @@ class DebateOrchestratorPersistenceTests(unittest.TestCase):
         persist_mock.assert_called_once()
         kwargs = persist_mock.call_args.kwargs
         self.assertEqual(kwargs["source_endpoint"], "/api/debate")
+        self.assertEqual(kwargs["data_source_id"], "local_mysql_demo")
         self.assertEqual(kwargs["session_id"], result["session_id"])
         self.assertEqual(kwargs["bundle"].id_card, self.bundle.id_card)
         self.assertEqual(len(kwargs["history"]), 1)

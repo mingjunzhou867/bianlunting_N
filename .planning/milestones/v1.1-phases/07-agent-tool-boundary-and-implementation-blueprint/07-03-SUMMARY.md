@@ -11,9 +11,9 @@ Completed the final implementation blueprint for the `v1.1` design milestone.
 
 Artifacts produced:
 
-- [07-IMPLEMENTATION-BLUEPRINT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-IMPLEMENTATION-BLUEPRINT.md)
-- [07-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-CONTEXT.md)
-- [STATE.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/STATE.md)
+- [07-IMPLEMENTATION-BLUEPRINT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-IMPLEMENTATION-BLUEPRINT.md)
+- [07-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-CONTEXT.md)
+- [STATE.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/STATE.md)
 
 Key outcomes:
 

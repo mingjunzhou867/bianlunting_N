@@ -1,9 +1,10 @@
 """Text-to-SQL tool for agent tool calling."""
 import json
 from sqlalchemy import text
-from config.database import get_session
+from data_sources.session import get_session_for_data_source
 from text2sql.dynamic.text2sql_agent import Text2SQLAgent
 from cognition.evidence_planner import EvidencePlanItem, QuestionType
+from privacy.sanitizer import prepare_sql_for_execution, sanitize_for_llm
 
 
 class Text2SQLTool:
@@ -42,7 +43,7 @@ class Text2SQLTool:
             }
         }
 
-    def execute(self, intent: str, person_id: str, table_hints=None, dict_refs=None) -> str:
+    def execute(self, intent: str, person_id: str, table_hints=None, dict_refs=None, data_source_id: str = "local_mysql_demo") -> str:
         plan_item = EvidencePlanItem(
             plan_item_id=intent[:10],
             rule_id=intent[:10],
@@ -54,23 +55,25 @@ class Text2SQLTool:
         )
 
         agent = Text2SQLAgent()
-        sql = agent.generate_sql(plan_item, person_id)
-        executable_sql = sql.replace("id_card_replace", person_id)
+        sql = agent.generate_sql(plan_item, person_id, data_source_id=data_source_id)
+        executable_sql = prepare_sql_for_execution(sql, person_id)
 
         try:
-            with get_session() as session:
+            with get_session_for_data_source(data_source_id) as session:
                 result = session.execute(text(executable_sql))
                 rows = [dict(zip(result.keys(), row)) for row in result.fetchall()]
 
-            return json.dumps({
+            payload = {
                 "status": "success",
-                "sql": executable_sql,
+                "sql": sanitize_for_llm(executable_sql, person_id),
                 "data": rows,
                 "row_count": len(rows)
-            }, ensure_ascii=False)
+            }
+            return sanitize_for_llm(json.dumps(payload, ensure_ascii=False), person_id)
         except Exception as e:
-            return json.dumps({
+            payload = {
                 "status": "error",
-                "sql": executable_sql,
-                "error": str(e)
-            }, ensure_ascii=False)
+                "sql": sanitize_for_llm(executable_sql, person_id),
+                "error": sanitize_for_llm(str(e), person_id),
+            }
+            return sanitize_for_llm(json.dumps(payload, ensure_ascii=False), person_id)

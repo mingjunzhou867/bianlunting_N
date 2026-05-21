@@ -1,0 +1,271 @@
+basic_conditions:
+  - rule_id: P003_MUST_001
+    description: "筛查近30天有效全日制企业增员人员，作为主动服务候选名单。"
+    sql_template_ref: >
+      SELECT er.id_card, p.name, p.gender, p.birth_date, p.hukou_region,
+             p.life_status, p.system_status, er.employment_form,
+             er.employment_date, er.sync_date, er.company_id, ci.company_name,
+             ci.company_type
+      FROM employment_registration er
+      JOIN person p ON er.id_card = p.id_card
+      JOIN company_info ci ON er.company_id = ci.company_id
+      WHERE er.is_valid = '1'
+        AND er.employment_form = '全日制用工'
+        AND er.employment_date >= DATE_SUB(:system_date, INTERVAL 30 DAY)
+        AND p.life_status = '生存'
+        AND p.system_status = '1'
+      ORDER BY er.employment_date DESC
+    requires_detail_query: true
+    allowed_fields:
+      - employment_registration.id_card
+      - employment_registration.employment_form
+      - employment_registration.employment_date
+      - employment_registration.sync_date
+      - employment_registration.company_id
+      - employment_registration.is_valid
+      - person.id_card
+      - person.name
+      - person.gender
+      - person.birth_date
+      - person.hukou_region
+      - person.life_status
+      - person.system_status
+      - company_info.company_id
+      - company_info.company_name
+      - company_info.company_type
+      - company_info.is_valid
+    evidence_targets:
+      - employment
+      - person
+      - company_info
+    notes_for_query_generation:
+      - "仅使用 employment_registration、person、company_info 中已映射字段。"
+      - "当前库没有企业注册地址字段，不能自动判断单位注册地是否属于孝感市。"
+
+  - rule_id: P003_MUST_002
+    description: "核查候选人员是否为本市户籍人员；当前数据库只能使用 person.hukou_region 作为本市线索。"
+    sql_template_ref: >
+      SELECT id_card, name, hukou_region, life_status, system_status
+      FROM person
+      WHERE id_card = :id_card
+        AND hukou_region LIKE '孝感%'
+        AND life_status = '生存'
+        AND system_status = '1'
+    requires_detail_query: true
+    allowed_fields:
+      - person.id_card
+      - person.name
+      - person.hukou_region
+      - person.life_status
+      - person.system_status
+    evidence_targets:
+      - person
+    notes_for_query_generation:
+      - "这是人员户籍筛查，不等同于企业注册地校验。"
+
+  - rule_id: P003_MUST_003
+    description: "识别已做有效就业困难人员认定的候选人员，并返回困难类别与政策匹配标记。"
+    sql_template_ref: >
+      SELECT id_card, hardship_category, hardship_category_code,
+             hardship_policy_match, apply_date, certify_org, is_valid
+      FROM hardship_certification
+      WHERE id_card = :id_card
+        AND is_valid = '1'
+      ORDER BY apply_date DESC
+      LIMIT 1
+    requires_detail_query: true
+    allowed_fields:
+      - hardship_certification.id_card
+      - hardship_certification.hardship_category
+      - hardship_certification.hardship_category_code
+      - hardship_certification.hardship_policy_match
+      - hardship_certification.apply_date
+      - hardship_certification.certify_org
+      - hardship_certification.is_valid
+    evidence_targets:
+      - hardship_certification
+    no_data_summary: "未查询到有效就业困难人员认定记录，可继续按疑似规则生成主动服务线索。"
+    no_data_supports: null
+
+exclusion_conditions: []
+
+inference_rules:
+  - rule_id: P003_INFER_001
+    description: "识别疑似4050人员：女性年满40周岁或男性年满50周岁。"
+    sql_template_ref: >
+      SELECT id_card, name, gender, birth_date,
+             TIMESTAMPDIFF(YEAR, birth_date, :system_date) AS current_age
+      FROM person
+      WHERE id_card = :id_card
+        AND life_status = '生存'
+        AND system_status = '1'
+        AND (
+          (gender = '女' AND TIMESTAMPDIFF(YEAR, birth_date, :system_date) >= 40)
+          OR
+          (gender = '男' AND TIMESTAMPDIFF(YEAR, birth_date, :system_date) >= 50)
+        )
+    requires_detail_query: true
+    allowed_fields:
+      - person.id_card
+      - person.name
+      - person.gender
+      - person.birth_date
+      - person.life_status
+      - person.system_status
+    evidence_targets:
+      - person
+    no_data_summary: "未达到当前数据库可判断的4050年龄线索。"
+    no_data_supports: null
+
+  - rule_id: P003_INFER_002
+    description: "识别近一年无单位缴费记录的候选人员，作为疑似连续失业或就业困难服务线索。"
+    sql_template_ref: >
+      SELECT id_card, COUNT(*) AS recent_unit_payment_count,
+             MAX(pay_month) AS latest_unit_pay_month
+      FROM social_insurance_payment
+      WHERE id_card = :id_card
+        AND insurer_status = '101'
+        AND is_valid = '1'
+        AND pay_month >= DATE_FORMAT(DATE_SUB(:system_date, INTERVAL 12 MONTH), '%Y%m')
+      GROUP BY id_card
+    requires_detail_query: false
+    allowed_fields:
+      - social_insurance_payment.id_card
+      - social_insurance_payment.pay_month
+      - social_insurance_payment.insurer_status
+      - social_insurance_payment.is_valid
+    evidence_targets:
+      - social_insurance_payment
+    no_data_summary: "近一年未查询到单位缴费记录，可作为疑似连续失业或就业困难线索，但不能直接等同于政策资格结论。"
+    no_data_supports: true
+    assembler_guidance: >
+      该规则仅输出主动服务线索；近一年无单位缴费记录不能直接替代失业登记、困难认定或最终资格结论。
+
+  - rule_id: P003_INFER_003
+    description: "核查是否已有失业登记记录；无记录时输出失业登记提醒。"
+    sql_template_ref: >
+      SELECT record_id, id_card, unemployment_date, unemployment_reason,
+             register_date, cancel_date, is_valid
+      FROM unemployment_registration
+      WHERE id_card = :id_card
+        AND is_valid = '1'
+      ORDER BY register_date DESC
+      LIMIT 1
+    requires_detail_query: true
+    allowed_fields:
+      - unemployment_registration.record_id
+      - unemployment_registration.id_card
+      - unemployment_registration.unemployment_date
+      - unemployment_registration.unemployment_reason
+      - unemployment_registration.register_date
+      - unemployment_registration.cancel_date
+      - unemployment_registration.is_valid
+    evidence_targets:
+      - unemployment_registration
+    no_data_summary: "未查询到有效失业登记记录，应提醒经办人员核实是否需要办理或补充失业登记。"
+    no_data_supports: null
+
+  - rule_id: P003_INFER_004
+    description: "核查候选人员是否已有当前企业有效就业登记；无记录时输出就业登记提醒。"
+    sql_template_ref: >
+      SELECT record_id, id_card, company_id, employment_form,
+             employment_date, contract_start_date, contract_end_date,
+             sync_date, is_valid
+      FROM employment_registration
+      WHERE id_card = :id_card
+        AND is_valid = '1'
+      ORDER BY employment_date DESC, sync_date DESC
+    requires_detail_query: true
+    allowed_fields:
+      - employment_registration.record_id
+      - employment_registration.id_card
+      - employment_registration.company_id
+      - employment_registration.employment_form
+      - employment_registration.employment_date
+      - employment_registration.contract_start_date
+      - employment_registration.contract_end_date
+      - employment_registration.sync_date
+      - employment_registration.is_valid
+    evidence_targets:
+      - employment
+    no_data_summary: "未查询到有效就业登记记录，应提醒经办人员核实就业登记状态。"
+    no_data_supports: null
+
+  - rule_id: P003_INFER_005
+    description: "查询候选人员社保缴费与单位参保记录，用于判断是否存在单位缴费和服务对象身份变化。"
+    sql_template_ref: >
+      SELECT sip.id_card, sip.pay_month, sip.insurance_type,
+             sip.insurer_status, sip.pay_base, sip.company_id,
+             ci.company_name, ci.company_type
+      FROM social_insurance_payment sip
+      LEFT JOIN company_info ci ON sip.company_id = ci.company_id
+      WHERE sip.id_card = :id_card
+        AND sip.is_valid = '1'
+      ORDER BY sip.pay_month DESC, sip.insurance_type
+    requires_detail_query: true
+    allowed_fields:
+      - social_insurance_payment.id_card
+      - social_insurance_payment.pay_month
+      - social_insurance_payment.insurance_type
+      - social_insurance_payment.insurer_status
+      - social_insurance_payment.pay_base
+      - social_insurance_payment.company_id
+      - social_insurance_payment.is_valid
+      - company_info.company_id
+      - company_info.company_name
+      - company_info.company_type
+    evidence_targets:
+      - social_insurance_payment
+      - company_info
+    no_data_summary: "未查询到社保缴费记录，应作为数据缺口提示，不直接作出服务对象排除结论。"
+    no_data_supports: null
+
+  - rule_id: P003_INFER_006
+    description: "查询参保身份变更日志，辅助识别从个人参保到单位参保等身份切换。"
+    sql_template_ref: >
+      SELECT change_id, id_card, insurance_type, old_status,
+             new_status, event_date, related_company_id, is_valid
+      FROM insurance_change_log
+      WHERE id_card = :id_card
+        AND is_valid = '1'
+      ORDER BY event_date DESC
+    requires_detail_query: true
+    allowed_fields:
+      - insurance_change_log.change_id
+      - insurance_change_log.id_card
+      - insurance_change_log.insurance_type
+      - insurance_change_log.old_status
+      - insurance_change_log.new_status
+      - insurance_change_log.event_date
+      - insurance_change_log.related_company_id
+      - insurance_change_log.is_valid
+    evidence_targets:
+      - insurance_change_log
+    no_data_summary: "未查询到参保身份变更记录，当前库未发现身份切换线索。"
+    no_data_supports: true
+
+calculation_rules:
+  - rule_id: P003_CALC_001
+    description: "查询历史补贴领取记录，作为主动服务重复享受和历史服务情况参考。"
+    sql_template_ref: >
+      SELECT id_card, policy_code, apply_start_month, apply_end_month,
+             first_enjoy_month, grant_months, grant_amount, grant_date, is_valid
+      FROM subsidy_payment_history
+      WHERE id_card = :id_card
+        AND is_valid = '1'
+      ORDER BY grant_date DESC, apply_end_month DESC
+    requires_detail_query: true
+    allowed_fields:
+      - subsidy_payment_history.id_card
+      - subsidy_payment_history.policy_code
+      - subsidy_payment_history.apply_start_month
+      - subsidy_payment_history.apply_end_month
+      - subsidy_payment_history.first_enjoy_month
+      - subsidy_payment_history.grant_months
+      - subsidy_payment_history.grant_amount
+      - subsidy_payment_history.grant_date
+      - subsidy_payment_history.is_valid
+    evidence_targets:
+      - subsidy_payment_history
+    no_data_summary: "未查询到历史补贴领取记录，可视为当前库暂无历史享受记录。"
+    no_data_supports: true

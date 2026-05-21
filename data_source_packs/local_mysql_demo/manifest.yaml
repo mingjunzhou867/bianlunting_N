@@ -1,0 +1,8 @@
+data_source_id: local_mysql_demo
+display_name: 本地 MySQL 示例库
+type: mysql
+version: 1.0.0
+description: 当前项目默认使用的本地 MySQL 样本业务库映射
+connection_ref: config/.env:local_mysql_demo
+charset: utf8mb4
+ddl_file: schema_struct.sql

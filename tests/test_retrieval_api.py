@@ -99,11 +99,137 @@ class RetrievalApiTests(unittest.TestCase):
             "Saved debate session not found: missing-session",
         )
 
+    @patch("api.main.search_saved_memory")
+    def test_memory_search_endpoint_returns_filtered_matches(self, search_saved_memory_mock) -> None:
+        search_saved_memory_mock.return_value = {
+            "query": "employment",
+            "policy_id": "POLICY_001",
+            "trust_level": "P0_DATA",
+            "source_type": "evidence",
+            "limit": 5,
+            "matches": [
+                {
+                    "session_id": "session-123",
+                    "policy_id": "POLICY_001",
+                    "completed_at": "2026-03-23T10:01:00",
+                    "masked_id_card": "4209**********000D",
+                    "record": {
+                        "memory_id": "mem_0001",
+                        "trust_level": "P0_DATA",
+                        "summary": "RULE_001: employment exists",
+                    },
+                }
+            ],
+        }
+
+        response = self.client.get(
+            "/api/memory/search",
+            params={
+                "q": "employment",
+                "policy_id": "POLICY_001",
+                "trust_level": "P0_DATA",
+                "source_type": "evidence",
+                "limit": 5,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["status"], "success")
+        self.assertEqual(payload["data"]["matches"][0]["record"]["memory_id"], "mem_0001")
+        search_saved_memory_mock.assert_called_once_with(
+            query="employment",
+            policy_id="POLICY_001",
+            trust_level="P0_DATA",
+            source_type="evidence",
+            limit=5,
+        )
+
+    @patch("api.main.list_policy_packs")
+    def test_policy_pack_endpoint_returns_available_packs(self, list_policy_packs_mock) -> None:
+        list_policy_packs_mock.return_value = [
+            {
+                "pack_id": "flexible_employment_subsidy",
+                "policy_id": "POLICY_001",
+                "policy_name": "灵活就业社保补贴资格认定",
+                "policy_type": "资格认定",
+                "version": "1.0.0",
+                "applicant_type": "person",
+                "description": "判断申请人是否符合灵活就业社保补贴申领资格",
+                "default_data_source_id": "local_mysql_demo",
+                "evidence_requirement_count": 7,
+            }
+        ]
+
+        response = self.client.get("/api/policy-packs")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["status"], "success")
+        self.assertEqual(payload["data"]["policy_packs"][0]["pack_id"], "flexible_employment_subsidy")
+
+    @patch("api.main.list_data_source_summaries")
+    def test_data_source_endpoint_returns_available_sources(self, list_data_source_summaries_mock) -> None:
+        list_data_source_summaries_mock.return_value = [
+            {
+                "data_source_id": "local_mysql_demo",
+                "display_name": "本地 MySQL 示例库",
+                "type": "mysql",
+                "version": "1.0.0",
+                "description": "当前项目默认使用的本地 MySQL 样本库映射",
+                "connection_ref": "config/.env",
+                "entity_count": 9,
+                "collector_count": 2,
+            }
+        ]
+
+        response = self.client.get("/api/data-sources")
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["status"], "success")
+        self.assertEqual(payload["data"]["data_sources"][0]["data_source_id"], "local_mysql_demo")
+
+    @patch("api.main.orchestrator.run_debate")
+    def test_debate_endpoint_passes_table_payload_to_orchestrator(self, run_debate_mock) -> None:
+        run_debate_mock.return_value = {"session_id": "session-table-payload"}
+        table_payload = {
+            "records": [
+                {
+                    "rule_id": "RULE_001",
+                    "result_summary": "employment status exists",
+                    "supports_conclusion": True,
+                }
+            ]
+        }
+
+        response = self.client.post(
+            "/api/debate",
+            json={
+                "id_card": "42090219760310000D",
+                "confirmed_policy_id": "POLICY_001",
+                "data_source_id": "table_payload_demo",
+                "table_payload": table_payload,
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["data"]["session_id"], "session-table-payload")
+        args, kwargs = run_debate_mock.call_args
+        self.assertEqual(args[0], "42090219760310000D")
+        self.assertEqual(kwargs["policy_id"], "POLICY_001")
+        self.assertEqual(kwargs["data_source_id"], "table_payload_demo")
+        self.assertEqual(kwargs["collection_context"], table_payload)
+
     def test_existing_debate_routes_remain_registered(self) -> None:
         routes = {(route.path, tuple(sorted(route.methods))) for route in app.routes if hasattr(route, "methods")}
 
         self.assertIn(("/api/debate", ("POST",)), routes)
         self.assertIn(("/api/debate_stream", ("POST",)), routes)
+        self.assertIn(("/api/memory/search", ("GET",)), routes)
+        self.assertIn(("/api/policy-packs", ("GET",)), routes)
+        self.assertIn(("/api/data-sources", ("GET",)), routes)
 
 
 if __name__ == "__main__":

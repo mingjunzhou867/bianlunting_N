@@ -32,6 +32,9 @@ class EvidenceAssembler:
     将数据库的 Raw JSON 结果转成下游 Agent 易于理解的自然语言摘要。
     """
 
+    def __init__(self, guidance_map: dict[str, str] | None = None):
+        self._guidance_map = guidance_map or {}
+
     def _question_text(self, plan_item: EvidencePlanItem) -> str:
         return getattr(plan_item, "question_text", None) or plan_item.rule_name
 
@@ -39,14 +42,10 @@ class EvidenceAssembler:
         return getattr(plan_item, "expected_answer_shape", None) or plan_item.rule_description
 
     def _rule_specific_guidance(self, plan_item: EvidencePlanItem) -> str:
-        if plan_item.rule_id == "P001_FLEX_004":
-            return (
-                "补充约束：这是“异常波动风险提示”而不是资格否决条款。"
-                "只有证据明确显示缴费基数出现大幅异常波动时，才可概括为需要关注的风险信号；"
-                "若缴费基数连续稳定、无明显波动或仅轻微变化，必须表述为“未发现异常波动”，"
-                "supports_conclusion 必须为 null，不得解释为负面证据，更不得据此推导“不符合资格”。"
-            )
-        return "若原始数据仅能反映普通稳定状态，请保持中性概括，避免把“未见异常”误写成反向风险。"
+        # 优先从 policy pack 的 guidance_map 读取
+        if plan_item.rule_id in self._guidance_map:
+            return self._guidance_map[plan_item.rule_id]
+        return "若原始数据仅能反映普通稳定状态，请保持中性概括，避免把'未见异常'误写成反向风险。"
 
     def assemble(self, plan_item: EvidencePlanItem, raw_data: list[dict[str, Any]]) -> AssemblerResult:
         if not raw_data:
@@ -66,7 +65,7 @@ class EvidenceAssembler:
 
 【你的任务】
 1. 用一句流畅连贯的中文，清晰概括出这条 JSON 意味着什么，避免直接复述 JSON 语法。
-2. 根据这个数据本身，明确回答它是“支持了条件”“违背了条件”还是“没有足够依据表明”。
+2. 根据这个数据本身，明确回答它是"支持了条件""违背了条件"还是"没有足够依据表明"。
 
 【输出格式】严格输出纯净无瑕的 JSON 对象：
 {{

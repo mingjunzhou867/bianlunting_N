@@ -16,6 +16,7 @@ from agents.debate_persistence import (
     build_completed_session_records,
     get_saved_session_detail,
     list_saved_sessions,
+    search_saved_memory,
 )
 from evidence.evidence_model import EvidenceBundle, EvidenceItem
 
@@ -130,6 +131,7 @@ class DebatePersistenceContractTests(unittest.TestCase):
             completed_at=datetime(2026, 3, 23, 10, 1, 0),
             arbiter_result={"summary": "维持多数意见"},
             persona={"title": "测试画像", "archetype": "测试类型"},
+            data_source_id="local_mysql_demo",
         )
 
         self.assertEqual(persisted.session_row["id_card"], bundle.id_card)
@@ -147,6 +149,10 @@ class DebatePersistenceContractTests(unittest.TestCase):
         self.assertEqual(snapshot["evidence"][0]["rule_id"], "RULE_001")
         self.assertEqual(snapshot["evidence"][0]["result_raw"][0]["company_id"], "91420900000000001X")
         self.assertEqual(snapshot["persona"]["title"], "测试画像")
+        self.assertEqual(snapshot["memory_snapshot"]["policy_id"], "POLICY_001")
+        self.assertEqual(snapshot["data_source_id"], "local_mysql_demo")
+        self.assertEqual(snapshot["summary"]["data_source_id"], "local_mysql_demo")
+        self.assertGreaterEqual(snapshot["memory_snapshot"]["counts_by_trust_level"]["P0_DATA"], 1)
 
     def test_mysql_ddl_matches_runtime_contract(self) -> None:
         ddl = DDL_PATH.read_text(encoding="utf-8")
@@ -292,6 +298,61 @@ class DebatePersistenceContractTests(unittest.TestCase):
         with patch("agents.debate_persistence.get_session", fake_get_session):
             with self.assertRaises(DebateSessionNotFoundError):
                 get_saved_session_detail("missing-session")
+
+    def test_search_saved_memory_filters_records_and_masks_identity(self) -> None:
+        snapshot = {
+            "memory_snapshot": {
+                "session_id": "session-123",
+                "policy_id": "POLICY_001",
+                "records": [
+                    {
+                        "memory_id": "mem_0001",
+                        "trust_level": "P0_DATA",
+                        "source_type": "evidence",
+                        "source_id": "RULE_001_1",
+                        "summary": "RULE_001: employment exists",
+                        "payload": {"rule_id": "RULE_001", "exec_status": "success"},
+                    },
+                    {
+                        "memory_id": "mem_0002",
+                        "trust_level": "P3_AGENT",
+                        "source_type": "agent_judgment",
+                        "source_id": "agent_1_round_0",
+                        "summary": "agent noted a possible conflict",
+                        "payload": {"agent_id": "agent_1"},
+                    },
+                ],
+            }
+        }
+        rows = [
+            {
+                "session_id": "session-123",
+                "id_card": "42090219760310000D",
+                "policy_id": "POLICY_001",
+                "completed_at": datetime(2026, 3, 23, 10, 1, 0),
+                "snapshot_payload": json.dumps(snapshot, ensure_ascii=False),
+            }
+        ]
+
+        @contextmanager
+        def fake_get_session():
+            yield FakeSession(rows)
+
+        with patch("agents.debate_persistence.get_session", fake_get_session):
+            result = search_saved_memory(
+                query="employment",
+                policy_id="POLICY_001",
+                trust_level="P0_DATA",
+                limit=10,
+            )
+
+        self.assertEqual(result["policy_id"], "POLICY_001")
+        self.assertEqual(len(result["matches"]), 1)
+        match = result["matches"][0]
+        self.assertEqual(match["session_id"], "session-123")
+        self.assertEqual(match["masked_id_card"], "4209**********000D")
+        self.assertNotIn("id_card", match)
+        self.assertEqual(match["record"]["memory_id"], "mem_0001")
 
 
 if __name__ == "__main__":

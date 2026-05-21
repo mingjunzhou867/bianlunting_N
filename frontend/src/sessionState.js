@@ -23,6 +23,8 @@ export const buildEmptySession = (idCard) => ({
   started_at: '',
   completed_at: '',
   view_source: 'live',
+  roundLoading: false,
+  loadingRound: 0,
 })
 
 const LEGACY_RISK_TEXT_FIXUPS = new Map([
@@ -147,6 +149,8 @@ export const applyStreamEventToSession = (session, payload, activeIdCard = '') =
     return {
       ...session,
       history: ensureRound(session.history, roundNum),
+      roundLoading: true,
+      loadingRound: roundNum,
     }
   }
 
@@ -160,6 +164,7 @@ export const applyStreamEventToSession = (session, payload, activeIdCard = '') =
     return {
       ...session,
       history: nextHistory,
+      roundLoading: roundNum === session.loadingRound ? false : session.roundLoading,
     }
   }
 

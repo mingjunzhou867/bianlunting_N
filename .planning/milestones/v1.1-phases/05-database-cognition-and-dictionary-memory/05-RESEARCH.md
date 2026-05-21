@@ -11,7 +11,7 @@ Find the safest way to formalize dictionary artifacts and task-level semantic pa
 
 ### 1. `ADC310.json` is already the right style anchor for the first dictionary family
 
-The example in [ADC310.json](/c:/Users/afrangry/PycharmProjects/bysj_t2s/dicts/ADC310.json) has three important properties:
+The example in [ADC310.json](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/dicts/ADC310.json) has three important properties:
 
 - it is readable by humans
 - it is already close to prompt/tool consumption shape

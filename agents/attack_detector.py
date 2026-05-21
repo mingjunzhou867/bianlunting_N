@@ -50,12 +50,12 @@ class AttackDetector:
         if a.stance == ArgumentStance.INSUFFICIENT or b.stance == ArgumentStance.INSUFFICIENT:
             return []
 
-        shared = set(a.evidence_refs) & set(b.evidence_refs)
+        shared = set(a.evidence_refs or []) & set(b.evidence_refs or [])
         if not shared:
             return []
 
         attacks = []
-        weight = ATTACK_WEIGHT[AttackType.EVIDENCE_CONFLICT]
+        weight = ATTACK_WEIGHT[AttackType.REBUTTAL]
         evidence_desc = f"shared evidence: {', '.join(shared)}"
 
         # The argument with lower confidence attacks the higher one
@@ -65,7 +65,7 @@ class AttackDetector:
             attacks.append(AttackRelation(
                 attacker_id=weaker.arg_id,
                 target_id=stronger.arg_id,
-                attack_type=AttackType.EVIDENCE_CONFLICT,
+                attack_type=AttackType.REBUTTAL,
                 evidence=evidence_desc,
                 weight=weight,
             ))
@@ -74,14 +74,14 @@ class AttackDetector:
             attacks.append(AttackRelation(
                 attacker_id=a.arg_id,
                 target_id=b.arg_id,
-                attack_type=AttackType.EVIDENCE_CONFLICT,
+                attack_type=AttackType.REBUTTAL,
                 evidence=evidence_desc,
                 weight=weight,
             ))
             attacks.append(AttackRelation(
                 attacker_id=b.arg_id,
                 target_id=a.arg_id,
-                attack_type=AttackType.EVIDENCE_CONFLICT,
+                attack_type=AttackType.REBUTTAL,
                 evidence=evidence_desc,
                 weight=weight,
             ))
@@ -104,14 +104,14 @@ class AttackDetector:
             return []
 
         attacks = []
-        weight = ATTACK_WEIGHT[AttackType.RULE_CONFLICT]
+        weight = ATTACK_WEIGHT[AttackType.DEFEATER]
 
         # Lower confidence argument is attacked
         weaker, stronger = (a, b) if a.confidence < b.confidence else (b, a)
         attacks.append(AttackRelation(
             attacker_id=stronger.arg_id,
             target_id=weaker.arg_id,
-            attack_type=AttackType.RULE_CONFLICT,
+            attack_type=AttackType.DEFEATER,
             evidence=f"stance conflict: {stronger.stance.value} vs {weaker.stance.value}",
             weight=weight * stronger.confidence,
         ))
@@ -133,7 +133,7 @@ class AttackDetector:
             eid = card.card_id.replace("card_", "")
             card_status[eid] = card.status
 
-        for ref in a.evidence_refs:
+        for ref in (a.evidence_refs or []):
             status = card_status.get(ref)
             if status in ("missing", "unresolved"):
                 # B's stance is well-supported while A relies on weak evidence
@@ -141,9 +141,9 @@ class AttackDetector:
                     attacks.append(AttackRelation(
                         attacker_id=b.arg_id,
                         target_id=a.arg_id,
-                        attack_type=AttackType.LOGIC_FLAW,
+                        attack_type=AttackType.UNDERCUT,
                         evidence=f"argument relies on weak evidence: {ref} (status={status})",
-                        weight=ATTACK_WEIGHT[AttackType.LOGIC_FLAW],
+                        weight=ATTACK_WEIGHT[AttackType.UNDERCUT],
                     ))
 
         return attacks
@@ -167,7 +167,7 @@ class AttackDetector:
                 continue
             # Check if argument has missing evidence but still draws definite conclusion
             missing_refs = [
-                ref for ref in arg.evidence_refs
+                ref for ref in (arg.evidence_refs or [])
                 if card_status.get(ref) == "missing"
             ]
             if missing_refs:
@@ -176,9 +176,9 @@ class AttackDetector:
                     attacks.append(AttackRelation(
                         attacker_id=other.arg_id,
                         target_id=arg.arg_id,
-                        attack_type=AttackType.MISSING_DATA,
+                        attack_type=AttackType.UNDERMINING,
                         evidence=f"depends on missing evidence: {', '.join(missing_refs)}",
-                        weight=ATTACK_WEIGHT[AttackType.MISSING_DATA],
+                        weight=ATTACK_WEIGHT[AttackType.UNDERMINING],
                     ))
 
         return attacks

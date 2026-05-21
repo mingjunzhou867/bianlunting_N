@@ -51,7 +51,7 @@ def test_argument_graph_basic():
     # Add attack
     attack = AttackRelation(
         attacker_id="a1", target_id="a2",
-        attack_type=AttackType.EVIDENCE_CONFLICT,
+        attack_type=AttackType.REBUTTAL,
         evidence="shared R001", weight=0.9,
     )
     graph.add_attack(attack)
@@ -92,7 +92,7 @@ def test_acceptable_set():
     graph2.add_argument(make_arg("a2", ArgumentStance.REJECT, ["ev_R002"], 0.5))
     graph2.add_attack(AttackRelation(
         attacker_id="a1", target_id="a2",
-        attack_type=AttackType.RULE_CONFLICT,
+        attack_type=AttackType.DEFEATER,
         evidence="stance conflict", weight=0.7,
     ))
     acceptable2 = graph2.compute_acceptable_set()
@@ -107,11 +107,11 @@ def test_acceptable_set():
     graph3.add_argument(make_arg("a2", ArgumentStance.REJECT, [], 0.4))
     graph3.add_attack(AttackRelation(
         attacker_id="a1", target_id="a2",
-        attack_type=AttackType.EVIDENCE_CONFLICT, evidence="conflict", weight=0.9,
+        attack_type=AttackType.REBUTTAL, evidence="conflict", weight=0.9,
     ))
     graph3.add_attack(AttackRelation(
         attacker_id="a2", target_id="a1",
-        attack_type=AttackType.LOGIC_FLAW, evidence="flaw", weight=0.5,
+        attack_type=AttackType.UNDERCUT, evidence="flaw", weight=0.5,
     ))
     acceptable3 = graph3.compute_acceptable_set()
     print(f"  Mutual attack: acceptable={acceptable3}")
@@ -134,11 +134,11 @@ def test_finalize_arguments():
     # Mutual attack with similar weights -> both might end up undecided
     graph.add_attack(AttackRelation(
         attacker_id="a1", target_id="a2",
-        attack_type=AttackType.EVIDENCE_CONFLICT, evidence="conflict", weight=0.9,
+        attack_type=AttackType.REBUTTAL, evidence="conflict", weight=0.9,
     ))
     graph.add_attack(AttackRelation(
         attacker_id="a2", target_id="a1",
-        attack_type=AttackType.EVIDENCE_CONFLICT, evidence="conflict", weight=0.9,
+        attack_type=AttackType.REBUTTAL, evidence="conflict", weight=0.9,
     ))
 
     statuses = graph.finalize_arguments()
@@ -168,7 +168,7 @@ def test_attack_detector():
     a2 = make_arg("a2", ArgumentStance.REJECT, ["ev_R001"], 0.6)
     attacks = detector.detect([a1, a2])
     print(f"  Evidence conflict: {len(attacks)} attacks")
-    assert any(t.attack_type == AttackType.EVIDENCE_CONFLICT for t in attacks)
+    assert any(t.attack_type == AttackType.REBUTTAL for t in attacks)
     print("  [OK] Detected evidence conflict")
 
     # Stance conflict: PASS vs REJECT
@@ -176,7 +176,7 @@ def test_attack_detector():
     a4 = make_arg("a4", ArgumentStance.REJECT, ["ev_R004"], 0.5)
     attacks2 = detector.detect([a3, a4])
     print(f"  Stance conflict: {len(attacks2)} attacks")
-    assert any(t.attack_type == AttackType.RULE_CONFLICT for t in attacks2)
+    assert any(t.attack_type == AttackType.DEFEATER for t in attacks2)
     print("  [OK] Detected stance/rule conflict")
 
     # No attack when same stance
@@ -184,7 +184,7 @@ def test_attack_detector():
     a6 = make_arg("a6", ArgumentStance.PASS, ["ev_R006"], 0.8)
     attacks3 = detector.detect([a5, a6])
     # Should have no evidence_conflict or rule_conflict (same stance, different refs)
-    conflict_attacks = [t for t in attacks3 if t.attack_type in (AttackType.EVIDENCE_CONFLICT, AttackType.RULE_CONFLICT)]
+    conflict_attacks = [t for t in attacks3 if t.attack_type in (AttackType.REBUTTAL, AttackType.DEFEATER)]
     assert len(conflict_attacks) == 0
     print("  [OK] No conflict attack for same stance")
     print()
@@ -218,7 +218,7 @@ def test_missing_data_attack():
     a2 = make_arg("a2", ArgumentStance.REJECT, ["R002"], 0.8)
 
     attacks = detector.detect([a1, a2], projection)
-    missing_attacks = [t for t in attacks if t.attack_type == AttackType.MISSING_DATA]
+    missing_attacks = [t for t in attacks if t.attack_type == AttackType.UNDERMINING]
     print(f"  Missing data attacks: {len(missing_attacks)}")
     assert len(missing_attacks) > 0
     print("  [OK] Detected missing data attack")

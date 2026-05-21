@@ -42,18 +42,18 @@ This phase delivers a stable persistence foundation for completed debate session
 ## Existing Code Insights
 
 ### Reusable Assets
-- [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py): already creates `session_id`, `history`, and final result dicts that can seed the canonical snapshot
-- [evidence/evidence_model.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py): already defines structured evidence objects suitable for snapshot serialization
-- [agents/base_agent.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/base_agent.py): already defines the structured `AgentJudgment` shape for per-round persistence
+- [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py): already creates `session_id`, `history`, and final result dicts that can seed the canonical snapshot
+- [evidence/evidence_model.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py): already defines structured evidence objects suitable for snapshot serialization
+- [agents/base_agent.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/base_agent.py): already defines the structured `AgentJudgment` shape for per-round persistence
 
 ### Established Patterns
-- Backend returns plain dict payloads from orchestrator methods and streams shaped SSE events from [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
+- Backend returns plain dict payloads from orchestrator methods and streams shaped SSE events from [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py)
 - SQLAlchemy text queries are the existing pattern for database writes and reads
 - The current system treats `/api/debate` and `/api/debate_stream` as two entry points over the same orchestration logic
 
 ### Integration Points
 - Persistence changes must integrate into both `run_debate()` and `run_debate_stream()`
-- MySQL schema alignment starts from [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql)
+- MySQL schema alignment starts from [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql)
 - Future retrieval APIs will depend on the summary fields and full snapshot shape defined by this phase
 
 </code_context>

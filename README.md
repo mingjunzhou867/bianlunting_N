@@ -16,6 +16,40 @@
 
 因此，本项目采用“数据库事实约束 + 多角色辩论 + 仲裁裁决”的架构，使大模型不直接凭空作出判断，而是在结构化 SQL 证据的约束下进行审查推理，从而提升系统的可靠性、可解释性和工程落地价值。
 
+## 工程化快速入口
+
+本仓库已补充本地开发和工程化约定，详见 [docs/development.md](docs/development.md)。
+
+常用命令：
+
+```powershell
+# 后端配置
+Copy-Item config\.env.example config\.env
+
+# 后端依赖
+python -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements.txt
+
+# 前端依赖
+npm.cmd --prefix frontend install
+
+# 启动
+.\scripts\start-backend.ps1
+.\scripts\start-frontend.ps1
+
+# 测试
+.\scripts\test-backend.ps1 -Mode unit
+.\scripts\test-backend.ps1 -Mode api
+.\scripts\test-frontend.ps1 -Mode all
+```
+
+敏感配置只允许写入 `config/.env` 或 `frontend/.env`，不要提交真实 API Key、数据库密码、虚拟环境、缓存、临时日志和本地 Agent 技能目录。
+
+当前工程化改造已把政策与数据源拆成可插拔包：`policy_packs/` 保存独立政策定义，`data_source_packs/` 保存独立数据源定义。默认保留 `local_mysql_demo`，同时提供 `table_payload_demo`，用于在没有同步数据库时把客户系统、Excel 或表单 API 输出的结构化行直接转成证据卡片。
+
+运行时取证计划已优先由政策包驱动：政策包声明“要取什么证”，数据源包声明“这些证据字段落在哪些表/资源”，collector 决定“怎么取”。提交前可运行 `.\scripts\validate-packs.ps1` 校验可插拔包契约。
+
 ## 2. 项目架构
 
 ### 2.1 总体架构
@@ -54,22 +88,26 @@ MySQL 业务数据库 / 政策规则文件 / 评测样本
 ### 2.2 目录结构
 
 ```text
-bysj_t2s-master/
+zhicetong_t2s/
 ├── agents/                     # 多智能体角色、辩论编排、裁决与会话持久化
 ├── api/                        # FastAPI 后端接口入口
 ├── cognition/                  # 政策认知、问题模板、语义包和取证规划
 ├── config/                     # 系统配置、数据库连接、LLM 客户端配置
 ├── data/                       # 数据库结构、模拟数据和 schema 文件
+├── data_source_packs/          # 可插拔数据源包，声明连接引用、实体映射和采集器能力
+├── data_sources/               # 数据源包加载、字段映射和解析工具
 ├── dicts/                      # 业务字典，如人员身份、就业形式、参保状态等
 ├── docs/                       # 政策文本、测试政策和项目辅助文档
 ├── evidence/                   # 证据领域模型、证据投影和诊断结构
 ├── frontend/                   # Vue + Vite 前端可视化系统
 ├── intent/                     # 用户意图理解与政策匹配模型
 ├── mcp_server/                 # MCP 服务相关模块
-├── policies/                   # 结构化政策 JSON 文件
+├── policy_packs/               # 可插拔政策包，声明政策规则、证据需求、提示词和报告模板
+├── policies/                   # 旧版结构化政策 JSON 文件
 ├── policy/                     # 政策解析、政策路由和政策数据模型
 ├── portrait/                   # 人员画像构建与样本增强
 ├── reports/                    # 官方报告生成模块
+├── runtime/                    # Trace、Memory 等通用运行时能力
 ├── scripts/                    # 字典生成、政策解析、启动脚本等辅助脚本
 ├── tests/                      # SQL 链路测试、多智能体评测、消融实验
 ├── text2sql/                   # Text-to-SQL、动态 SQL 生成、自动修复和证据装配
@@ -80,6 +118,18 @@ bysj_t2s-master/
 ```
 
 ### 2.3 分层说明
+
+#### 2.3.0 可插拔政策层
+
+政策定义优先放在 `policy_packs/`，每个政策包独立声明 `manifest.yaml`、`rules.yaml`、`evidence_requirements.yaml`、`prompts.yaml` 和 `report_template.yaml`。当前 `flexible_employment_subsidy` 是第一个政策包，兼容旧运行时的 `POLICY_001`。
+
+后端通过 `policy/policy_pack_loader.py` 加载政策包，并由 `policy/policy_router.py` 暴露成旧链路仍可使用的 `PolicyConfig`。因此新增政策时，优先新增政策包，而不是把规则写死进 Agent 或取证代码。
+
+#### 2.3.0.1 可插拔数据源层
+
+数据库映射优先放在 `data_source_packs/`，每个数据源包独立声明 `manifest.yaml`、`schema_map.yaml`、`collectors.yaml` 和 `connection.example.yaml`。当前 `local_mysql_demo` 是默认数据源包，对应现有本地 MySQL 样本库。
+
+后端通过 `data_sources/loader.py` 加载数据源包，通过 `data_sources/schema_mapper.py` 解析逻辑实体与真实表字段。当前阶段已经支持 API 传入 `data_source_id` 并保留到运行结果、Trace 和持久化快照；SQL 执行入口由 `data_sources/session.py` 统一解析，目前支持 `mysql + config/.env` 数据源包。Collector 注册入口位于 `collectors/registry.py`，后续 Excel/API 数据源应通过独立 collector 接入。
 
 #### 2.3.1 前端展示层
 

@@ -28,7 +28,7 @@ It does not implement anything itself.
 
 The current static runtime remains valuable during migration:
 
-- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/evidence_collector.py) remains the baseline
+- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/evidence_collector.py) remains the baseline
 - the same path remains the fallback
 - the same path remains the regression oracle for shadow comparison
 
@@ -95,7 +95,7 @@ This is where the new path becomes operationally meaningful, but it should still
 
 ## Orchestrator Role During Migration
 
-[debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py) is the natural control point for migration.
+[debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py) is the natural control point for migration.
 
 It should remain the place where:
 

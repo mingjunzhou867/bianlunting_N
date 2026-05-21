@@ -6,10 +6,10 @@ Turned the user’s expanded idea into one canonical system definition with expl
 
 ## Delivered
 
-- Expanded [PROJECT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/PROJECT.md) so the milestone now defines the five-layer architecture, the formal task entrypoint, and the architecture positioning in one place
-- Strengthened [04-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/04-system-boundary-alignment/04-CONTEXT.md) with a module boundary matrix and prompt-context loading rules
-- Updated [ROADMAP.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/ROADMAP.md) so Phase 4 now records its concrete decisions instead of remaining a generic roadmap line
-- Updated [REQUIREMENTS.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/REQUIREMENTS.md) to mark the alignment requirements as complete
+- Expanded [PROJECT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/PROJECT.md) so the milestone now defines the five-layer architecture, the formal task entrypoint, and the architecture positioning in one place
+- Strengthened [04-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/04-system-boundary-alignment/04-CONTEXT.md) with a module boundary matrix and prompt-context loading rules
+- Updated [ROADMAP.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/ROADMAP.md) so Phase 4 now records its concrete decisions instead of remaining a generic roadmap line
+- Updated [REQUIREMENTS.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/REQUIREMENTS.md) to mark the alignment requirements as complete
 
 ## Verification
 

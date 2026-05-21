@@ -44,7 +44,7 @@ It is not a general-purpose database encyclopedia response.
 
 The semantic packet consumes reusable assets defined in:
 
-- [05-DICT-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-DICT-CONTRACT.md)
+- [05-DICT-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-DICT-CONTRACT.md)
 
 That means:
 

@@ -78,7 +78,7 @@ These may still exist for audit or debugging, but they are not part of the norma
 
 ## Relationship To The Semantic Packet
 
-The semantic packet defined in [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md) remains upstream.
+The semantic packet defined in [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md) remains upstream.
 
 Debate prompts should not receive the entire packet by default.
 
@@ -141,7 +141,7 @@ This means future multi-pass behavior, if added, is orchestrator-mediated rather
 
 ## Relationship To The Dynamic Query Contract
 
-The dynamic-query chain defined in [06-DYNAMIC-QUERY-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-DYNAMIC-QUERY-CONTRACT.md) already owns:
+The dynamic-query chain defined in [06-DYNAMIC-QUERY-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-DYNAMIC-QUERY-CONTRACT.md) already owns:
 
 - `query_intent`
 - `text_to_sql`
@@ -155,7 +155,7 @@ Instead, it states that debate agents sit downstream of those outcomes and shoul
 
 ## Relationship To Current Runtime
 
-The current runtime in [debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py) already centralizes debate sequencing.
+The current runtime in [debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py) already centralizes debate sequencing.
 
 That makes the orchestrator the natural place for:
 
@@ -163,7 +163,7 @@ That makes the orchestrator the natural place for:
 - future on-demand context expansion
 - enforcing debate-time tool restrictions
 
-The current prompt assembly in [base_agent.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/base_agent.py) is the natural place to study how the projection can be consumed without exposing raw low-level artifacts.
+The current prompt assembly in [base_agent.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/base_agent.py) is the natural place to study how the projection can be consumed without exposing raw low-level artifacts.
 
 ## What This Contract Must Avoid
 

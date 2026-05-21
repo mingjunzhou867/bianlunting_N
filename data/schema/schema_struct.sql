@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 8.0.44, for Win64 (x86_64)
 --
--- Host: localhost    Database: bysj
+-- Host: localhost    Database: zhicetong_t2s
 -- ------------------------------------------------------
 -- Server version	8.0.44
 
@@ -152,6 +152,8 @@ CREATE TABLE `hardship_certification` (
   `cert_id` bigint NOT NULL AUTO_INCREMENT,
   `id_card` varchar(18) NOT NULL COMMENT '身份证号',
   `hardship_category` varchar(100) DEFAULT NULL COMMENT '就业困难人员类别(如:大龄失业人员/残疾人员/离校2年内未就业的高校毕业生)',
+  `hardship_category_code` varchar(50) DEFAULT NULL COMMENT '困难类别编码(如ED_001)',
+  `hardship_policy_match` varchar(10) DEFAULT NULL COMMENT '政策匹配标记(1=匹配/0=不匹配)',
   `apply_date` date DEFAULT NULL COMMENT '困难认定申请日期',
   `certify_org` varchar(100) DEFAULT NULL COMMENT '认定机构',
   `cancel_date` date DEFAULT NULL COMMENT '认定退出注销日期',

@@ -1,0 +1,152 @@
+requirements:
+  - requirement_id: recent_enterprise_hire
+    rule_id: P003_MUST_001
+    description: 筛查近30天有效全日制企业增员候选名单。
+    entity: employment
+    required_fields:
+      - id_card
+      - company_id
+      - employment_form
+      - employment_date
+      - sync_date
+      - is_valid
+    expected_signal: recent_full_time_hire
+    fallback: manual_review
+
+  - requirement_id: candidate_person_status
+    rule_id: P003_MUST_001
+    description: 核查候选人员基础状态、生存状态和系统有效标记。
+    entity: person
+    required_fields:
+      - id_card
+      - name
+      - gender
+      - birth_date
+      - life_status
+      - system_status
+    expected_signal: valid_living_person
+    fallback: manual_review
+
+  - requirement_id: local_hukou_signal
+    rule_id: P003_MUST_002
+    description: 使用人员户籍字段识别本市人员线索。
+    entity: person
+    required_fields:
+      - id_card
+      - hukou_region
+      - life_status
+      - system_status
+    expected_signal: local_person_signal
+    fallback: manual_review
+
+  - requirement_id: existing_hardship_certification
+    rule_id: P003_MUST_003
+    description: 查询有效就业困难人员认定及困难类别。
+    entity: hardship_certification
+    required_fields:
+      - id_card
+      - hardship_category
+      - hardship_category_code
+      - hardship_policy_match
+      - apply_date
+      - is_valid
+    expected_signal: existing_hardship_certification
+    fallback: manual_review
+
+  - requirement_id: age_4050_signal
+    rule_id: P003_INFER_001
+    description: 使用性别和出生日期识别疑似4050人员。
+    entity: person
+    required_fields:
+      - id_card
+      - gender
+      - birth_date
+      - life_status
+      - system_status
+    expected_signal: suspected_4050
+    fallback: manual_review
+
+  - requirement_id: recent_unit_payment_absence
+    rule_id: P003_INFER_002
+    description: 查询近一年单位缴费记录，作为疑似连续失业或就业困难线索。
+    entity: social_insurance_payment
+    required_fields:
+      - id_card
+      - pay_month
+      - insurer_status
+      - is_valid
+    expected_signal: no_recent_unit_payment
+    fallback: manual_review
+
+  - requirement_id: unemployment_registration_status
+    rule_id: P003_INFER_003
+    description: 查询有效失业登记，用于输出已登记或提醒补登记。
+    entity: unemployment_registration
+    required_fields:
+      - id_card
+      - register_date
+      - cancel_date
+      - is_valid
+    expected_signal: unemployment_registration_or_reminder
+    fallback: manual_review
+
+  - requirement_id: employment_registration_status
+    rule_id: P003_INFER_004
+    description: 查询有效就业登记，用于输出已登记或提醒补登记。
+    entity: employment
+    required_fields:
+      - id_card
+      - company_id
+      - employment_form
+      - employment_date
+      - sync_date
+      - is_valid
+    expected_signal: employment_registration_or_reminder
+    fallback: manual_review
+
+  - requirement_id: social_insurance_payment_trace
+    rule_id: P003_INFER_005
+    description: 查询社保缴费明细和单位参保信息，支撑主动服务线索解释。
+    entity: social_insurance_payment
+    required_fields:
+      - id_card
+      - pay_month
+      - insurance_type
+      - insurer_status
+      - pay_base
+      - company_id
+      - is_valid
+    expected_signal: social_insurance_trace
+    fallback: manual_review
+
+  - requirement_id: insurance_change_trace
+    rule_id: P003_INFER_006
+    description: 查询参保身份变更日志，辅助判断身份切换线索。
+    entity: insurance_change_log
+    required_fields:
+      - id_card
+      - insurance_type
+      - old_status
+      - new_status
+      - event_date
+      - related_company_id
+      - is_valid
+    expected_signal: insurance_status_change_trace
+    fallback: manual_review
+
+  - requirement_id: subsidy_history_reference
+    rule_id: P003_CALC_001
+    description: 查询历史补贴领取记录，作为重复享受和历史服务参考。
+    entity: subsidy_payment_history
+    required_fields:
+      - id_card
+      - policy_code
+      - apply_start_month
+      - apply_end_month
+      - first_enjoy_month
+      - grant_months
+      - grant_amount
+      - grant_date
+      - is_valid
+    expected_signal: subsidy_history_reference
+    fallback: manual_review

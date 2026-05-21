@@ -10,19 +10,6 @@ $frontendDir = Join-Path $repoRoot "frontend"
 $packageLock = Join-Path $frontendDir "package-lock.json"
 $nodeModules = Join-Path $frontendDir "node_modules"
 $viteCmd = Join-Path $nodeModules ".bin\vite.cmd"
-$frontendActivateCandidates = @()
-
-if ($FrontendEnvPath) {
-    $frontendActivateCandidates += $FrontendEnvPath
-}
-
-$frontendActivateCandidates += @(
-    (Join-Path $frontendDir ".venv\Scripts\Activate.ps1"),
-    (Join-Path $frontendDir "venv\Scripts\Activate.ps1"),
-    (Join-Path $repoRoot ".frontend-venv\Scripts\Activate.ps1")
-)
-
-$frontendActivate = $frontendActivateCandidates | Where-Object { $_ -and (Test-Path $_) } | Select-Object -First 1
 
 $npm = Get-Command "npm.cmd" -ErrorAction SilentlyContinue
 if (-not $npm) {
@@ -30,18 +17,16 @@ if (-not $npm) {
     exit 1
 }
 
-if (-not $frontendActivate) {
-    Write-Host "Frontend virtual environment activation script was not found." -ForegroundColor Yellow
-    Write-Host "Pass -FrontendEnvPath or place an activation script at one of these locations:" -ForegroundColor Yellow
-    foreach ($candidate in $frontendActivateCandidates | Select-Object -Unique) {
-        Write-Host "  $candidate" -ForegroundColor Yellow
+if ($FrontendEnvPath) {
+    if (-not (Test-Path $FrontendEnvPath)) {
+        Write-Host "Frontend environment bootstrap script was not found: $FrontendEnvPath" -ForegroundColor Yellow
+        exit 1
     }
-    exit 1
+    . $FrontendEnvPath
 }
 
 Write-Host "Starting frontend from $frontendDir" -ForegroundColor Cyan
 Set-Location $frontendDir
-. $frontendActivate
 
 if (-not (Test-Path $viteCmd)) {
     Write-Host "Frontend dependencies are missing. Running npm install..." -ForegroundColor Yellow

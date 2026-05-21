@@ -45,12 +45,52 @@ def _majority_vote(judgments: list[Any]) -> tuple[str, float]:
     return CONCLUSION_MISSING, 0.3
 
 
+def support_threshold_for_evidence(
+    evidence_items: list[EvidenceItem] | None,
+) -> float:
+    """Compute support threshold from evidence items' rule types.
+
+    Uses the highest proof standard among all evidence items to determine
+    the weighted vote threshold. Default is 0.6 (preponderance).
+    """
+    if not evidence_items:
+        return 0.6
+    from agents.proof_standards import (
+        DEFEAT_THRESHOLD_BY_STANDARD,
+        ProofStandard,
+        proof_standard_for_rule_type,
+    )
+    best_idx = 0
+    standards = [
+        ProofStandard.PREPONDERANCE,
+        ProofStandard.CLEAR_AND_CONVINCING,
+        ProofStandard.BEYOND_REASONABLE_DOUBT,
+    ]
+    for item in evidence_items:
+        rule_type = getattr(item, "rule_type", "") or ""
+        if not rule_type:
+            # Try inferring from category
+            category = getattr(item, "category", "") or ""
+            if "排除" in category or "exclusion" in category.lower():
+                rule_type = "必须排除"
+            elif "灵活" in category or "flex" in category.lower():
+                rule_type = "灵活评判"
+            else:
+                rule_type = "必须满足"
+        ps = proof_standard_for_rule_type(rule_type)
+        idx = standards.index(ps)
+        if idx > best_idx:
+            best_idx = idx
+    return DEFEAT_THRESHOLD_BY_STANDARD[standards[best_idx]]
+
+
 def decide(
     judgments: list[Any],
     projection: EvidenceProjection | None = None,
     evidence_items: list[EvidenceItem] | None = None,
     structured_rules: Any = None,
     bundle: EvidenceBundle | None = None,
+    support_threshold: float = 0.6,
 ) -> DecisionVerdict:
     """Run the three-layer decision pipeline.
 
@@ -64,6 +104,9 @@ def decide(
         evidence_items: List of EvidenceItem for rule engine.
         structured_rules: PolicyConfig.structured_rules for rule engine.
         bundle: EvidenceBundle (alternative to evidence_items for rule engine).
+        support_threshold: Weighted support ratio threshold for PASS (default 0.6).
+            Can be adjusted based on proof standard (e.g., 0.5 preponderance,
+            0.7 clear and convincing, 0.9 beyond reasonable doubt).
 
     Returns:
         DecisionVerdict with conclusion, confidence, method, breakdown.
@@ -141,7 +184,7 @@ def decide(
         # Weighted total of support vs oppose
         total = weighted["total_weight"]
         support_ratio = weighted["weighted_support"] / total if total > 0 else 0
-        if support_ratio > 0.6:
+        if support_ratio > support_threshold:
             return DecisionVerdict(
                 conclusion=CONCLUSION_PASS,
                 confidence=weighted["weighted_confidence"],

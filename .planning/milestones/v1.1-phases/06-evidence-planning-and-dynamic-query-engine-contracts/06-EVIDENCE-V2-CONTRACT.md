@@ -120,7 +120,7 @@ Time scope is necessary both for audit and for later explanation to debate agent
 
 ## Relationship To Current Prototype
 
-The current predecessor lives in [evidence_model.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py).
+The current predecessor lives in [evidence_model.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py).
 
 Today the system has:
 

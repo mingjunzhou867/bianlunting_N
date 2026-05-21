@@ -693,6 +693,6 @@ chapterSlide(pres, 5, "创新与应用", "核心创新点与应用落地价值")
 }
 
 // Write
-pres.writeFile({ fileName: "D:/AI/bysj_t2s-master/智能评审系统_PPT.pptx" })
+pres.writeFile({ fileName: "智能评审系统_PPT.pptx" })
   .then(() => console.log("Done!"))
   .catch(e => console.error(e));

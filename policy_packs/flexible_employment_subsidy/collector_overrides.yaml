@@ -1,0 +1,56 @@
+scope_validators:
+  hardship_category_scope:
+    match_field: hardship_policy_match
+    code_field: hardship_category_code
+    label_field: hardship_category
+    in_scope_codes:
+      - ED_001
+      - ED_002
+      - ED_003
+    in_scope_labels:
+      - 大龄失业人员
+      - 残疾人员
+      - 离校2年内未就业的高校毕业生
+
+recovery_strategies:
+  P001_FLEX_002:
+    trigger: no_data
+    sql: >
+      SELECT id_card, hardship_category, hardship_category_code,
+      hardship_policy_match, apply_date, certify_org, is_valid
+      FROM hardship_certification
+      WHERE id_card = :id_card AND is_valid = '1'
+      ORDER BY apply_date DESC LIMIT 1
+    scope_validator: hardship_category_scope
+    summary_template: >
+      按困难认定主记录回退取证：类别编码={hardship_category_code}，
+      政策匹配标记={hardship_policy_match}，认定日期={apply_date}。
+
+  P001_FLEX_005:
+    trigger: exception
+    sql: >
+      SELECT policy_code, apply_start_month, apply_end_month,
+      grant_months, grant_amount, grant_date, is_valid
+      FROM subsidy_payment_history
+      WHERE id_card = :id_card AND is_valid = '1'
+      ORDER BY grant_date DESC, apply_end_month DESC
+    success_summary_template: "回退取证成功：共查询到 {row_count} 条历史补贴明细记录。"
+    no_data_summary: "未查询到历史补贴领取记录，可视为当前没有已享受补贴月数的存量记录。"
+    no_data_supports: true
+
+volatility_analyzers:
+  P001_FLEX_004:
+    value_field: pay_base
+    min_samples: 2
+    thresholds:
+      - max_change: 0.05
+        summary: "缴费基数整体稳定，未见异常波动；该项不构成负面证据，仅作为中性观察信息。"
+        supports: null
+      - max_change: 0.20
+        summary: "缴费基数存在轻微波动，但幅度处于正常范围，当前不足以认定为异常风险；该项仅作为中性观察信息。"
+        supports: null
+      - max_change: 1.0
+        summary: "缴费基数存在较明显波动，提示可能存在身份切换、经营异常或数据异常风险；需结合单位参保、身份切换等证据进一步复核，该项不单独直接否决资格。"
+        supports: null
+    insufficient_samples_summary: "缴费基数记录不足，暂无法判断是否存在异常波动；该项仅作为风险观察信号，不单独影响资格结论。"
+    insufficient_samples_supports: null

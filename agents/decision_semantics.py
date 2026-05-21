@@ -66,7 +66,7 @@ def build_item_semantics(
             status = CONCLUSION_FAIL
             display_label = "反向证据"
             tag_type = "danger"
-        elif supports_conclusion is True and not missing_data:
+        elif supports_conclusion is True and (not missing_data or exec_status == "no_data"):
             evidence_state = EVIDENCE_STATE_HIT
             decision_effect = DECISION_EFFECT_SUPPORT
             status = CONCLUSION_PASS
@@ -79,7 +79,7 @@ def build_item_semantics(
             display_label = CLAUSE_STATUS_NO_RISK
             tag_type = "info" if missing_data else "warning"
     else:
-        if supports_conclusion is True and not missing_data:
+        if supports_conclusion is True and (not missing_data or exec_status == "no_data"):
             evidence_state = EVIDENCE_STATE_HIT
             decision_effect = DECISION_EFFECT_SUPPORT
             status = CONCLUSION_PASS

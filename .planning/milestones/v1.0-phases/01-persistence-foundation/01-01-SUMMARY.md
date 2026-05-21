@@ -6,9 +6,9 @@ Defined one canonical persistence contract for successful debate sessions and al
 
 ## Delivered
 
-- Added [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_persistence.py) as the shared serialization and write helper
-- Added a new `debate_session` table in [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql) for query-friendly session summaries plus a full snapshot payload
-- Reworked `agent_debate_log` in [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql) to match actual runtime judgment fields instead of the old mismatched scenario/final-verdict schema
+- Added [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_persistence.py) as the shared serialization and write helper
+- Added a new `debate_session` table in [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql) for query-friendly session summaries plus a full snapshot payload
+- Reworked `agent_debate_log` in [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql) to match actual runtime judgment fields instead of the old mismatched scenario/final-verdict schema
 
 ## Canonical Contract
 
@@ -19,4 +19,4 @@ Defined one canonical persistence contract for successful debate sessions and al
 
 ## Verification
 
-- Contract assertions added in [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_persistence_contract.py)
+- Contract assertions added in [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_persistence_contract.py)

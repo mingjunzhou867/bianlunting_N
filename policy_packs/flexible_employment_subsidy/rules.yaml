@@ -1,0 +1,118 @@
+basic_conditions:
+  - rule_id: P001_MUST_001
+    description: "必须是生存状态: 申请人生存状态必须为\"生存\""
+    sql_template_ref: SELECT life_status FROM person WHERE id_card = :id_card
+  - rule_id: P001_MUST_002
+    description: "必须有失业登记: 申请人必须有有效的失业登记记录"
+    sql_template_ref: SELECT COUNT(*) as cnt FROM unemployment_registration WHERE id_card = :id_card AND is_valid = '1'
+  - rule_id: P001_MUST_003
+    description: "必须有困难认定: 申请人必须有有效的就业困难人员认定"
+    sql_template_ref: SELECT COUNT(*) as cnt FROM hardship_certification WHERE id_card = :id_card AND is_valid = '1'
+    requires_detail_query: true
+    allowed_fields:
+      - hardship_certification.id_card
+      - hardship_certification.hardship_category
+      - hardship_certification.hardship_category_code
+      - hardship_certification.hardship_policy_match
+      - hardship_certification.apply_date
+      - hardship_certification.certify_org
+      - hardship_certification.is_valid
+    evidence_targets:
+      - hardship_certification
+      - person
+    notes_for_query_generation:
+      - "This is a detail query. Use only real columns from the schema."
+      - "Prefer field-level facts over COUNT(*)."
+      - "If hardship_certification lacks a needed field, fall back to the closest real fields and do not invent columns."
+    normalize_sql_template: >
+      SELECT id_card, hardship_category, hardship_category_code, hardship_policy_match,
+      apply_date, certify_org, is_valid
+      FROM hardship_certification
+      WHERE id_card = :id_card AND is_valid = '1'
+      ORDER BY apply_date DESC LIMIT 1
+
+exclusion_conditions:
+  - rule_id: P001_EXCLUDE_001
+    description: "不能是企业法人: 申请人不能是有效的企业法人"
+    sql_template_ref: SELECT COUNT(*) as cnt FROM company_info WHERE legal_person_id_card = :id_card AND is_valid = '1'
+  - rule_id: P001_EXCLUDE_002
+    description: "不能是企业股东: 申请人不能持有有效的企业股份"
+    sql_template_ref: SELECT COUNT(*) as cnt FROM company_shareholder WHERE id_card = :id_card AND is_valid = '1'
+  - rule_id: P001_EXCLUDE_003
+    description: "不能有单位缴费社保: 近3个月不能有单位为其缴纳社保"
+    sql_template_ref: SELECT COUNT(*) as cnt FROM social_insurance_payment WHERE id_card = :id_card AND insurer_status = '101' AND is_valid = '1' AND pay_month >= DATE_FORMAT(DATE_SUB(NOW(), INTERVAL 3 MONTH), '%Y%m')
+
+inference_rules: []
+
+calculation_rules:
+  - rule_id: P001_FLEX_001
+    description: "灵活就业社保缴费连续性: 检查申请人灵活就业社保的缴费连续性，是否存在断缴"
+    sql_template_ref: SELECT pay_month, insurance_type, pay_base FROM social_insurance_payment WHERE id_card = :id_card AND insurer_status = '102' AND is_valid = '1' ORDER BY pay_month
+  - rule_id: P001_FLEX_002
+    description: "困难类别是否符合政策范围: 就业困难类别必须在政策允许范围内"
+    sql_template_ref: SELECT hardship_category, apply_date, certify_org FROM hardship_certification WHERE id_card = :id_card AND is_valid = '1'
+    requires_detail_query: true
+    allowed_fields:
+      - hardship_certification.id_card
+      - hardship_certification.hardship_category
+      - hardship_certification.hardship_category_code
+      - hardship_certification.hardship_policy_match
+      - hardship_certification.apply_date
+      - hardship_certification.certify_org
+      - hardship_certification.is_valid
+    evidence_targets:
+      - hardship_certification
+      - person
+    notes_for_query_generation:
+      - "This is a detail query. Use only real columns from the schema."
+      - "Return actual hardship category facts or closest valid evidence."
+  - rule_id: P001_FLEX_003
+    description: "是否存在身份切换风险: 检查是否有从个人灵活就业到单位参保的身份切换"
+    sql_template_ref: SELECT event_date, old_status, new_status, related_company_id FROM insurance_change_log WHERE id_card = :id_card AND old_status = '102' AND new_status = '101' ORDER BY event_date DESC
+    no_data_summary: "未查询到身份切换记录，当前未发现从灵活就业转为单位参保的切换风险。"
+    no_data_supports: true
+  - rule_id: P001_FLEX_004
+    description: "缴费基数异常波动风险提示: 分析灵活就业期间缴费基数是否存在异常波动；连续稳定或轻微波动不得作为不符合资格的依据"
+    sql_template_ref: SELECT pay_month, pay_base, insurance_type FROM social_insurance_payment WHERE id_card = :id_card AND insurer_status = '102' AND is_valid = '1' ORDER BY pay_month
+    requires_detail_query: true
+    allowed_fields:
+      - social_insurance_payment.id_card
+      - social_insurance_payment.pay_month
+      - social_insurance_payment.insurance_type
+      - social_insurance_payment.pay_base
+      - social_insurance_payment.insurer_status
+    evidence_targets:
+      - social_insurance_payment
+    no_data_summary: "未检出可判定的缴费基数异常波动信号；该项仅用于风险提示，不单独影响资格结论。"
+    no_data_supports: true
+    assembler_guidance: >
+      补充约束：这是"异常波动风险提示"而不是资格否决条款。
+      只有证据明确显示缴费基数出现大幅异常波动时，才可概括为需要关注的风险信号；
+      若缴费基数连续稳定、无明显波动或仅轻微变化，必须表述为"未发现异常波动"，
+      supports_conclusion 必须为 null，不得解释为负面证据，更不得据此推导"不符合资格"。
+    normalize_rule_name: "缴费基数异常波动风险提示"
+    normalize_description: >
+      分析灵活就业期间缴费基数是否存在大幅异常波动。
+      仅当出现明显异常升降时，提示经营异常或数据异常风险；
+      连续稳定或轻微波动不得作为不符合资格的依据，可列入需要关注事项。
+  - rule_id: P001_FLEX_005
+    description: "历史补贴领取情况: 检查历史上是否已领取过灵活就业社保补贴，分析剩余可领取月数"
+    sql_template_ref: SELECT policy_code, apply_start_month, apply_end_month, grant_months, grant_amount FROM subsidy_payment_history WHERE id_card = :id_card AND is_valid = '1' ORDER BY grant_date DESC
+    requires_detail_query: true
+    allowed_fields:
+      - social_insurance_payment.id_card
+      - social_insurance_payment.pay_month
+      - social_insurance_payment.insurance_type
+      - social_insurance_payment.pay_base
+      - social_insurance_payment.insurer_status
+      - subsidy_payment_history.id_card
+      - subsidy_payment_history.policy_code
+      - subsidy_payment_history.apply_start_month
+      - subsidy_payment_history.apply_end_month
+      - subsidy_payment_history.grant_months
+      - subsidy_payment_history.grant_amount
+    evidence_targets:
+      - social_insurance_payment
+      - subsidy_payment_history
+    no_data_summary: "未查询到历史补贴领取记录，可视为当前没有已享受补贴月数的存量记录。"
+    no_data_supports: true

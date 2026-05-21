@@ -41,10 +41,10 @@ This phase adds backend read APIs over the completed debate sessions saved in Ph
 ## Existing Code Insights
 
 ### Reusable Assets
-- [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_persistence.py): already defines the canonical saved snapshot shape and the summary fields stored in `debate_session`
-- [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql): already provides the two storage surfaces Phase 2 will read from: `debate_session` and `agent_debate_log`
-- [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py): already establishes the current FastAPI routing and response style for debate-related endpoints
-- [config/database.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/config/database.py): already provides the SQLAlchemy text-query session pattern used elsewhere in the backend
+- [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_persistence.py): already defines the canonical saved snapshot shape and the summary fields stored in `debate_session`
+- [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql): already provides the two storage surfaces Phase 2 will read from: `debate_session` and `agent_debate_log`
+- [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py): already establishes the current FastAPI routing and response style for debate-related endpoints
+- [config/database.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/config/database.py): already provides the SQLAlchemy text-query session pattern used elsewhere in the backend
 
 ### Established Patterns
 - FastAPI handlers currently return a plain JSON envelope for non-stream endpoints

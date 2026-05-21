@@ -207,7 +207,7 @@ The long-term architectural memory should remain in:
 
 ## Relationship To Current Static Collector
 
-The current predecessor lives in [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/evidence_collector.py).
+The current predecessor lives in [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/evidence_collector.py).
 
 That file currently performs something closer to:
 

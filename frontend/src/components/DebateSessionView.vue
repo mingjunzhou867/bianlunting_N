@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import { Loading } from '@element-plus/icons-vue'
 import AgentCard from './AgentCard.vue'
 import EvidenceBoard from './EvidenceBoard.vue'
 import PersonaProfileCard from './PersonaProfileCard.vue'
@@ -25,6 +26,11 @@ const formatDateTime = (value) => {
 }
 
 const canDownloadOfficialReport = (session) => Boolean(session?.session_id && session?.final_conclusion)
+
+const showCounterfactual = (session) =>
+  ['不符合', '待定'].includes(session?.final_conclusion) &&
+  Array.isArray(session?.arbiter_result?.counterfactuals) &&
+  session.arbiter_result.counterfactuals.length > 0
 
 const resolveOfficialReportUrl = (session) => {
   if (!canDownloadOfficialReport(session)) return ''
@@ -335,9 +341,12 @@ const openEvidenceDetail = (evidenceRef) => {
             />
           </div>
         </div>
-      </div>
 
-      <el-empty v-else description="当前会话还没有可展示的辩论记录" />
+        <div v-if="props.session.roundLoading" class="round-loading">
+          <el-icon class="is-loading"><Loading /></el-icon>
+          <span>ROUND {{ props.session.loadingRound }} 自动摘要中...</span>
+        </div>
+      </div>
     </section>
 
     <section
@@ -544,6 +553,37 @@ const openEvidenceDetail = (evidenceRef) => {
       </el-card>
     </section>
 
+    <section
+      v-if="showCounterfactual(props.session)"
+      class="session-section"
+    >
+      <div class="section-heading">
+        <div class="section-title">反事实推演</div>
+        <div class="section-subtitle">若关键条件改变，结论是否逆转</div>
+      </div>
+
+      <el-card class="arbiter-card" shadow="never">
+        <div
+          v-for="(item, index) in props.session.arbiter_result.counterfactuals"
+          :key="`cf-${index}`"
+          class="counterfactual-item"
+        >
+          <div class="counterfactual-header">
+            <el-tag :type="item.conclusion_change ? 'warning' : 'success'" size="small">
+              {{ item.conclusion_change ? '结论可能逆转' : '结论不变' }}
+            </el-tag>
+            <span class="counterfactual-ref">{{ item.evidence_ref }}</span>
+          </div>
+          <div class="counterfactual-body">
+            <span class="counterfactual-current">当前：{{ item.current_status }}（置信度 {{ (item.current_confidence * 100).toFixed(0) }}%）</span>
+            <span class="counterfactual-arrow">→</span>
+            <span class="counterfactual-hypothetical">假设：{{ item.hypothetical_status }}</span>
+          </div>
+          <div class="counterfactual-explanation">{{ item.explanation }}</div>
+        </div>
+      </el-card>
+    </section>
+
     <el-dialog v-model="evidenceDetailVisible" title="证据详情" width="620px" append-to-body>
       <div class="tooltip-pre">{{ evidenceDetailText }}</div>
     </el-dialog>
@@ -624,7 +664,7 @@ const openEvidenceDetail = (evidenceRef) => {
   margin-top: 18px;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
 }
 
 .meta-card {
@@ -959,7 +999,7 @@ const openEvidenceDetail = (evidenceRef) => {
 
 .clause-row {
   margin-top: 12px;
-  padding: 12px;
+  padding: 14px 16px;
   border: 1px dashed var(--border-color);
   border-radius: 10px;
   background: var(--bg-card);
@@ -1012,7 +1052,10 @@ const openEvidenceDetail = (evidenceRef) => {
 }
 
 @media (max-width: 960px) {
-  .session-meta-grid,
+  .session-meta-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   .verdict-grid,
   .evidence-highlight-grid,
   .disagreement-grid {
@@ -1029,5 +1072,64 @@ const openEvidenceDetail = (evidenceRef) => {
   .session-meta-grid {
     grid-template-columns: minmax(0, 1fr);
   }
+}
+
+.round-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  color: var(--text-dim, #909399);
+  font-size: 14px;
+}
+
+.round-loading .is-loading {
+  animation: rotating 1s linear infinite;
+}
+
+@keyframes rotating {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.counterfactual-item {
+  padding: 14px 0;
+  border-bottom: 1px solid var(--border-color, #ebeef5);
+}
+
+.counterfactual-item:last-child {
+  border-bottom: none;
+}
+
+.counterfactual-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.counterfactual-ref {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.counterfactual-body {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-dim, #909399);
+  margin-bottom: 4px;
+}
+
+.counterfactual-arrow {
+  color: var(--el-color-primary, #409eff);
+}
+
+.counterfactual-explanation {
+  font-size: 13px;
+  color: var(--text-secondary, #606266);
+  line-height: 1.5;
 }
 </style>

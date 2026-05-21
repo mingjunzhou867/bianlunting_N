@@ -8,15 +8,15 @@ from agents.agent_strict import StrictComplianceAgent
 from agents.base_agent import AgentJudgment, BaseAgent, format_evidence_bundle
 
 
-def create_all_agents() -> list[BaseAgent]:
+def create_all_agents(policy_name: str = "政策资格认定") -> list[BaseAgent]:
     """Return the default five debate agents in a stable order."""
 
     return [
-        StrictComplianceAgent(),
-        LenientBusinessAgent(),
-        ExploratoryAgent(),
-        EmpiricalReasoningAgent(),
-        AuditChallengeAgent(),
+        StrictComplianceAgent(policy_name=policy_name),
+        LenientBusinessAgent(policy_name=policy_name),
+        ExploratoryAgent(policy_name=policy_name),
+        EmpiricalReasoningAgent(policy_name=policy_name),
+        AuditChallengeAgent(policy_name=policy_name),
     ]
 
 

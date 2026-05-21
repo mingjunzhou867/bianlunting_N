@@ -1,0 +1,2 @@
+"""Evidence collector registry package."""
+

@@ -9,6 +9,7 @@ from text2sql.dynamic.dynamic_collector import DynamicEvidenceCollector
 class DynamicCollectorNoDataTests(unittest.TestCase):
     def setUp(self) -> None:
         self.collector = DynamicEvidenceCollector()
+        self.collector._ensure_pack("POLICY_001")
 
     def test_identity_switch_no_data_is_treated_as_no_risk(self) -> None:
         summary, supports = self.collector._resolve_no_data_semantics(
@@ -26,15 +27,17 @@ class DynamicCollectorNoDataTests(unittest.TestCase):
         self.assertTrue(supports)
         self.assertIn("未查询到历史补贴领取记录", summary)
 
-    def test_other_no_data_rules_keep_unknown_semantics(self) -> None:
-        self.assertIsNone(
-            self.collector._resolve_no_data_semantics(
-                SimpleNamespace(rule_id="P001_FLEX_004")
-            )
+    def test_base_volatility_no_data_is_treated_as_no_detected_risk(self) -> None:
+        summary, supports = self.collector._resolve_no_data_semantics(
+            SimpleNamespace(rule_id="P001_FLEX_004")
         )
 
+        self.assertTrue(supports)
+        self.assertIn("未检出", summary)
+        self.assertIn("不单独影响资格结论", summary)
+
     def test_base_volatility_stable_is_neutral(self) -> None:
-        summary, supports = self.collector._resolve_base_volatility_semantics(
+        summary, supports = self.collector._resolve_volatility_semantics(
             SimpleNamespace(rule_id="P001_FLEX_004"),
             [
                 {"pay_month": "2026-01", "pay_base": 4000},
@@ -47,7 +50,7 @@ class DynamicCollectorNoDataTests(unittest.TestCase):
         self.assertIn("不构成负面证据", summary)
 
     def test_base_volatility_small_change_is_neutral(self) -> None:
-        summary, supports = self.collector._resolve_base_volatility_semantics(
+        summary, supports = self.collector._resolve_volatility_semantics(
             SimpleNamespace(rule_id="P001_FLEX_004"),
             [
                 {"pay_month": "2026-01", "pay_base": 4000},
@@ -60,7 +63,7 @@ class DynamicCollectorNoDataTests(unittest.TestCase):
         self.assertIn("不足以认定为异常风险", summary)
 
     def test_base_volatility_large_change_requires_review_but_not_fail(self) -> None:
-        summary, supports = self.collector._resolve_base_volatility_semantics(
+        summary, supports = self.collector._resolve_volatility_semantics(
             SimpleNamespace(rule_id="P001_FLEX_004"),
             [
                 {"pay_month": "2026-01", "pay_base": 5000},

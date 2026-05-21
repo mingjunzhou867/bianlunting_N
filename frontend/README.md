@@ -10,16 +10,16 @@
 
 核心文件：
 
-- [App.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/App.vue)
-- [DebateSessionView.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/components/DebateSessionView.vue)
-- [HistorySessionList.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/components/HistorySessionList.vue)
-- [sessionState.js](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/sessionState.js)
+- [App.vue](src/App.vue)
+- [DebateSessionView.vue](src/components/DebateSessionView.vue)
+- [HistorySessionList.vue](src/components/HistorySessionList.vue)
+- [sessionState.js](src/sessionState.js)
 
 ## 开发前提
 
 如果后端数据库没有先应用新的 schema，左侧历史列表和历史详情都会失效。完整前置条件见：
 
-- [saved-session-history.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/docs/saved-session-history.md)
+- [saved-session-history.md](../docs/saved-session-history.md)
 
 ## 常用命令
 

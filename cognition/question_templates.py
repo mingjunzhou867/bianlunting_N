@@ -18,7 +18,7 @@ class QuestionTemplate(BaseModel):
     question_id: str
     question_text: str
     question_type: QuestionType
-    policy_scope: str = "灵活就业社保补贴"
+    policy_scope: str = ""
     linked_policy_clauses: list[str] = Field(default_factory=list)
     linked_conflict_patterns: list[str] = Field(default_factory=list)
     expected_answer_shape: str
@@ -77,7 +77,7 @@ def build_default_question_templates() -> list[QuestionTemplate]:
         QuestionTemplate(
             qualification_item_id="QI_EXCL_UNIT_INSURANCE",
             question_id="EXCL_UNIT_INSURANCE",
-            question_text="申请期间是否存在单位缴纳医保记录，导致不满足灵活就业补贴条件？",
+            question_text="申请期间是否存在单位缴纳医保记录，导致不满足补贴条件？",
             question_type=QuestionType.EXCL,
             linked_policy_clauses=["单位缴纳排除"],
             expected_answer_shape="time_window_boolean",

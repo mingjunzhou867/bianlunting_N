@@ -39,41 +39,39 @@ class PolicyRuleLoader:
     """从数据库加载政策规则"""
 
     def _normalize_rule(self, policy_id: str, rule: PolicyRule) -> PolicyRule:
-        """Apply runtime guardrails for rules that need tighter semantics."""
-        if policy_id == "POLICY_001" and rule.rule_id == "P001_MUST_003":
+        """从 policy pack 的 rule 元数据读取覆盖值，替代硬编码。"""
+        try:
+            from policy.policy_pack_loader import load_policy_packs
+            pack = load_policy_packs().get(policy_id)
+            if not pack:
+                return rule
+            # 在四个 bucket 中查找匹配的 rule
+            pack_rule = None
+            for bucket in (
+                pack.structured_rules.basic_conditions,
+                pack.structured_rules.exclusion_conditions,
+                pack.structured_rules.inference_rules,
+                pack.structured_rules.calculation_rules,
+            ):
+                for r in bucket:
+                    if r.rule_id == rule.rule_id:
+                        pack_rule = r
+                        break
+                if pack_rule:
+                    break
+            if not pack_rule:
+                return rule
             return PolicyRule(
                 rule_id=rule.rule_id,
-                rule_name=rule.rule_name,
-                rule_description=rule.rule_description,
+                rule_name=pack_rule.normalize_rule_name or rule.rule_name,
+                rule_description=pack_rule.normalize_description or rule.rule_description,
                 rule_type=rule.rule_type,
-                sql_template=(
-                    "SELECT "
-                    "id_card, hardship_category, hardship_category_code, hardship_policy_match, "
-                    "apply_date, certify_org, is_valid "
-                    "FROM hardship_certification "
-                    "WHERE id_card = :id_card "
-                    "  AND is_valid = '1' "
-                    "ORDER BY apply_date DESC "
-                    "LIMIT 1"
-                ),
+                sql_template=pack_rule.normalize_sql_template or rule.sql_template,
                 scenario_category=rule.scenario_category,
                 priority=rule.priority,
             )
-        if policy_id == "POLICY_001" and rule.rule_id == "P001_FLEX_004":
-            return PolicyRule(
-                rule_id=rule.rule_id,
-                rule_name="缴费基数异常波动风险提示",
-                rule_description=(
-                    "分析灵活就业期间缴费基数是否存在大幅异常波动。"
-                    "仅当出现明显异常升降时，提示经营异常或数据异常风险；"
-                    "连续稳定或轻微波动不得作为不符合资格的依据，可列入需要关注事项。"
-                ),
-                rule_type=rule.rule_type,
-                sql_template=rule.sql_template,
-                scenario_category=rule.scenario_category,
-                priority=rule.priority,
-            )
-        return rule
+        except Exception:
+            return rule
 
     def load_rules(self, policy_id: str) -> PolicyRuleSet:
         """

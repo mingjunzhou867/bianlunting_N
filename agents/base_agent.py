@@ -15,6 +15,7 @@ from config.llm_client import llm_chat
 from config.settings import settings
 from evidence.evidence_model import EvidenceBundle
 from evidence.evidence_projection import EvidenceProjection
+from privacy.sanitizer import sanitize_for_llm
 
 
 CONCLUSION_PASS = "符合"
@@ -37,8 +38,10 @@ LEGACY_STANCE_ALIASES = {
     STANCE_PENDING: {STANCE_PENDING, "待定", "待确认", CONCLUSION_MISSING, "数据缺失"},
 }
 
-SHARED_CONTEXT = """
-你正在参与灵活就业社保补贴资格认定的多 Agent 讨论。
+def build_shared_context(policy_name: str = "政策资格认定") -> str:
+    """构建 Agent 共享上下文，政策名称从 policy_pack manifest 动态注入。"""
+    return f"""
+你正在参与{policy_name}的多 Agent 讨论。
 你只能基于提供给你的证据做判断，不得虚构数据库事实。
 最终输出必须是单个 JSON 对象，字段必须完整，且不得输出代码块或额外解释。
 
@@ -49,6 +52,9 @@ SHARED_CONTEXT = """
 - attacks: 如果反对其他 Agent 的论点，填写被攻击论点的描述
 - supported_by: 如果支持其他 Agent 的论点，填写被支持论点的描述
 """.strip()
+
+
+SHARED_CONTEXT = build_shared_context()
 
 
 @dataclass(frozen=True)
@@ -87,7 +93,7 @@ class AgentJudgment(BaseModel):
 def format_evidence_bundle(bundle: EvidenceBundle) -> str:
     """Render the legacy bundle format for prompt comparison/regression."""
 
-    lines = [f"【取证对象】{bundle.id_card}", ""]
+    lines = [f"【取证对象】{sanitize_for_llm(bundle.id_card, bundle.id_card)}", ""]
     support_labels = {
         True: STANCE_SUPPORT,
         False: STANCE_OPPOSE,
@@ -95,11 +101,11 @@ def format_evidence_bundle(bundle: EvidenceBundle) -> str:
     }
 
     for item in bundle.items:
-        lines.append(f"[{item.rule_id}] {item.target}")
+        lines.append(f"[{item.rule_id}] {sanitize_for_llm(item.target, bundle.id_card)}")
         lines.append(
             f"  类别: {item.category} | 状态: {item.exec_status} | 结论: {support_labels[item.supports_conclusion]}"
         )
-        lines.append(f"  摘要: {item.result_summary}")
+        lines.append(f"  摘要: {sanitize_for_llm(item.result_summary, bundle.id_card)}")
         lines.append("")
 
     return "\n".join(lines)
@@ -117,7 +123,7 @@ def format_projection(projection: EvidenceProjection) -> str:
 
     lines = [
         f"【任务】{projection.task_header}",
-        f"【取证对象】{projection.target_person}",
+        f"【取证对象】{sanitize_for_llm(projection.target_person, projection.target_person)}",
         f"【政策范围】{projection.policy_scope}",
         (
             f"【证据概览】共 {projection.total_cards} 项证据，"
@@ -128,20 +134,20 @@ def format_projection(projection: EvidenceProjection) -> str:
     ]
 
     for card in projection.cards:
-        lines.append(f"[{card.card_id}] {card.question}")
+        lines.append(f"[{card.card_id}] {sanitize_for_llm(card.question, projection.target_person)}")
         lines.append(
             "  "
             f"{status_labels.get(card.status, card.status)}"
             f" | {card.confidence:.0%}"
             f" | {', '.join(card.artifact_refs)}"
         )
-        lines.append(f"  {card.finding}")
+        lines.append(f"  {sanitize_for_llm(card.finding, projection.target_person)}")
         lines.append("")
 
     if projection.uncertainty_markers:
         lines.append("【不确定性标记】")
         for marker in projection.uncertainty_markers:
-            lines.append(f"  - {marker}")
+            lines.append(f"  - {sanitize_for_llm(marker, projection.target_person)}")
         lines.append("")
 
     return "\n".join(lines)
@@ -152,12 +158,13 @@ def format_persona_context(persona_context: dict | None) -> str:
     if not isinstance(persona_context, dict) or not persona_context:
         return ""
 
-    lines: list[str] = ["【用户画像】"]
-    title = str(persona_context.get("title") or "").strip()
-    archetype = str(persona_context.get("archetype") or "").strip()
-    summary_line = str(persona_context.get("summary_line") or "").strip()
-    core_intent = str(persona_context.get("core_intent") or "").strip()
-    substantive_dispute = str(persona_context.get("substantive_dispute") or "").strip()
+    lines: list[str] = ["【证据画像】"]
+    target_id_card = str(persona_context.get("target_id_card") or "").strip()
+    title = sanitize_for_llm(str(persona_context.get("title") or "").strip(), target_id_card)
+    archetype = sanitize_for_llm(str(persona_context.get("archetype") or "").strip(), target_id_card)
+    summary_line = sanitize_for_llm(str(persona_context.get("summary_line") or "").strip(), target_id_card)
+    core_intent = sanitize_for_llm(str(persona_context.get("core_intent") or "").strip(), target_id_card)
+    substantive_dispute = sanitize_for_llm(str(persona_context.get("substantive_dispute") or "").strip(), target_id_card)
     risk_level = str(persona_context.get("risk_level") or "").strip()
 
     if title:
@@ -167,17 +174,30 @@ def format_persona_context(persona_context: dict | None) -> str:
     if summary_line:
         lines.append(f"- 摘要: {summary_line}")
     if core_intent:
-        lines.append(f"- 核心意图: {core_intent}")
+        lines.append(f"- 使用边界: {core_intent}")
     if substantive_dispute:
         lines.append(f"- 实质争议: {substantive_dispute}")
     if risk_level:
         lines.append(f"- 风险级别: {risk_level}")
 
+    fact_cards = persona_context.get("fact_cards")
+    if isinstance(fact_cards, list) and fact_cards:
+        lines.append("- 关键事实:")
+        for fact in fact_cards[:4]:
+            if not isinstance(fact, dict):
+                continue
+            label = str(fact.get("label") or "").strip()
+            value = sanitize_for_llm(str(fact.get("value") or "").strip(), target_id_card)
+            refs = fact.get("evidence_refs")
+            refs_text = f" refs={refs}" if isinstance(refs, list) and refs else ""
+            if label and value:
+                lines.append(f"  * {label}: {value}{refs_text}")
+
     dispute_points = persona_context.get("dispute_points")
     if isinstance(dispute_points, list) and dispute_points:
         lines.append("- 辩论焦点:")
         for point in dispute_points[:4]:
-            point_text = str(point).strip()
+            point_text = sanitize_for_llm(str(point).strip(), target_id_card)
             if point_text:
                 lines.append(f"  * {point_text}")
 
@@ -197,6 +217,9 @@ class BaseAgent(ABC):
         CONCLUSION_FAIL: STANCE_OPPOSE,
         CONCLUSION_MISSING: STANCE_PENDING,
     }
+
+    def __init__(self, policy_name: str = "政策资格认定"):
+        self._shared_context = build_shared_context(policy_name)
 
     @property
     @abstractmethod
@@ -241,6 +264,8 @@ class BaseAgent(ABC):
         tools: list[dict] | None = None,
         tool_registry=None,
         tool_policy: DebateToolPolicy | None = None,
+        conflict_summary: str = "",
+        round_summaries: str = "",
     ) -> AgentJudgment:
         evidence_text = format_projection(projection)
         persona_text = format_persona_context(persona_context)
@@ -248,11 +273,14 @@ class BaseAgent(ABC):
         user_content = evidence_text
         if persona_text:
             user_content = f"{user_content}\n\n{persona_text}"
-        user_content = (
-            f"{user_content}\n\n"
-            f"【其他 Agent 的判断】\n{other_views}\n\n"
-            "请结合当前证据和其他 Agent 观点，按约定 JSON 格式输出你的回应。"
-        )
+        if round_summaries:
+            user_content = f"{user_content}\n\n{round_summaries}"
+        user_content = f"{user_content}\n\n【其他 Agent 的判断】\n{other_views}\n\n"
+        if conflict_summary:
+            user_content = f"{user_content}{conflict_summary}\n\n"
+            user_content += "请针对【核心分歧】中列出的冲突点逐一回应，说明你是否修正立场以及理由。按约定 JSON 格式输出。"
+        else:
+            user_content += "请结合当前证据和其他 Agent 观点，按约定 JSON 格式输出你的回应。"
 
         if tools and tool_registry and (tool_policy is None or tool_policy.allow_tools):
             raw = self._call_llm_with_tools(self.SYSTEM_PROMPT, user_content, tools, tool_registry)
@@ -319,7 +347,7 @@ class BaseAgent(ABC):
         user_content: str,
         temperature: float | None = None,
     ) -> str:
-        full_system = f"{SHARED_CONTEXT}\n\n{system_prompt}"
+        full_system = f"{self._shared_context}\n\n{system_prompt}"
         reply = llm_chat(
             system_prompt=full_system,
             user_message=user_content,
@@ -556,7 +584,7 @@ class BaseAgent(ABC):
         )
         current_raw = raw
         for attempt in range(1, retries + 1):
-            repair_system = f"{SHARED_CONTEXT}\n\n{system_prompt}"
+            repair_system = f"{self._shared_context}\n\n{system_prompt}"
             repair_user = (
                 "上一条回答不符合 JSON 契约。\n"
                 "请严格按约定字段输出单个 JSON 对象，不要代码块，不要额外解释。\n"
@@ -638,7 +666,7 @@ class BaseAgent(ABC):
             base_url=settings.get_effective_base_url() or None,
         )
         full_system = (
-            f"{SHARED_CONTEXT}\n\n{system_prompt}\n\n"
+            f"{self._shared_context}\n\n{system_prompt}\n\n"
             "你可以调用工具查询数据库获取更多信息。"
             "如果已有信息足够，可以直接输出最终 JSON 判断。"
         )
@@ -672,9 +700,9 @@ class BaseAgent(ABC):
             messages.append(msg.model_dump(exclude_unset=True))
             for tc in msg.tool_calls:
                 try:
-                    result = tool_registry.execute(tc.function.name, json.loads(tc.function.arguments))
+                    result = tool_registry.execute(tc.function.name, json.loads(tc.function.arguments), agent_id=self.AGENT_ID)
                 except Exception as tool_exc:
-                    result = f"工具执行出错: {tool_exc}"
+                    result = sanitize_for_llm(f"工具执行出错: {tool_exc}")
                 messages.append(
                     {
                         "role": "tool",

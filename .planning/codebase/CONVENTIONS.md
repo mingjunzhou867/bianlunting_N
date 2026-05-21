@@ -49,7 +49,7 @@
 **Patterns:**
 - Throw or raise on boundary validation failures
 - Catch exceptions around agent calls and degrade into fallback judgments
-- Database session helper centralizes commit/rollback behavior in [config/database.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/config/database.py)
+- Database session helper centralizes commit/rollback behavior in [config/database.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/config/database.py)
 
 **Error Types:**
 - API layer uses `HTTPException`
@@ -102,7 +102,7 @@
 
 - Match existing backend style: Pydantic models for structured contracts, `loguru` for logging, SQLAlchemy text queries for DB interaction
 - Keep new persistence logic out of the frontend; the frontend currently acts as a consumer of shaped backend events/data
-- Prefer extracting dedicated persistence/query modules rather than growing [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py) indefinitely
+- Prefer extracting dedicated persistence/query modules rather than growing [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py) indefinitely
 
 ---
 *Convention analysis: 2026-03-23*

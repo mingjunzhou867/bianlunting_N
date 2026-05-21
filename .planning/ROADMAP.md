@@ -138,8 +138,8 @@
 
 ## Archived Milestones
 
-- [v1.1: Dynamic Evidence Planning Design](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/milestones/v1.1-ROADMAP.md) - shipped 2026-03-24, 4 phases, 10 plans
-- [v1.0: Debate Persistence and Retrieval](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/milestones/v1.0-ROADMAP.md) - shipped 2026-03-24, 4 phases, 9 plans
+- [v1.1: Dynamic Evidence Planning Design](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/milestones/v1.1-ROADMAP.md) - shipped 2026-03-24, 4 phases, 10 plans
+- [v1.0: Debate Persistence and Retrieval](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/milestones/v1.0-ROADMAP.md) - shipped 2026-03-24, 4 phases, 9 plans
 
 ---
 

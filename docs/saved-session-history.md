@@ -16,8 +16,8 @@
 
 历史会话功能依赖新的数据库结构，核心脚本是：
 
-- [mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql)
-- [personas_mock.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/mock_data/personas_mock.sql)
+- [mysql_ddl.sql](data/schema/mysql_ddl.sql)
+- [personas_mock.sql](data/mock_data/personas_mock.sql)
 
 推荐执行顺序：
 
@@ -34,8 +34,8 @@
 
 保存逻辑集中在：
 
-- [debate_persistence.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_persistence.py)
-- [debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py)
+- [debate_persistence.py](agents/debate_persistence.py)
+- [debate_orchestrator.py](agents/debate_orchestrator.py)
 
 ### 3.1 `debate_session`
 
@@ -90,7 +90,7 @@
 
 路由定义在：
 
-- [main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
+- [main.py](api/main.py)
 
 ### 4.1 `POST /api/debate`
 
@@ -119,10 +119,10 @@
 
 前端入口在：
 
-- [App.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/App.vue)
-- [HistorySessionList.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/components/HistorySessionList.vue)
-- [DebateSessionView.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/components/DebateSessionView.vue)
-- [sessionState.js](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/sessionState.js)
+- [App.vue](frontend/src/App.vue)
+- [HistorySessionList.vue](frontend/src/components/HistorySessionList.vue)
+- [DebateSessionView.vue](frontend/src/components/DebateSessionView.vue)
+- [sessionState.js](frontend/src/sessionState.js)
 
 当前交互约定：
 
@@ -138,9 +138,9 @@
 
 重点测试文件：
 
-- [test_debate.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_debate.py)
-- [test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_persistence_contract.py)
-- [test_retrieval_api.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_retrieval_api.py)
+- [test_debate.py](tests/test_debate.py)
+- [test_persistence_contract.py](tests/test_persistence_contract.py)
+- [test_retrieval_api.py](tests/test_retrieval_api.py)
 
 建议命令：
 

@@ -20,8 +20,8 @@
 **Databases:**
 - MySQL - Primary operational datastore and schema source
   - Connection: composed from `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `DB_CHARSET`
-  - Client: SQLAlchemy + PyMySQL in [config/database.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/config/database.py)
-  - Schema source: [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql)
+  - Client: SQLAlchemy + PyMySQL in [config/database.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/config/database.py)
+  - Schema source: [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql)
   - Mock data: `data/mock_data/`
 
 **Caching:**
@@ -34,7 +34,7 @@
 
 **Auth Provider:**
 - None observed
-- API is currently open and CORS allows all origins in [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
+- API is currently open and CORS allows all origins in [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py)
 
 ## Monitoring & Observability
 
@@ -58,7 +58,7 @@
 
 **Development:**
 - Backend secrets live in `config/.env`
-- Frontend API URL is hardcoded to `http://localhost:8000/api/debate_stream` in [frontend/src/App.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/App.vue)
+- Frontend API URL is hardcoded to `http://localhost:8000/api/debate_stream` in [frontend/src/App.vue](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/src/App.vue)
 - MySQL is required for realistic backend behavior and persistence
 
 **Production:**

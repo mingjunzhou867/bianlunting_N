@@ -18,6 +18,7 @@ from agents.decision_semantics import build_item_semantics, conclusion_tag_type
 from config.database import get_session
 from evidence.evidence_model import EvidenceBundle, EvidenceItem
 from reports.official_report_generator import build_official_report_metadata
+from runtime.memory import build_session_memory_snapshot
 
 
 class DebatePersistenceError(RuntimeError):
@@ -122,11 +123,25 @@ def build_debate_result(
     adjudication_report: dict[str, Any] | None = None,
     manual_supplements: list[dict[str, Any]] | None = None,
     persona: dict[str, Any] | None = None,
+    system_traces: list[dict[str, Any]] | None = None,
+    memory_snapshot: dict[str, Any] | None = None,
+    policy_id: str = "",
+    data_source_id: str = "",
 ) -> dict[str, Any]:
     final_conclusion = final_record.get_final_conclusion()
+    resolved_memory_snapshot = memory_snapshot or build_session_memory_snapshot(
+        session_id=session_id,
+        policy_id=policy_id,
+        bundle=bundle,
+        history=history,
+        final_record=final_record,
+        manual_supplements=manual_supplements,
+        system_traces=system_traces,
+    )
     return {
         "session_id": session_id,
         "id_card": bundle.id_card,
+        "data_source_id": data_source_id,
         "evidence_count": len(bundle.items),
         "rounds_taken": final_record.round_num,
         "final_conclusion": final_conclusion,
@@ -147,6 +162,8 @@ def build_debate_result(
             "has_manual_supplement": bool(manual_supplements),
         },
         "persona": persona or {},
+        "system_traces": system_traces or [],
+        "memory_snapshot": resolved_memory_snapshot,
         "official_report": {
             **build_official_report_metadata(session_id),
             "available": False,
@@ -168,9 +185,20 @@ def build_completed_session_records(
     adjudication_report: dict[str, Any] | None = None,
     manual_supplements: list[dict[str, Any]] | None = None,
     persona: dict[str, Any] | None = None,
+    system_traces: list[dict[str, Any]] | None = None,
+    data_source_id: str = "",
 ) -> PersistedDebateSession:
     history_payload = serialize_history(history)
     evidence_payload = serialize_evidence_bundle(bundle)
+    memory_snapshot = build_session_memory_snapshot(
+        session_id=session_id,
+        policy_id=policy_id,
+        bundle=bundle,
+        history=history,
+        final_record=final_record,
+        manual_supplements=manual_supplements,
+        system_traces=system_traces,
+    )
     result_payload = build_debate_result(
         session_id,
         bundle,
@@ -180,6 +208,10 @@ def build_completed_session_records(
         adjudication_report=adjudication_report,
         manual_supplements=manual_supplements,
         persona=persona,
+        system_traces=system_traces,
+        memory_snapshot=memory_snapshot,
+        policy_id=policy_id,
+        data_source_id=data_source_id,
     )
     agent_count = len(history[0].judgments) if history else 0
 
@@ -203,6 +235,7 @@ def build_completed_session_records(
     snapshot = {
         **result_payload,
         "policy_id": policy_id,
+        "data_source_id": data_source_id,
         "status": session_row["status"],
         "source_endpoint": source_endpoint,
         "started_at": _isoformat(started_at),
@@ -210,6 +243,7 @@ def build_completed_session_records(
         "summary": {
             "status": session_row["status"],
             "policy_id": policy_id,
+            "data_source_id": data_source_id,
             "source_endpoint": source_endpoint,
             "final_conclusion": session_row["final_conclusion"],
             "final_stance": session_row["final_stance"],
@@ -307,6 +341,127 @@ def list_saved_sessions(id_card: str = None) -> list[dict[str, Any]]:
         rows = session.execute(query_sql, params).mappings().all()
 
     return [_build_history_summary_row(dict(row)) for row in rows]
+
+
+def _mask_id_card(id_card: Any) -> str:
+    text_value = str(id_card or "").strip()
+    if len(text_value) <= 8:
+        return "*" * len(text_value)
+    return f"{text_value[:4]}{'*' * (len(text_value) - 8)}{text_value[-4:]}"
+
+
+def _memory_record_matches(
+    record: dict[str, Any],
+    *,
+    query: str,
+    trust_level: str,
+    source_type: str,
+) -> bool:
+    if trust_level and str(record.get("trust_level") or "") != trust_level:
+        return False
+    if source_type and str(record.get("source_type") or "") != source_type:
+        return False
+    if not query:
+        return True
+
+    searchable = " ".join(
+        [
+            str(record.get("memory_id") or ""),
+            str(record.get("trust_level") or ""),
+            str(record.get("source_type") or ""),
+            str(record.get("source_id") or ""),
+            str(record.get("summary") or ""),
+            _json_dumps(record.get("payload") or {}),
+        ]
+    ).lower()
+    return query.lower() in searchable
+
+
+def search_saved_memory(
+    *,
+    query: str | None = None,
+    policy_id: str | None = None,
+    trust_level: str | None = None,
+    source_type: str | None = None,
+    limit: int = 20,
+    session_limit: int = 100,
+) -> dict[str, Any]:
+    """Search structured memory records extracted from completed sessions."""
+    resolved_limit = max(1, min(int(limit or 20), 100))
+    resolved_session_limit = max(resolved_limit, min(int(session_limit or 100), 500))
+    normalized_policy_id = str(policy_id or "").strip()
+    normalized_query = str(query or "").strip()
+    normalized_trust_level = str(trust_level or "").strip()
+    normalized_source_type = str(source_type or "").strip()
+    where_clause = "WHERE policy_id = :policy_id" if normalized_policy_id else ""
+    query_sql = text(
+        f"""
+        SELECT
+            session_id,
+            id_card,
+            policy_id,
+            completed_at,
+            snapshot_payload
+        FROM debate_session
+        {where_clause}
+        ORDER BY completed_at DESC, created_at DESC
+        LIMIT {resolved_session_limit}
+        """
+    )
+
+    with get_session() as session:
+        params = {"policy_id": normalized_policy_id} if normalized_policy_id else {}
+        rows = session.execute(query_sql, params).mappings().all()
+
+    matches: list[dict[str, Any]] = []
+    for raw_row in rows:
+        row = dict(raw_row)
+        try:
+            snapshot = json.loads(row.get("snapshot_payload") or "{}")
+        except json.JSONDecodeError:
+            continue
+        memory_snapshot = snapshot.get("memory_snapshot") if isinstance(snapshot, dict) else None
+        records = memory_snapshot.get("records") if isinstance(memory_snapshot, dict) else None
+        if not isinstance(records, list):
+            continue
+
+        for raw_record in records:
+            if not isinstance(raw_record, dict):
+                continue
+            if not _memory_record_matches(
+                raw_record,
+                query=normalized_query,
+                trust_level=normalized_trust_level,
+                source_type=normalized_source_type,
+            ):
+                continue
+            matches.append(
+                {
+                    "session_id": row.get("session_id"),
+                    "policy_id": row.get("policy_id") or memory_snapshot.get("policy_id") or "",
+                    "completed_at": _normalize_value(row.get("completed_at")),
+                    "masked_id_card": _mask_id_card(row.get("id_card")),
+                    "record": dict(raw_record),
+                }
+            )
+            if len(matches) >= resolved_limit:
+                return {
+                    "query": normalized_query,
+                    "policy_id": normalized_policy_id,
+                    "trust_level": normalized_trust_level,
+                    "source_type": normalized_source_type,
+                    "limit": resolved_limit,
+                    "matches": matches,
+                }
+
+    return {
+        "query": normalized_query,
+        "policy_id": normalized_policy_id,
+        "trust_level": normalized_trust_level,
+        "source_type": normalized_source_type,
+        "limit": resolved_limit,
+        "matches": matches,
+    }
 
 
 def _apply_detail_defaults(row: dict[str, Any], snapshot: dict[str, Any]) -> dict[str, Any]:
@@ -515,6 +670,8 @@ def persist_completed_session(
     adjudication_report: dict[str, Any] | None = None,
     manual_supplements: list[dict[str, Any]] | None = None,
     persona: dict[str, Any] | None = None,
+    system_traces: list[dict[str, Any]] | None = None,
+    data_source_id: str = "",
 ) -> PersistedDebateSession:
     persisted = build_completed_session_records(
         session_id=session_id,
@@ -529,6 +686,8 @@ def persist_completed_session(
         adjudication_report=adjudication_report,
         manual_supplements=manual_supplements,
         persona=persona,
+        system_traces=system_traces,
+        data_source_id=data_source_id,
     )
 
     insert_session_sql = text(

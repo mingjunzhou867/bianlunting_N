@@ -1,0 +1,7 @@
+data_source_id: table_payload_demo
+display_name: 表格材料直传数据源
+type: table_payload
+version: 1.0.0
+description: 通过 API 请求直接传入 records 或 tables，将表格/材料行转换为证据项
+connection_ref: request.table_payload
+charset: utf-8

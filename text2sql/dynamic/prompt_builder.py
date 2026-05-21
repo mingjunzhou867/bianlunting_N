@@ -4,13 +4,29 @@ from pathlib import Path
 from typing import Any
 
 from cognition.evidence_planner import EvidencePlanItem
+from privacy.sanitizer import SQL_ID_CARD_PLACEHOLDER, TARGET_ID_CARD_PLACEHOLDER, sanitize_for_llm
 
 
 class DDLManager:
     """Manages reading and extracting specific table definitions from the DDL file."""
 
-    def __init__(self, ddl_path: str | Path | None = None):
-        if ddl_path is None:
+    def __init__(self, ddl_path: str | Path | None = None, data_source_id: str | None = None):
+        if ddl_path is not None:
+            self.ddl_paths = [Path(ddl_path)]
+        elif data_source_id:
+            from data_sources.loader import get_data_source_pack
+            pack = get_data_source_pack(data_source_id)
+            base_dir = Path(__file__).resolve().parent.parent.parent
+            self.ddl_paths = []
+            if pack and pack.manifest.ddl_file:
+                self.ddl_paths.append(Path(pack.source_dir) / pack.manifest.ddl_file)
+            self.ddl_paths.extend([
+                base_dir / "data" / "schema" / "schema_struct.sql",
+                base_dir / "schema_struct.sql",
+                base_dir / "data" / "schema" / "full_backup.sql",
+                base_dir / "data" / "schema" / "mysql_ddl.sql",
+            ])
+        else:
             base_dir = Path(__file__).resolve().parent.parent.parent
             self.ddl_paths = [
                 base_dir / "data" / "schema" / "schema_struct.sql",
@@ -18,8 +34,6 @@ class DDLManager:
                 base_dir / "data" / "schema" / "full_backup.sql",
                 base_dir / "data" / "schema" / "mysql_ddl.sql",
             ]
-        else:
-            self.ddl_paths = [Path(ddl_path)]
 
         self._table_cache: dict[str, str] = {}
         self._load_and_parse_ddl()
@@ -106,8 +120,13 @@ class QueryPromptBuilder:
     核心是只给模型当前任务所需的表结构和约束。
     """
 
-    def __init__(self, ddl_manager: DDLManager | None = None, dict_manager: DictManager | None = None):
-        self.ddl_manager = ddl_manager or DDLManager()
+    def __init__(self, ddl_manager: DDLManager | None = None, dict_manager: DictManager | None = None, data_source_id: str | None = None):
+        self.data_source_id = data_source_id
+        self._pack = None
+        if data_source_id:
+            from data_sources.loader import get_data_source_pack
+            self._pack = get_data_source_pack(data_source_id)
+        self.ddl_manager = ddl_manager or DDLManager(data_source_id=data_source_id)
         self.dict_manager = dict_manager or DictManager()
 
     def _extract_target_tables(self, sql_template: str) -> list[str]:
@@ -199,10 +218,46 @@ class QueryPromptBuilder:
 
         return "\n".join(f"{idx + 1}. {note}" for idx, note in enumerate(notes)) or "（无额外规则特定约束）"
 
+    def _get_allowed_tables(self) -> list[str]:
+        if self._pack:
+            return [em.table for em in self._pack.entities.values()]
+        return [
+            "person",
+            "employment_registration",
+            "unemployment_registration",
+            "hardship_certification",
+            "social_insurance_payment",
+            "subsidy_payment_history",
+            "company_info",
+            "company_shareholder",
+            "insurance_change_log",
+        ]
+
+    def _get_allowed_fields_map(self) -> dict[str, list[str]]:
+        if self._pack:
+            result = {}
+            for _entity_name, em in self._pack.entities.items():
+                fields = sorted(set(em.fields.values()))
+                result[em.table] = fields
+            return result
+        return {
+            "person": ["id_card", "name", "gender", "birth_date", "hukou_region", "life_status", "system_status", "business_role", "created_at"],
+            "employment_registration": ["record_id", "id_card", "company_id", "employment_form", "employment_date", "contract_start_date", "contract_end_date", "sync_date", "is_valid"],
+            "unemployment_registration": ["record_id", "id_card", "unemployment_date", "unemployment_reason", "register_date", "cancel_date", "is_valid"],
+            "hardship_certification": ["cert_id", "id_card", "hardship_category", "hardship_category_code", "hardship_policy_match", "apply_date", "certify_org", "cancel_date", "cancel_reason", "is_valid"],
+            "social_insurance_payment": ["payment_id", "id_card", "company_id", "insurance_type", "pay_month", "insurer_status", "pay_base", "is_valid"],
+            "subsidy_payment_history": ["payment_id", "id_card", "policy_code", "apply_start_month", "apply_end_month", "first_enjoy_month", "grant_months", "grant_amount", "grant_date", "is_valid"],
+            "company_info": ["company_id", "company_name", "legal_person_id_card", "company_type", "is_valid", "created_at"],
+            "company_shareholder": ["relation_id", "company_id", "id_card", "share_ratio", "is_valid"],
+            "insurance_change_log": ["change_id", "id_card", "insurance_type", "old_status", "new_status", "event_date", "related_company_id", "is_valid"],
+        }
+
     def build_system_prompt(self, plan_item: EvidencePlanItem, person_id: str) -> str:
         """组装系统 Prompt。"""
 
-        sql_template = plan_item.sql_template or ""
+        sql_template = sanitize_for_llm(plan_item.sql_template or "", person_id)
+        rule_name = sanitize_for_llm(plan_item.rule_name, person_id)
+        rule_description = sanitize_for_llm(plan_item.rule_description, person_id)
         target_tables = self._collect_target_tables(plan_item)
 
         ddl_contexts = [self.ddl_manager.get_table_ddl(table) for table in target_tables]
@@ -223,39 +278,19 @@ class QueryPromptBuilder:
             "当问题要求查询所有记录时，不要默认追加有效状态过滤。"
         )
         fields_str = self._build_allowed_field_clause(plan_item)
-        notes_str = self._rule_specific_notes(plan_item)
+        notes_str = sanitize_for_llm(self._rule_specific_notes(plan_item), person_id)
 
-        allowed_tables = [
-            "person",
-            "employment_registration",
-            "unemployment_registration",
-            "hardship_certification",
-            "social_insurance_payment",
-            "subsidy_payment_history",
-            "company_info",
-            "company_shareholder",
-            "insurance_change_log",
-        ]
+        allowed_tables = self._get_allowed_tables()
         allowed_tables_str = "\n".join(f"- {table}" for table in allowed_tables)
-        allowed_fields_map = {
-            "person": ["id_card", "name", "gender", "birth_date", "hukou_region", "life_status", "system_status", "business_role", "created_at"],
-            "employment_registration": ["record_id", "id_card", "company_id", "employment_form", "employment_date", "contract_start_date", "contract_end_date", "sync_date", "is_valid"],
-            "unemployment_registration": ["record_id", "id_card", "unemployment_date", "unemployment_reason", "register_date", "cancel_date", "is_valid"],
-            "hardship_certification": ["cert_id", "id_card", "hardship_category", "apply_date", "certify_org", "cancel_date", "cancel_reason", "is_valid"],
-            "social_insurance_payment": ["payment_id", "id_card", "company_id", "insurance_type", "pay_month", "insurer_status", "pay_base", "is_valid"],
-            "subsidy_payment_history": ["payment_id", "id_card", "policy_code", "apply_start_month", "apply_end_month", "first_enjoy_month", "grant_months", "grant_amount", "grant_date", "is_valid"],
-            "company_info": ["company_id", "company_name", "legal_person_id_card", "company_type", "is_valid", "created_at"],
-            "company_shareholder": ["relation_id", "company_id", "id_card", "share_ratio", "is_valid"],
-            "insurance_change_log": ["change_id", "id_card", "insurance_type", "old_status", "new_status", "event_date", "related_company_id", "is_valid"],
-        }
+        allowed_fields_map = self._get_allowed_fields_map()
         allowed_fields_str = "\n".join(
             f"- {table}: {', '.join(fields)}" for table, fields in allowed_fields_map.items()
         )
 
         system_prompt = f"""你是一个顶级数据库专家（DBA）与政务数据分析师。你的任务是根据传入的业务核查需求，编写一条能在 MySQL 8.0 直接执行的 SELECT 查询语句。
 【任务背景与要求】
-你需要核查的问题是：{plan_item.rule_name}
-规则描述：{plan_item.rule_description}
+你需要核查的问题是：{rule_name}
+规则描述：{rule_description}
 
 【强制表结构约束】
 你只能使用下面这些现有表，严禁臆造任何新表名、旧表名或别名拼错的表名：
@@ -269,10 +304,12 @@ class QueryPromptBuilder:
 - subsidy_records
 - company_relation
 
-【安全占位符要求】
-在撰写涉及人员核查的 SQL 查询时，凡是针对 `id_card` 的过滤，都必须使用固定占位符 `'id_card_replace'`。
-错误示例：id_card = '{person_id}'
-正确示例：id_card = 'id_card_replace'
+【隐私与安全占位符要求】
+真实身份证号不会提供给你；如需表达目标人员，只能使用占位符 `{TARGET_ID_CARD_PLACEHOLDER}`。
+在撰写涉及人员核查的 SQL 查询时，凡是针对 `id_card` 的过滤，都必须使用固定 SQL 占位符 `'{SQL_ID_CARD_PLACEHOLDER}'`。
+错误示例：id_card = '{TARGET_ID_CARD_PLACEHOLDER}'
+错误示例：id_card = '420902********000B'
+正确示例：id_card = '{SQL_ID_CARD_PLACEHOLDER}'
 
 【SQL 模板参考】
 {sql_template if sql_template else '（无模板，请根据规则描述自行编写）'}
@@ -312,7 +349,7 @@ class QueryPromptBuilder:
 1. 只输出能在 MySQL 中执行的纯 SELECT 查询语句，不要附加解释文字。
 2. 必须严格遵守 MySQL 8.0 语法，尤其注意窗口函数别名不能在同层 WHERE/HAVING 直接引用。
 3. 如果需要查询最新记录，优先使用 `ORDER BY ... DESC LIMIT 1`。
-4. 所有 `id_card` 过滤必须使用 `id_card = 'id_card_replace'`。
+4. 所有 `id_card` 过滤必须使用 `id_card = '{SQL_ID_CARD_PLACEHOLDER}'`。
 5. 任何 `FROM` / `JOIN` 中的表名必须严格来自【强制表结构约束】。
 6. 输出格式必须是 Markdown 的 ```sql ... ``` 代码块。"""
         return system_prompt
@@ -322,7 +359,8 @@ class QueryPromptBuilder:
         组装用户 Prompt。
         如果是 AutoDebugger 重试，会附带 error_msg。
         """
-        if error_msg:
+        safe_error_msg = sanitize_for_llm(error_msg, person_id)
+        if safe_error_msg:
             extra_hint = (
                 "\n修复提示：如果错误表现为结果为空、行数不一致或值不一致，请优先检查枚举编码和值域。"
                 "insurer_status 只能使用 '101' 或 '102'，不要生成 '101单位缴费'、'102个人灵活就业'；"
@@ -338,7 +376,7 @@ class QueryPromptBuilder:
 
             return (
                 f"你之前生成的 SQL 在执行时遇到了如下错误，请修正并重新输出一条正确的 SQL。\n"
-                f"错误信息：{error_msg}"
+                f"错误信息：{safe_error_msg}"
                 f"{extra_hint}\n\n"
                 "请直接输出修正后的 SQL 语句。"
             )

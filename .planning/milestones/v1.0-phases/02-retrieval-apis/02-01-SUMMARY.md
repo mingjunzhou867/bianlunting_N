@@ -6,11 +6,11 @@ Built the reusable retrieval layer for saved debate sessions before wiring any n
 
 ## Delivered
 
-- Added list/detail retrieval helpers to [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_persistence.py)
-- Added explicit `DebateSessionNotFoundError` handling in [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_persistence.py)
+- Added list/detail retrieval helpers to [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_persistence.py)
+- Added explicit `DebateSessionNotFoundError` handling in [agents/debate_persistence.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_persistence.py)
 - Kept list reads summary-only and newest-first from `debate_session`
 - Kept detail reads snapshot-first by deserializing `snapshot_payload`
-- Extended [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_persistence_contract.py) to cover helper-level list/detail semantics
+- Extended [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_persistence_contract.py) to cover helper-level list/detail semantics
 
 ## Verification
 

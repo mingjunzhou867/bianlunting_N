@@ -139,8 +139,8 @@ const sanitizeDisplayText = (value) => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
   border-radius: 999px;
   background: var(--bg-card-alt);
   color: var(--text-primary);
@@ -174,7 +174,7 @@ const sanitizeDisplayText = (value) => {
 }
 
 .section-label {
-  margin-bottom: 6px;
+  margin-bottom: 8px;
   font-size: 12px;
   font-weight: 600;
   color: var(--text-muted);
@@ -196,7 +196,7 @@ const sanitizeDisplayText = (value) => {
 
 .ref-list {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 

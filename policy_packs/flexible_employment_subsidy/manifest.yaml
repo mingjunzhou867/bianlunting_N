@@ -1,0 +1,26 @@
+pack_id: flexible_employment_subsidy
+policy_id: POLICY_001
+policy_name: 灵活就业社保补贴资格认定
+policy_type: 资格认定
+version: 1.0.0
+applicant_type: person
+description: 判断申请人是否符合灵活就业社保补贴申领资格
+effective_date:
+expiry_date:
+default_data_source_id: local_mysql_demo
+keywords:
+  - 灵活就业
+  - 社保补贴
+  - 就业困难人员
+aliases:
+  - 灵活就业补贴
+  - 社保补贴资格
+intent_patterns:
+  - 判断.*灵活就业.*补贴
+  - 是否.*符合.*社保补贴
+decision_labels:
+  passed: 符合
+  failed: 不符合
+  uncertain: 数据缺失
+task_header: 灵活就业社保补贴资格认定
+policy_scope: 灵活就业补贴政策规则

@@ -17,16 +17,19 @@ if __package__ in (None, ""):
     if str(project_root) not in sys.path:
         sys.path.insert(0, str(project_root))
 
+from data_sources.loader import list_data_source_summaries, resolve_data_source_id
 from agents.debate_orchestrator import DebateOrchestrator
 from agents.debate_persistence import (
     DebateSessionNotFoundError,
     confirm_manual_review,
     get_saved_session_detail,
     list_saved_sessions,
+    search_saved_memory,
 )
 from evidence.evidence_model import EvidenceBundle, EvidenceItem, classify_evidence_diagnostic
 from intent.intent_understanding_agent import IntentUnderstandingAgent
-from policy.policy_router import get_policy
+from policy.policy_pack_loader import resolve_policy_id
+from policy.policy_router import get_policy, list_policy_packs
 from reports.official_report_generator import ensure_official_report
 
 
@@ -50,6 +53,9 @@ class DebateRequest(BaseModel):
     id_card: str = Field(..., min_length=1)
     user_query: str | None = None
     confirmed_policy_id: str | None = None
+    policy_pack_id: str | None = None
+    data_source_id: str | None = None
+    table_payload: dict[str, Any] | None = None
     reuse_evidence: bool = False
     evidence: list[dict[str, Any]] | None = None
     manual_supplements: list[dict[str, Any]] | None = None
@@ -72,8 +78,11 @@ def _normalize_confidence(value: Any, default: float = 1.0) -> float:
 
 
 def _resolve_policy_id(request: DebateRequest) -> tuple[str | None, JSONResponse | None]:
+    if request.policy_pack_id:
+        return resolve_policy_id(request.policy_pack_id) or request.policy_pack_id, None
+
     if request.confirmed_policy_id:
-        return request.confirmed_policy_id, None
+        return resolve_policy_id(request.confirmed_policy_id) or request.confirmed_policy_id, None
 
     if request.user_query and request.user_query.strip():
         intent = intent_agent.understand(request.user_query.strip())
@@ -230,22 +239,39 @@ def get_policy_conditions(policy_id: str) -> dict[str, Any]:
     }
 
 
+@app.get("/api/policy-packs")
+def get_policy_packs() -> dict[str, Any]:
+    return {"status": "success", "data": {"policy_packs": list_policy_packs()}}
+
+
+@app.get("/api/data-sources")
+def get_data_sources() -> dict[str, Any]:
+    return {"status": "success", "data": {"data_sources": list_data_source_summaries()}}
+
+
 @app.post("/api/debate")
 def run_debate(request: DebateRequest) -> Any:
     policy_id, early_response = _resolve_policy_id(request)
     if early_response is not None:
         return early_response
+    data_source_id = resolve_data_source_id(request.data_source_id)
 
     if request.reuse_evidence:
         bundle = _build_bundle_from_payload(request.id_card.strip(), request.evidence)
         result = orchestrator.run_debate_with_bundle(
             bundle,
             policy_id=policy_id or DEFAULT_POLICY_ID,
+            data_source_id=data_source_id,
             source_endpoint="/api/debate",
             manual_supplements=request.manual_supplements,
         )
     else:
-        result = orchestrator.run_debate(request.id_card.strip(), policy_id=policy_id or DEFAULT_POLICY_ID)
+        result = orchestrator.run_debate(
+            request.id_card.strip(),
+            policy_id=policy_id or DEFAULT_POLICY_ID,
+            data_source_id=data_source_id,
+            collection_context=request.table_payload,
+        )
     return {"status": "success", "data": result}
 
 
@@ -254,16 +280,23 @@ def run_debate_stream(request: DebateRequest) -> Any:
     policy_id, early_response = _resolve_policy_id(request)
     if early_response is not None:
         return early_response
+    data_source_id = resolve_data_source_id(request.data_source_id)
 
     if request.reuse_evidence:
         bundle = _build_bundle_from_payload(request.id_card.strip(), request.evidence)
         stream = orchestrator.run_debate_stream_with_bundle(
             bundle,
             policy_id=policy_id or DEFAULT_POLICY_ID,
+            data_source_id=data_source_id,
             manual_supplements=request.manual_supplements,
         )
     else:
-        stream = orchestrator.run_debate_stream(request.id_card.strip(), policy_id=policy_id or DEFAULT_POLICY_ID)
+        stream = orchestrator.run_debate_stream(
+            request.id_card.strip(),
+            policy_id=policy_id or DEFAULT_POLICY_ID,
+            data_source_id=data_source_id,
+            collection_context=request.table_payload,
+        )
     return StreamingResponse(stream, media_type="text/event-stream; charset=utf-8")
 
 
@@ -281,6 +314,24 @@ def get_debate_detail(session_id: str) -> dict[str, Any]:
     except DebateSessionNotFoundError as exc:
         raise HTTPException(status_code=404, detail=str(exc)) from exc
     return {"status": "success", "data": detail}
+
+
+@app.get("/api/memory/search")
+def search_memory(
+    q: str | None = Query(default=None),
+    policy_id: str | None = Query(default=None),
+    trust_level: str | None = Query(default=None),
+    source_type: str | None = Query(default=None),
+    limit: int = Query(default=20, ge=1, le=100),
+) -> dict[str, Any]:
+    result = search_saved_memory(
+        query=q,
+        policy_id=policy_id,
+        trust_level=trust_level,
+        source_type=source_type,
+        limit=limit,
+    )
+    return {"status": "success", "data": result}
 
 
 @app.post("/api/debates/{session_id}/manual_review/confirm")

@@ -29,7 +29,7 @@ The agent-facing evidence projection is the debate-ready view of one prepared ev
 It sits between:
 
 - the canonical internal evidence artifact, Evidence v2
-- the current debate prompt surface in [base_agent.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/base_agent.py)
+- the current debate prompt surface in [base_agent.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/base_agent.py)
 
 Its job is to give agents the information needed to judge, challenge, and compare evidence without forcing them to parse low-level retrieval traces.
 
@@ -149,7 +149,7 @@ This allows agents to reason honestly without needing low-level execution traces
 
 ## Compatibility With Current Runtime
 
-The current runtime uses [EvidenceBundle](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py) and prompt formatting in [base_agent.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/base_agent.py).
+The current runtime uses [EvidenceBundle](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py) and prompt formatting in [base_agent.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/base_agent.py).
 
 Phase 7 intentionally points toward a migration path where:
 

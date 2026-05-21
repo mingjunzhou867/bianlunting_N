@@ -3,7 +3,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import Any
+from typing import Any, ClassVar
+
+from agents.proof_standards import (
+    DEFEAT_THRESHOLD_BY_STANDARD,
+    ProofStandard,
+)
 
 
 class ArgumentStance(str, Enum):
@@ -14,21 +19,29 @@ class ArgumentStance(str, Enum):
 
 
 class AttackType(str, Enum):
-    """Types of attack between arguments."""
-    EVIDENCE_CONFLICT = "evidence_conflict"      # same evidence, opposite conclusion
-    RULE_CONFLICT = "rule_conflict"              # different rules, contradictory conclusions
-    LOGIC_FLAW = "logic_flaw"                    # reasoning chain has flaws
-    MISSING_DATA = "missing_data"                # argument depends on missing data
-    POLICY_MISMATCH = "policy_mismatch"          # wrong policy clause applied
+    """Types of attack between arguments (ASPIC+ terminology).
+
+    Maps to standard argumentation theory:
+    - REBUTTAL: attacking the conclusion (same evidence, opposite conclusion)
+    - UNDERCUT: attacking the inference/reasoning chain
+    - UNDERMINING: attacking the evidence premises
+    - DEFEATER: direct rule exception (contradictory stances)
+    - POLICY_MISMATCH: wrong policy clause applied
+    """
+    REBUTTAL = "rebuttal"              # was EVIDENCE_CONFLICT
+    DEFEATER = "defeater"              # was RULE_CONFLICT
+    UNDERCUT = "undercut"              # was LOGIC_FLAW
+    UNDERMINING = "undermining"        # was MISSING_DATA
+    POLICY_MISMATCH = "policy_mismatch"  # unchanged
 
 
 # Attack weight by type — stronger attacks are more likely to defeat an argument
 ATTACK_WEIGHT: dict[AttackType, float] = {
-    AttackType.EVIDENCE_CONFLICT: 0.9,
+    AttackType.REBUTTAL: 0.9,
     AttackType.POLICY_MISMATCH: 0.8,
-    AttackType.RULE_CONFLICT: 0.7,
-    AttackType.MISSING_DATA: 0.6,
-    AttackType.LOGIC_FLAW: 0.5,
+    AttackType.DEFEATER: 0.7,
+    AttackType.UNDERMINING: 0.6,
+    AttackType.UNDERCUT: 0.5,
 }
 
 
@@ -46,6 +59,7 @@ class Argument:
     supported_by: list[str]        # supporting argument IDs
     attack_type: AttackType | None = None  # if this is an attacking argument
     status: str = "active"         # "active" | "defeated" | "undecided"
+    proof_standard: ProofStandard = ProofStandard.PREPONDERANCE  # burden of proof
 
 
 @dataclass
@@ -80,12 +94,17 @@ class ArgumentGraph:
         return [e for e in self.attack_edges if e.attacker_id == arg_id]
 
     def compute_acceptable_set(self) -> set[str]:
-        """Simplified Grounded Semantics: iteratively find acceptable arguments.
+        """Grounded Semantics with proof-standard-aware defeat relation.
 
-        1. Start with arguments that have no attackers → acceptable
-        2. Arguments attacked only by non-acceptable args → acceptable
-        3. Arguments attacked by acceptable args with high weight → defeated
-        4. Repeat until stable
+        Based on Dung (1995) Abstract Argumentation Framework:
+        1. Start with arguments that have no attackers → acceptable (in grounded extension)
+        2. Arguments whose all attackers are defeated → acceptable
+        3. Arguments attacked by acceptable attackers with sufficient strength → defeated
+        4. Repeat until fixpoint
+
+        Defeat criterion (standard strength-based):
+            effective_strength = attack.weight * attacker.confidence
+            defeat iff effective_strength >= proof_standard_threshold * target.confidence
 
         Returns:
             Set of acceptable argument IDs.
@@ -134,7 +153,10 @@ class ArgumentGraph:
                         attacker = self.arguments.get(attack.attacker_id)
                         attacker_confidence = attacker.confidence if attacker else 0.0
                         effective_strength = attack.weight * attacker_confidence
-                        threshold = max(0.55, arg.confidence * 0.85)
+                        base_threshold = DEFEAT_THRESHOLD_BY_STANDARD.get(
+                            arg.proof_standard, 0.55,
+                        )
+                        threshold = base_threshold * arg.confidence
                         if effective_strength >= threshold:
                             has_strong_attack = True
                             break
@@ -181,6 +203,39 @@ class ArgumentGraph:
         # This is checked by comparing attack_edges count before/after a round
         return True  # placeholder — actual check done in orchestrator
 
+    # Attack type → human-readable label for conflict summary
+    _ATTACK_LABELS: ClassVar[dict[AttackType, str]] = {
+        AttackType.REBUTTAL: "结论冲突",
+        AttackType.DEFEATER: "规则对立",
+        AttackType.UNDERCUT: "推理质疑",
+        AttackType.UNDERMINING: "证据缺失",
+        AttackType.POLICY_MISMATCH: "条款误用",
+    }
+
+    def summarize_conflicts(self, max_items: int = 6) -> str:
+        """从攻击边生成结构化冲突摘要，供 debate_respond prompt 注入。
+
+        纯数据格式化，无 LLM 调用，线程安全。
+        """
+        if not self.attack_edges:
+            return ""
+
+        lines: list[str] = ["【核心分歧】"]
+        for i, edge in enumerate(self.attack_edges[:max_items]):
+            attacker = self.arguments.get(edge.attacker_id)
+            target = self.arguments.get(edge.target_id)
+            attacker_name = attacker.source_agent if attacker else edge.attacker_id
+            target_name = target.source_agent if target else edge.target_id
+            label = self._ATTACK_LABELS.get(edge.attack_type, edge.attack_type.value)
+            lines.append(
+                f"{i + 1}. [{label}] {attacker_name} → {target_name}：{edge.evidence}"
+            )
+
+        if len(self.attack_edges) > max_items:
+            lines.append(f"…等共 {len(self.attack_edges)} 项分歧")
+
+        return "\n".join(lines)
+
     def to_dict(self) -> dict[str, Any]:
         """Serialize the graph for persistence/debugging."""
         return {
@@ -197,6 +252,7 @@ class ArgumentGraph:
                     "supported_by": a.supported_by,
                     "attack_type": a.attack_type.value if a.attack_type else None,
                     "status": a.status,
+                    "proof_standard": a.proof_standard.value,
                 }
                 for aid, a in self.arguments.items()
             },

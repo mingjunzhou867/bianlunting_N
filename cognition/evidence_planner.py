@@ -13,6 +13,10 @@ from cognition.question_templates import (
     QuestionType,
 )
 from cognition.semantic_packet import SemanticPacketBuilder
+from data_sources.loader import get_data_source_pack
+from data_sources.models import DataSourcePack
+from policy.policy_models import EvidenceRequirement, PolicyRule as PackPolicyRule
+from policy.policy_pack_loader import load_policy_packs
 
 
 class PlannerPriority(str, Enum):
@@ -78,6 +82,17 @@ class EvidencePlanner:
         qualification_scope: str | None = None,
     ) -> EvidencePlan:
         packet = self.packet_builder.build(person_id, policy_id, qualification_scope)
+        pack_items = self._build_plan_items_from_policy_pack(policy_id, person_id)
+        if pack_items:
+            pack_items.sort(key=lambda item: (self._priority_rank(item.priority), item.rule_id))
+            return EvidencePlan(
+                person_id=person_id,
+                policy_id=policy_id,
+                qualification_scope=qualification_scope,
+                packet_summary=packet.task.summary,
+                items=pack_items,
+            )
+
         rule_set = self.rule_loader.load_rules(policy_id)
 
         items: list[EvidencePlanItem] = [
@@ -100,63 +115,234 @@ class EvidencePlanner:
             items=items,
         )
 
-    def _build_plan_item_from_rule(self, rule: PolicyRule) -> EvidencePlanItem:
-        allowed_fields: list[str] = []
-        relevant_fields: list[str] = []
-        evidence_targets: list[str] = []
-        notes_for_query_generation: list[str] = []
+    def _build_plan_items_from_policy_pack(self, policy_id: str, person_id: str) -> list[EvidencePlanItem]:
+        pack = load_policy_packs().get(policy_id)
+        if pack is None:
+            return []
 
-        if rule.rule_id == "P001_MUST_003":
-            allowed_fields = [
-                "hardship_certification.id_card",
-                "hardship_certification.hardship_category",
-                "hardship_certification.hardship_category_code",
-                "hardship_certification.hardship_policy_match",
-                "hardship_certification.apply_date",
-                "hardship_certification.certify_org",
-                "hardship_certification.is_valid",
-            ]
-            relevant_fields = list(allowed_fields)
-            evidence_targets = [
-                "hardship_certification",
-                "person",
-            ]
-            notes_for_query_generation = [
-                "This is a detail query. Use only real columns from the schema.",
-                "Prefer field-level facts over COUNT(*).",
-                "If hardship_certification lacks a needed field, fall back to the closest real fields and do not invent columns.",
-            ]
-        elif rule.rule_id == "P001_FLEX_002":
-            allowed_fields = [
-                "hardship_certification.id_card",
-                "hardship_certification.hardship_category",
-                "hardship_certification.hardship_category_code",
-                "hardship_certification.hardship_policy_match",
-                "hardship_certification.apply_date",
-                "hardship_certification.certify_org",
-                "hardship_certification.is_valid",
-            ]
-            relevant_fields = list(allowed_fields)
-            evidence_targets = ["hardship_certification", "person"]
-            notes_for_query_generation = [
-                "This is a detail query. Use only real columns from the schema.",
-                "Return actual hardship category facts or closest valid evidence.",
-            ]
-        elif rule.rule_id in {"P001_FLEX_004", "P001_FLEX_005"}:
-            allowed_fields = [
-                "social_insurance_payment.id_card",
-                "social_insurance_payment.pay_month",
-                "social_insurance_payment.insurance_type",
-                "social_insurance_payment.pay_base",
-                "social_insurance_payment.insurer_status",
-                "subsidy_payment_history.id_card",
-                "subsidy_payment_history.policy_code",
-                "subsidy_payment_history.apply_start_month",
-                "subsidy_payment_history.apply_end_month",
-                "subsidy_payment_history.grant_months",
-                "subsidy_payment_history.grant_amount",
-            ]
-            evidence_targets = ["social_insurance_payment", "subsidy_payment_history"]
+        requirements_by_rule: dict[str, list[EvidenceRequirement]] = {}
+        for requirement in pack.evidence_requirements:
+            requirements_by_rule.setdefault(requirement.rule_id, []).append(requirement)
+        data_source_pack = (
+            get_data_source_pack(pack.manifest.default_data_source_id)
+            if pack.manifest.default_data_source_id
+            else None
+        )
+
+        items: list[EvidencePlanItem] = []
+        rule_rows: list[tuple[PackPolicyRule, str, int]] = []
+        rule_rows.extend((rule, "必须满足", 0) for rule in pack.structured_rules.basic_conditions)
+        rule_rows.extend((rule, "必须排除", 1) for rule in pack.structured_rules.exclusion_conditions)
+        rule_rows.extend((rule, "灵活评判", 2) for rule in pack.structured_rules.inference_rules)
+        rule_rows.extend((rule, "额度计算", 3) for rule in pack.structured_rules.calculation_rules)
+
+        seen_rule_ids: set[str] = set()
+        for index, (rule, rule_type, bucket_rank) in enumerate(rule_rows, start=1):
+            seen_rule_ids.add(rule.rule_id)
+            requirements = requirements_by_rule.get(rule.rule_id) or [None]
+            for requirement_index, requirement in enumerate(requirements, start=1):
+                items.append(
+                    self._build_pack_plan_item(
+                        rule=rule,
+                        rule_type=rule_type,
+                        bucket_rank=bucket_rank,
+                        priority=index,
+                        person_id=person_id,
+                        requirement=requirement,
+                        requirement_index=requirement_index,
+                        policy_pack_id=pack.manifest.pack_id,
+                        data_source_pack=data_source_pack,
+                    )
+                )
+
+        for requirement in pack.evidence_requirements:
+            if requirement.rule_id in seen_rule_ids:
+                continue
+            items.append(
+                self._build_requirement_only_plan_item(
+                    requirement=requirement,
+                    person_id=person_id,
+                    policy_pack_id=pack.manifest.pack_id,
+                    priority=900 + len(items),
+                    data_source_pack=data_source_pack,
+                )
+            )
+
+        return items
+
+    def _build_pack_plan_item(
+        self,
+        rule: PackPolicyRule,
+        rule_type: str,
+        bucket_rank: int,
+        priority: int,
+        person_id: str,
+        requirement: EvidenceRequirement | None,
+        requirement_index: int,
+        policy_pack_id: str,
+        data_source_pack: DataSourcePack | None,
+    ) -> EvidencePlanItem:
+        rule_name = self._rule_name(rule)
+        rule_description = rule.description or rule_name
+        relevant_fields, allowed_fields, evidence_targets = self._requirement_hints(requirement, data_source_pack)
+        specific_hints = self._rule_specific_hints(rule.rule_id, rule=rule)
+        allowed_fields = self._merge_unique(allowed_fields, specific_hints["allowed_fields"])
+        relevant_fields = self._merge_unique(relevant_fields, specific_hints["relevant_fields"] or allowed_fields)
+        evidence_targets = self._merge_unique(evidence_targets, specific_hints["evidence_targets"])
+        notes = self._pack_notes(policy_pack_id, requirement)
+        notes.extend(specific_hints["notes_for_query_generation"])
+        suffix = f"_{requirement_index}" if requirement and len(requirement.rule_id) > 0 and requirement_index > 1 else ""
+        return EvidencePlanItem(
+            plan_item_id=f"plan_{rule.rule_id.lower()}{suffix}",
+            rule_id=rule.rule_id,
+            rule_name=rule_name,
+            rule_description=rule_description,
+            rule_type=rule_type,
+            sql_template=rule.normalize_sql_template or rule.sql_template_ref or "",
+            priority=bucket_rank * 100 + priority,
+            scenario_category=rule_type,
+            qualification_item_id=requirement.requirement_id if requirement else rule.rule_id,
+            question_id=requirement.requirement_id if requirement else rule.rule_id,
+            question_text=requirement.description if requirement else rule_description,
+            evidence_targets=evidence_targets,
+            relevant_fields=relevant_fields,
+            allowed_fields=allowed_fields,
+            entity_scope=[person_id],
+            expected_answer_shape=requirement.expected_signal if requirement and requirement.expected_signal else rule_description,
+            missing_evidence_strategy=self._missing_strategy_for_requirement(requirement),
+            conflict_strategy="preserve_trace_and_mark_for_review",
+            linked_policy_clauses=[rule.rule_id],
+            notes_for_query_generation=notes,
+        )
+
+    def _build_requirement_only_plan_item(
+        self,
+        requirement: EvidenceRequirement,
+        person_id: str,
+        policy_pack_id: str,
+        priority: int,
+        data_source_pack: DataSourcePack | None,
+    ) -> EvidencePlanItem:
+        relevant_fields, allowed_fields, evidence_targets = self._requirement_hints(requirement, data_source_pack)
+        return EvidencePlanItem(
+            plan_item_id=f"plan_{requirement.rule_id.lower()}_{requirement.requirement_id.lower()}",
+            rule_id=requirement.rule_id,
+            rule_name=requirement.description,
+            rule_description=requirement.description,
+            rule_type="证据需求",
+            sql_template="",
+            priority=priority,
+            scenario_category="policy_pack_requirement",
+            qualification_item_id=requirement.requirement_id,
+            question_id=requirement.requirement_id,
+            question_text=requirement.description,
+            evidence_targets=evidence_targets,
+            relevant_fields=relevant_fields,
+            allowed_fields=allowed_fields,
+            entity_scope=[person_id],
+            expected_answer_shape=requirement.expected_signal or requirement.description,
+            missing_evidence_strategy=self._missing_strategy_for_requirement(requirement),
+            conflict_strategy="preserve_trace_and_mark_for_review",
+            linked_policy_clauses=[requirement.rule_id],
+            notes_for_query_generation=self._pack_notes(policy_pack_id, requirement),
+        )
+
+    def _rule_name(self, rule: PackPolicyRule) -> str:
+        text = (rule.description or rule.rule_id).strip()
+        for delimiter in ("：", ":", "。", "."):
+            if delimiter in text:
+                head = text.split(delimiter, 1)[0].strip()
+                if head:
+                    return head
+        return text[:40] or rule.rule_id
+
+    def _requirement_hints(
+        self,
+        requirement: EvidenceRequirement | None,
+        data_source_pack: DataSourcePack | None = None,
+    ) -> tuple[list[str], list[str], list[str]]:
+        if requirement is None:
+            return [], [], []
+        entity_mapping = (
+            data_source_pack.entities.get(requirement.entity)
+            if data_source_pack is not None
+            else None
+        )
+        table_name = entity_mapping.table if entity_mapping is not None else requirement.entity
+        fields = []
+        for field in requirement.required_fields:
+            if "." in field:
+                fields.append(field)
+            else:
+                physical_field = field
+                if entity_mapping is not None:
+                    physical_field = entity_mapping.fields.get(field) or field
+                fields.append(f"{table_name}.{physical_field}")
+        targets = [table_name] if table_name else []
+        return list(fields), list(fields), targets
+
+    def _missing_strategy_for_requirement(
+        self,
+        requirement: EvidenceRequirement | None,
+    ) -> MissingEvidenceStrategy:
+        if requirement is None:
+            return MissingEvidenceStrategy.MARK_UNKNOWN
+        fallback = (requirement.fallback or "").strip().lower()
+        if fallback in {"not_satisfied", "treat_as_not_satisfied"}:
+            return MissingEvidenceStrategy.TREAT_AS_NOT_SATISFIED
+        if fallback in {"adjacent_source", "search_adjacent_source"}:
+            return MissingEvidenceStrategy.SEARCH_ADJACENT_SOURCE
+        return MissingEvidenceStrategy.MARK_UNKNOWN
+
+    def _pack_notes(self, policy_pack_id: str, requirement: EvidenceRequirement | None) -> list[str]:
+        notes = [f"policy_pack_id:{policy_pack_id}"]
+        if requirement is not None:
+            notes.extend(
+                [
+                    f"requirement_id:{requirement.requirement_id}",
+                    f"entity:{requirement.entity}",
+                    f"fallback:{requirement.fallback}",
+                ]
+            )
+            if requirement.expected_signal:
+                notes.append(f"expected_signal:{requirement.expected_signal}")
+        return notes
+
+    def _merge_unique(self, *groups: list[str]) -> list[str]:
+        seen: set[str] = set()
+        merged: list[str] = []
+        for group in groups:
+            for value in group:
+                if value and value not in seen:
+                    seen.add(value)
+                    merged.append(value)
+        return merged
+
+    def _rule_specific_hints(
+        self,
+        rule_id: str,
+        rule: PackPolicyRule | None = None,
+    ) -> dict[str, list[str]]:
+        # 优先从 policy pack rule 的元数据读取
+        if rule is not None:
+            if rule.allowed_fields or rule.evidence_targets or rule.notes_for_query_generation:
+                return {
+                    "allowed_fields": list(rule.allowed_fields),
+                    "relevant_fields": list(rule.relevant_fields) if rule.relevant_fields else list(rule.allowed_fields),
+                    "evidence_targets": list(rule.evidence_targets),
+                    "notes_for_query_generation": list(rule.notes_for_query_generation),
+                }
+
+        # 向后兼容：无 pack rule 元数据时返回空（LLM 自行判断）
+        return {
+            "allowed_fields": [],
+            "relevant_fields": [],
+            "evidence_targets": [],
+            "notes_for_query_generation": [],
+        }
+
+    def _build_plan_item_from_rule(self, rule: PolicyRule) -> EvidencePlanItem:
+        hints = self._rule_specific_hints(rule.rule_id)
 
         return EvidencePlanItem(
             plan_item_id=f"plan_{rule.rule_id.lower()}",
@@ -167,10 +353,10 @@ class EvidencePlanner:
             sql_template=rule.sql_template,
             priority=rule.priority,
             scenario_category=rule.scenario_category,
-            relevant_fields=relevant_fields,
-            allowed_fields=list(allowed_fields),
-            evidence_targets=evidence_targets,
-            notes_for_query_generation=notes_for_query_generation,
+            relevant_fields=hints["relevant_fields"],
+            allowed_fields=hints["allowed_fields"],
+            evidence_targets=hints["evidence_targets"],
+            notes_for_query_generation=hints["notes_for_query_generation"],
         )
 
     def _build_plan_item(

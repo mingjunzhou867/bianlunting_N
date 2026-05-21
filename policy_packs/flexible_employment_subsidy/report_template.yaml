@@ -1,0 +1,9 @@
+report_title: 灵活就业社保补贴资格审核辅助报告
+sections:
+  - applicant_summary
+  - policy_summary
+  - evidence_summary
+  - rule_decisions
+  - risk_notes
+  - manual_review
+  - final_conclusion

@@ -6,9 +6,9 @@ Defined the task-level semantic packet as the formal output of the database-cogn
 
 ## Delivered
 
-- Added [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md) to define the packet as a structured bundle with `task`, `fields`, `relations`, `time_semantics`, and `dict_excerpt`
-- Updated [05-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-CONTEXT.md) so the phase now records excerpt-first loading and the separation between reusable dictionaries and task-trimmed packets
-- Routed the milestone forward in [STATE.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/STATE.md) so Phase 6 becomes the next discussion target
+- Added [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md) to define the packet as a structured bundle with `task`, `fields`, `relations`, `time_semantics`, and `dict_excerpt`
+- Updated [05-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-CONTEXT.md) so the phase now records excerpt-first loading and the separation between reusable dictionaries and task-trimmed packets
+- Routed the milestone forward in [STATE.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/STATE.md) so Phase 6 becomes the next discussion target
 
 ## Verification
 

@@ -40,17 +40,17 @@ Phase 6 is not designing in a vacuum.
 
 The current codebase already contains a static predecessor to several Phase 6 concepts:
 
-- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/sql_templates.py)
+- [sql_templates.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/sql_templates.py)
   - existing static `RULE_REGISTRY`
   - implicit question catalog hidden behind `rule_id`
   - category split such as qualification, calculation, and proactive
-- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/text2sql/evidence_collector.py)
+- [evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/text2sql/evidence_collector.py)
   - current `rule_id -> SQL -> execute -> EvidenceItem` chain
   - early auto-verdict behavior
   - current bundle assembly model
-- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/evidence/evidence_model.py)
+- [evidence_model.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/evidence/evidence_model.py)
   - `EvidenceItem` and `EvidenceBundle` as the current evidence prototype
-- [test_evidence_collector.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_evidence_collector.py)
+- [test_evidence_collector.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_evidence_collector.py)
   - current regression anchor for what the static pipeline is capable of expressing
 
 Implication:
@@ -152,15 +152,15 @@ The default handoff should be:
 
 Phase 6 now has three formal contract documents:
 
-- [06-QUESTION-AND-PLAN-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-QUESTION-AND-PLAN-CONTRACT.md)
+- [06-QUESTION-AND-PLAN-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-QUESTION-AND-PLAN-CONTRACT.md)
   - formalizes qualification-item-first check-question templates
   - formalizes question-driven evidence-plan items
   - formalizes traceability from qualification item to question template to plan item
-- [06-DYNAMIC-QUERY-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-DYNAMIC-QUERY-CONTRACT.md)
+- [06-DYNAMIC-QUERY-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-DYNAMIC-QUERY-CONTRACT.md)
   - formalizes `query_intent`
   - formalizes the dynamic retrieval chain from planning to bounded repair and terminal outcome
   - formalizes observability while keeping SQL as runtime trace rather than long-term memory
-- [06-EVIDENCE-V2-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-EVIDENCE-V2-CONTRACT.md)
+- [06-EVIDENCE-V2-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-EVIDENCE-V2-CONTRACT.md)
   - formalizes Evidence v2 as a richer auditable artifact
   - formalizes provenance from planning, dictionary context, query execution, and repair history
   - records the summary-first downstream stance without prematurely freezing Phase 7 packaging

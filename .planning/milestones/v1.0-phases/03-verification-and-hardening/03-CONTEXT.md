@@ -58,10 +58,10 @@ This phase hardens the now end-to-end save/read/view flow. It is limited to regr
 ## Existing Code Insights
 
 ### Reusable Assets
-- [tests/test_debate.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_debate.py): already covers debate orchestration and persistence-hook behavior for successful and failed saves
-- [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_persistence_contract.py): already locks key schema/runtime and retrieval-contract expectations
-- [tests/test_retrieval_api.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/tests/test_retrieval_api.py): already covers the backend retrieval route contract
-- [frontend/src/App.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/App.vue): now contains the combined live/history state machine that Phase 3 needs to protect
+- [tests/test_debate.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_debate.py): already covers debate orchestration and persistence-hook behavior for successful and failed saves
+- [tests/test_persistence_contract.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_persistence_contract.py): already locks key schema/runtime and retrieval-contract expectations
+- [tests/test_retrieval_api.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/tests/test_retrieval_api.py): already covers the backend retrieval route contract
+- [frontend/src/App.vue](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/src/App.vue): now contains the combined live/history state machine that Phase 3 needs to protect
 
 ### Established Patterns
 - Backend regression coverage currently uses Python `unittest` with focused mocking rather than heavyweight end-to-end infrastructure
@@ -70,8 +70,8 @@ This phase hardens the now end-to-end save/read/view flow. It is limited to regr
 
 ### Integration Points
 - Phase 3 can extend backend tests without changing the core persistence architecture
-- Frontend hardening should target the new history-view interactions introduced in [App.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/App.vue), [DebateSessionView.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/components/DebateSessionView.vue), and [HistorySessionList.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/components/HistorySessionList.vue)
-- Documentation should likely reference [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql), [data/mock_data/personas_mock.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/mock_data/personas_mock.sql), [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py), and the frontend entry points together
+- Frontend hardening should target the new history-view interactions introduced in [App.vue](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/src/App.vue), [DebateSessionView.vue](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/src/components/DebateSessionView.vue), and [HistorySessionList.vue](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/src/components/HistorySessionList.vue)
+- Documentation should likely reference [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql), [data/mock_data/personas_mock.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/mock_data/personas_mock.sql), [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py), and the frontend entry points together
 
 </code_context>
 

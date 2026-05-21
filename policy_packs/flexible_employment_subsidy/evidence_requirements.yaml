@@ -1,0 +1,67 @@
+requirements:
+  - requirement_id: life_status
+    rule_id: P001_MUST_001
+    description: 核验申请人生命状态
+    entity: person
+    required_fields:
+      - life_status
+    expected_signal: alive
+    fallback: manual_review
+  - requirement_id: unemployment_registration
+    rule_id: P001_MUST_002
+    description: 核验申请人是否存在有效失业登记
+    entity: unemployment_registration
+    required_fields:
+      - id_card
+      - is_valid
+    expected_signal: valid_unemployment_registration
+    fallback: manual_review
+  - requirement_id: hardship_certification
+    rule_id: P001_MUST_003
+    description: 核验申请人是否存在有效就业困难人员认定
+    entity: hardship_certification
+    required_fields:
+      - hardship_category
+      - apply_date
+      - is_valid
+    expected_signal: valid_hardship_certification
+    fallback: manual_review
+  - requirement_id: business_identity
+    rule_id: P001_EXCLUDE_001
+    description: 排查申请人是否存在有效企业法人身份
+    entity: company_info
+    required_fields:
+      - legal_person_id_card
+      - is_valid
+    expected_signal: no_active_legal_person_identity
+    fallback: manual_review
+  - requirement_id: shareholder_identity
+    rule_id: P001_EXCLUDE_002
+    description: 排查申请人是否存在有效企业股东身份
+    entity: company_shareholder
+    required_fields:
+      - id_card
+      - is_valid
+    expected_signal: no_active_shareholder_identity
+    fallback: manual_review
+  - requirement_id: recent_unit_payment
+    rule_id: P001_EXCLUDE_003
+    description: 排查近3个月是否存在单位缴费社保记录
+    entity: social_insurance_payment
+    required_fields:
+      - insurer_status
+      - pay_month
+      - is_valid
+    expected_signal: no_recent_unit_payment
+    fallback: manual_review
+  - requirement_id: flexible_payment_continuity
+    rule_id: P001_FLEX_001
+    description: 核验灵活就业社保缴费连续性
+    entity: social_insurance_payment
+    required_fields:
+      - pay_month
+      - insurance_type
+      - pay_base
+      - insurer_status
+    expected_signal: flexible_payment_sequence
+    fallback: manual_review

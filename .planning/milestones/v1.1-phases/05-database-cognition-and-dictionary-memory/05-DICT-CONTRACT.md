@@ -13,7 +13,7 @@ It is intentionally design-level:
 - it does not define MCP request and response payloads
 - it does not define how one specific runtime task slices excerpts out of a dictionary
 
-That downstream task-time packaging belongs in [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md).
+That downstream task-time packaging belongs in [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md).
 
 ## Purpose
 
@@ -36,7 +36,7 @@ The artifact contract must therefore preserve readability while being structured
 
 The starting point is the existing dictionary example:
 
-- [ADC310.json](/c:/Users/afrangry/PycharmProjects/bysj_t2s/dicts/ADC310.json)
+- [ADC310.json](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/dicts/ADC310.json)
 
 The project explicitly chooses to evolve that style rather than replace it with an abstract metadata-heavy schema that is harder for humans to read.
 

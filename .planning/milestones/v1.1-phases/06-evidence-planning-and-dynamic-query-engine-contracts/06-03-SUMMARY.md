@@ -11,8 +11,8 @@ Completed the Evidence v2 contract for Phase 6.
 
 Artifacts produced:
 
-- [06-EVIDENCE-V2-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-EVIDENCE-V2-CONTRACT.md)
-- [06-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-CONTEXT.md)
+- [06-EVIDENCE-V2-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-EVIDENCE-V2-CONTRACT.md)
+- [06-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/06-evidence-planning-and-dynamic-query-engine-contracts/06-CONTEXT.md)
 
 Key outcomes:
 

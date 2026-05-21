@@ -10,21 +10,37 @@ from loguru import logger
 from policy.policy_router import list_policies
 
 
-_KEYWORD_MAP = {
-    "灵活就业": "灵活就业",
-    "补贴": "补贴",
-    "社保": "社会保险",
-    "保险": "社会保险",
-    "资格认定": "资格认定",
-    "认定": "认定",
-    "金额": "金额计算",
-    "补发": "金额计算",
-    "月数": "金额计算",
-    "历史": "历史查询",
-    "查询": "历史查询",
-    "人员": "疑似人员识别",
-    "疑似": "疑似人员识别",
-}
+_KEYWORD_MAP_CACHE: dict[str, str] | None = None
+
+
+def _build_keyword_map() -> dict[str, str]:
+    """从所有 policy_pack manifest 的 keywords/aliases 动态构建关键词映射。"""
+    global _KEYWORD_MAP_CACHE
+    if _KEYWORD_MAP_CACHE is not None:
+        return _KEYWORD_MAP_CACHE
+    from policy.policy_pack_loader import load_policy_packs
+    kw_map: dict[str, str] = {}
+    for pack in load_policy_packs().values():
+        for kw in pack.manifest.keywords:
+            if kw not in kw_map:
+                kw_map[kw] = kw
+        for alias in pack.manifest.aliases:
+            if alias not in kw_map:
+                kw_map[alias] = alias
+    # 通用动作关键词（与政策无关）
+    kw_map.update({
+        "资格认定": "资格认定",
+        "认定": "认定",
+        "金额": "金额计算",
+        "补发": "金额计算",
+        "月数": "金额计算",
+        "历史": "历史查询",
+        "查询": "历史查询",
+        "人员": "疑似人员识别",
+        "疑似": "疑似人员识别",
+    })
+    _KEYWORD_MAP_CACHE = kw_map
+    return kw_map
 
 
 def _extract_json(text: str) -> str:
@@ -50,6 +66,7 @@ def _normalize_action_type(value: Any) -> str:
 def _build_fallback_intent(user_query: str) -> PolicyIntent:
     query = user_query.strip()
     policies = list_policies()
+    keyword_map = _build_keyword_map()
     scored: list[dict[str, Any]] = []
 
     for idx, policy in enumerate(policies):
@@ -63,7 +80,7 @@ def _build_fallback_intent(user_query: str) -> PolicyIntent:
         score = 0.05
         reasons: list[str] = []
 
-        for keyword, action in _KEYWORD_MAP.items():
+        for keyword, action in keyword_map.items():
             if keyword in query and keyword in haystack:
                 score += 0.18
                 reasons.append(f"命中关键词“{keyword}”")
@@ -75,7 +92,13 @@ def _build_fallback_intent(user_query: str) -> PolicyIntent:
             score += 0.12
             reasons.append("命中政策类型")
 
-        if any(k in query for k in ("社保", "补贴", "灵活就业")) and any(k in haystack for k in ("社保", "补贴", "灵活就业")):
+        # 从 policy pack manifest 动态获取关键词做业务主题匹配
+        pack_keywords = set()
+        for kw in (policy.get("keywords") or []):
+            pack_keywords.add(kw)
+        for alias in (policy.get("aliases") or []):
+            pack_keywords.add(alias)
+        if pack_keywords and any(k in query for k in pack_keywords) and any(k in haystack for k in pack_keywords):
             score += 0.15
             reasons.append("业务主题一致")
 

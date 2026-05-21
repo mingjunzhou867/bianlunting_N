@@ -38,7 +38,7 @@ From Phase 4:
 
 The reference example for the first dictionary-file family is:
 
-- [ADC310.json](/c:/Users/afrangry/PycharmProjects/bysj_t2s/dicts/ADC310.json)
+- [ADC310.json](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/dicts/ADC310.json)
 
 What is valuable about this example:
 
@@ -169,8 +169,8 @@ Phase 5 execution turns discussion choices into implementation-guiding contracts
 
 Phase 5 execution produced two baseline design contracts:
 
-- [05-DICT-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-DICT-CONTRACT.md)
-- [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md)
+- [05-DICT-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-DICT-CONTRACT.md)
+- [05-SEMANTIC-PACKET-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-SEMANTIC-PACKET-CONTRACT.md)
 
 These two artifacts divide responsibilities clearly:
 

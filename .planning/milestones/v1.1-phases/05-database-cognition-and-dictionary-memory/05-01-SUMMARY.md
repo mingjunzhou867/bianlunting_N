@@ -6,9 +6,9 @@ Turned the ADC310-style example into a formal reusable dictionary-asset contract
 
 ## Delivered
 
-- Added [05-DICT-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-DICT-CONTRACT.md) to define the approved ADC310-like enhanced format, including `source_refs`, `aliases`, and `notes`
-- Rewrote [05-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-CONTEXT.md) so Phase 5 now records the executed contract decisions instead of only the discussion conclusions
-- Anchored the contract explicitly to [ADC310.json](/c:/Users/afrangry/PycharmProjects/bysj_t2s/dicts/ADC310.json) rather than drifting into an unrelated abstract schema
+- Added [05-DICT-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-DICT-CONTRACT.md) to define the approved ADC310-like enhanced format, including `source_refs`, `aliases`, and `notes`
+- Rewrote [05-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/05-database-cognition-and-dictionary-memory/05-CONTEXT.md) so Phase 5 now records the executed contract decisions instead of only the discussion conclusions
+- Anchored the contract explicitly to [ADC310.json](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/dicts/ADC310.json) rather than drifting into an unrelated abstract schema
 
 ## Verification
 

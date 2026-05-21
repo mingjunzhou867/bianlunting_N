@@ -72,12 +72,12 @@ The archived `v1.1` milestone defined the expanded system as five coordinated la
 
 ## Archived Milestones
 
-- [v1.1 roadmap archive](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/milestones/v1.1-ROADMAP.md)
-- [v1.1 requirements archive](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/milestones/v1.1-REQUIREMENTS.md)
-- [v1.1 milestone audit](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/v1.1-MILESTONE-AUDIT.md)
-- [v1.0 roadmap archive](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/milestones/v1.0-ROADMAP.md)
-- [v1.0 requirements archive](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/milestones/v1.0-REQUIREMENTS.md)
-- [v1.0 milestone audit](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/v1.0-MILESTONE-AUDIT.md)
+- [v1.1 roadmap archive](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/milestones/v1.1-ROADMAP.md)
+- [v1.1 requirements archive](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/milestones/v1.1-REQUIREMENTS.md)
+- [v1.1 milestone audit](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/v1.1-MILESTONE-AUDIT.md)
+- [v1.0 roadmap archive](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/milestones/v1.0-ROADMAP.md)
+- [v1.0 requirements archive](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/milestones/v1.0-REQUIREMENTS.md)
+- [v1.0 milestone audit](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/v1.0-MILESTONE-AUDIT.md)
 
 <details>
 <summary>Archived v1.1 Milestone Brief</summary>

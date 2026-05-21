@@ -1,0 +1,20 @@
+collectors:
+  - collector_id: dynamic_mysql_text2sql
+    type: mysql
+    entities:
+      - person
+      - employment
+      - unemployment_registration
+      - hardship_certification
+      - social_insurance_payment
+      - subsidy_payment_history
+      - company_info
+      - company_shareholder
+      - insurance_change_log
+    supports_stream: true
+    description: 当前 DynamicEvidenceCollector 使用的 MySQL Text-to-SQL 取证链路
+  - collector_id: manual_supplement
+    type: manual
+    entities: []
+    supports_stream: false
+    description: 人工补证兜底入口

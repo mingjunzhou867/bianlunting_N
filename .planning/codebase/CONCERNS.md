@@ -6,14 +6,14 @@
 
 **Debate persistence contract mismatch:**
 - Issue: Backend inserts fields like `session_id`, `agent_id`, `conclusion`, `confidence`, `evidence_refs`, `reasoning`, `dissent_points`, `key_finding`
-- Files: [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py), [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql)
+- Files: [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py), [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql)
 - Why: Code and schema evolved independently
 - Impact: Debate log writes can fail or silently diverge from the intended schema, which directly blocks “save everything for later reuse”
 - Fix approach: Define a single persisted debate model, align DDL and insert/read code, add migration-safe tests
 
 **Persistence split across row logs only:**
 - Issue: Current implementation stores per-agent rows and a final verdict row, but not a canonical session snapshot containing evidence, round history, and query-ready metadata
-- Files: [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py), [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
+- Files: [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py), [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py)
 - Why: Current code focuses on live execution/demo display
 - Impact: Reconstructing a full historical debate is hard and potentially lossy
 - Fix approach: Add a session-level persistence model plus retrieval API(s)
@@ -22,7 +22,7 @@
 
 **`agent_debate_log` schema likely incompatible with runtime inserts:**
 - Symptoms: Insert exceptions during debate persistence, or a DB schema forced to drift from DDL comments
-- Trigger: Run debate flow against a database created strictly from [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql)
+- Trigger: Run debate flow against a database created strictly from [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql)
 - Workaround: Manually modify database schema to match runtime code
 - Root cause: Column names and meanings differ between DDL and application insert SQL
 
@@ -30,13 +30,13 @@
 
 **Open API surface:**
 - Risk: Anyone who can reach the backend can trigger debate execution
-- File: [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
+- File: [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py)
 - Current mitigation: None observed
 - Recommendations: Add auth or at least environment-gated access controls before exposing outside local/demo use
 
 **Potential over-persistence of sensitive evidence:**
 - Risk: The requested feature intends to save full debate content, which may include identity data, evidence SQL, and reasoning traces
-- Files: [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/bysj_t2s/data/schema/mysql_ddl.sql), [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py)
+- Files: [data/schema/mysql_ddl.sql](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/data/schema/mysql_ddl.sql), [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py)
 - Current mitigation: None beyond local schema design
 - Recommendations: Decide explicitly what to store raw vs summarized, and define retention/access rules
 
@@ -44,7 +44,7 @@
 
 **Per-request synchronous debate execution:**
 - Problem: `/api/debate` and `/api/debate_stream` execute evidence collection plus all agent calls inline
-- Files: [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py), [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/agents/debate_orchestrator.py)
+- Files: [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py), [agents/debate_orchestrator.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/agents/debate_orchestrator.py)
 - Measurement: No formal numbers found
 - Cause: No background job queue or async fan-out
 - Improvement path: Add asynchronous execution model or persisted session/job abstraction if usage grows
@@ -59,7 +59,7 @@
 
 **Frontend depends on live-only stream contract:**
 - Why fragile: `App.vue` is wired for immediate SSE events, not historical session loading
-- File: [frontend/src/App.vue](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/src/App.vue)
+- File: [frontend/src/App.vue](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/src/App.vue)
 - Common failures: Adding retrieval/history UX without a normalized session payload will cause duplication or inconsistent shaping
 - Safe modification: Introduce one stable backend DTO for both live final payload and historical retrieval
 - Test coverage: No frontend tests observed

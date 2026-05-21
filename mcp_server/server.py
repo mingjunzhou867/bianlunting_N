@@ -7,11 +7,12 @@ from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy import text
 
 from config.database import get_session
+from data_sources.session import get_session_for_data_source
 from cognition.evidence_planner import EvidencePlanItem, QuestionType
 from text2sql.dynamic.text2sql_agent import Text2SQLAgent
 
 # 初始化我们的 FastMCP 服务节点
-mcp = FastMCP("BysjT2S_MCP_Server")
+mcp = FastMCP("ZhiCeTong_MCP_Server")
 DICTS_DIR = Path(__file__).parent.parent / "scripts" / "dicts"
 
 @mcp.tool()
@@ -43,7 +44,7 @@ def get_dict(field_name: str) -> str:
 
 
 @mcp.tool()
-def text_to_sql(intent: str, table_hints: List[str], dict_refs: List[str], person_id: str) -> str:
+def text_to_sql(intent: str, table_hints: List[str], dict_refs: List[str], person_id: str, data_source_id: str = "local_mysql_demo") -> str:
     """
     通用代理 SQL 生成器入口：接收自然语言查询意图和表提示，
     动态生成 SQL 并执行一次，直接返回结果集。
@@ -61,14 +62,14 @@ def text_to_sql(intent: str, table_hints: List[str], dict_refs: List[str], perso
     )
     
     agent = Text2SQLAgent()
-    sql = agent.generate_sql(dummy_plan, person_id)
+    sql = agent.generate_sql(dummy_plan, person_id, data_source_id=data_source_id)
     executable_sql = sql.replace("id_card_replace", person_id)
-    
+
     try:
-        with get_session() as session:
+        with get_session_for_data_source(data_source_id) as session:
             result = session.execute(text(executable_sql))
             rows = [dict(zip(result.keys(), row)) for row in result.fetchall()]
-        
+
         return json.dumps({
             "generated_sql": executable_sql,
             "status": "success",
@@ -84,7 +85,7 @@ def text_to_sql(intent: str, table_hints: List[str], dict_refs: List[str], perso
 
 
 @mcp.tool()
-def auto_debug_sql(sql_with_bug: str, error_msg: str, intent: str, table_hints: List[str], dict_refs: List[str], person_id: str) -> str:
+def auto_debug_sql(sql_with_bug: str, error_msg: str, intent: str, table_hints: List[str], dict_refs: List[str], person_id: str, data_source_id: str = "local_mysql_demo") -> str:
     """
     接收之前执行失败的 SQL 以及它的错误信息，借助大模型的反思能力，
     重新生成修正后的 SQL 并再次尝试执行。
@@ -98,13 +99,13 @@ def auto_debug_sql(sql_with_bug: str, error_msg: str, intent: str, table_hints: 
         sql_template="",
         priority=100,
     )
-    
+
     agent = Text2SQLAgent()
-    sql = agent.generate_sql(dummy_plan, person_id, error_feedback=error_msg)
+    sql = agent.generate_sql(dummy_plan, person_id, error_feedback=error_msg, data_source_id=data_source_id)
     executable_sql = sql.replace("id_card_replace", person_id)
-    
+
     try:
-        with get_session() as session:
+        with get_session_for_data_source(data_source_id) as session:
             result = session.execute(text(executable_sql))
             rows = [dict(zip(result.keys(), row)) for row in result.fetchall()]
         

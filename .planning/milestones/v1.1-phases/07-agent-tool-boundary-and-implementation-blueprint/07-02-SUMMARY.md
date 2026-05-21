@@ -11,8 +11,8 @@ Completed the formal prompt-loading and tool-boundary contract for debate-time o
 
 Artifacts produced:
 
-- [07-PROMPT-AND-TOOL-BOUNDARY-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-PROMPT-AND-TOOL-BOUNDARY-CONTRACT.md)
-- [07-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/bysj_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-CONTEXT.md)
+- [07-PROMPT-AND-TOOL-BOUNDARY-CONTRACT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-PROMPT-AND-TOOL-BOUNDARY-CONTRACT.md)
+- [07-CONTEXT.md](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/.planning/phases/07-agent-tool-boundary-and-implementation-blueprint/07-CONTEXT.md)
 
 Key outcomes:
 

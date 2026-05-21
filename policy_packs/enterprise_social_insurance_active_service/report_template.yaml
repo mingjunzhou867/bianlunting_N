@@ -1,0 +1,10 @@
+report_title: 企业社会保险补贴主动服务筛查报告
+sections:
+  - enterprise_hire_summary
+  - candidate_person_summary
+  - hardship_certification
+  - suspected_service_signals
+  - registration_reminders
+  - social_insurance_trace
+  - subsidy_history
+  - manual_review

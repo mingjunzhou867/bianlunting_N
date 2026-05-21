@@ -27,8 +27,8 @@
 ## Frameworks
 
 **Core:**
-- FastAPI - HTTP API in [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
-- SQLAlchemy 2.x - Database execution and session lifecycle in [config/database.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/config/database.py)
+- FastAPI - HTTP API in [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py)
+- SQLAlchemy 2.x - Database execution and session lifecycle in [config/database.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/config/database.py)
 - Pydantic 2.x - Settings and domain models in `config/` and `evidence/`
 - Vue 3.5 - Frontend app in `frontend/src/`
 - Vite 8 - Frontend dev server and build tool
@@ -39,7 +39,7 @@
 - Python script-style tests under `tests/` are run manually, for example `python -m tests.test_debate`
 
 **Build/Dev:**
-- Uvicorn - Local API server entry from [api/main.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/api/main.py)
+- Uvicorn - Local API server entry from [api/main.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/api/main.py)
 - Vite - Frontend dev/build in `frontend/package.json`
 
 ## Key Dependencies
@@ -60,13 +60,13 @@
 ## Configuration
 
 **Environment:**
-- Backend settings are loaded from `config/.env` by [config/settings.py](/c:/Users/afrangry/PycharmProjects/bysj_t2s/config/settings.py)
+- Backend settings are loaded from `config/.env` by [config/settings.py](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/config/settings.py)
 - Key env vars include LLM provider credentials and MySQL connection settings
 - Debate behavior is configured through `system_date`, `debate_max_rounds`, and `consensus_threshold`
 
 **Build:**
-- Python dependencies are declared in [requirements.txt](/c:/Users/afrangry/PycharmProjects/bysj_t2s/requirements.txt)
-- Frontend scripts and dependencies are declared in [frontend/package.json](/c:/Users/afrangry/PycharmProjects/bysj_t2s/frontend/package.json)
+- Python dependencies are declared in [requirements.txt](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/requirements.txt)
+- Frontend scripts and dependencies are declared in [frontend/package.json](/c:/Users/afrangry/PycharmProjects/zhicetong_t2s/frontend/package.json)
 
 ## Platform Requirements
 

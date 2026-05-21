@@ -171,3 +171,73 @@ class ConservativeArbiter:
             else " 当前未发现足以推翻多数结论的关键异议。"
         )
         return f"{evidence_summary}{decisive_summary}{risk_summary}"
+
+    def build_counterfactuals(
+        self,
+        projection: EvidenceProjection,
+        arbiter_result: ArbiterResult,
+        final_record: Any,
+    ) -> list[dict[str, Any]]:
+        """反事实推演：若关键证据反转，结论是否改变。
+
+        轻量启发式，无 LLM 调用。遍历决定性证据，构造假设场景。
+        """
+        counterfactuals: list[dict[str, Any]] = []
+        conclusion = final_record.get_final_conclusion()
+
+        for ref in arbiter_result.decisive_evidence_refs:
+            card = self._find_card(projection, ref)
+            if not card:
+                continue
+
+            current_status = card.status
+            current_confidence = card.confidence
+
+            # 构造反转场景
+            if current_status == "supports":
+                hypothetical = "contradicts"
+                reversal_desc = f"若 {ref} 从「支持」变为「矛盾」"
+            elif current_status == "contradicts":
+                hypothetical = "supports"
+                reversal_desc = f"若 {ref} 从「矛盾」变为「支持」"
+            elif current_status == "missing":
+                hypothetical = "supports"
+                reversal_desc = f"若 {ref} 从「缺失」变为「已证实」"
+            else:
+                continue
+
+            # 判断结论是否可能逆转
+            # 启发式：如果当前结论是 PASS，关键证据反转为 contradicts → 可能逆转
+            # 如果当前结论是 FAIL，关键证据反转为 supports → 可能逆转
+            conclusion_change = False
+            if conclusion == "符合" and hypothetical == "contradicts":
+                conclusion_change = True
+            elif conclusion == "不符合" and hypothetical == "supports":
+                conclusion_change = True
+            elif conclusion == "待定":
+                conclusion_change = True  # 待定时任何反转都可能影响
+
+            explanation = (
+                f"{reversal_desc}，"
+                f"{'结论可能逆转为' + ('不符合' if conclusion == '符合' else '符合') if conclusion_change else '结论仍维持不变'}。"
+                f"（当前置信度 {current_confidence:.0%}）"
+            )
+
+            counterfactuals.append({
+                "evidence_ref": ref,
+                "current_status": current_status,
+                "current_confidence": current_confidence,
+                "hypothetical_status": hypothetical,
+                "conclusion_change": conclusion_change,
+                "explanation": explanation,
+            })
+
+        return counterfactuals
+
+    @staticmethod
+    def _find_card(projection: EvidenceProjection, ref: str):
+        """在 projection 中查找匹配 ref 的 card。"""
+        for card in projection.cards:
+            if card.card_id == ref or card.card_id == f"card_{ref}":
+                return card
+        return None

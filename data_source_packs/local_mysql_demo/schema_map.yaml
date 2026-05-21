@@ -1,0 +1,118 @@
+entities:
+  person:
+    table: person
+    id_field: id_card
+    description: 人员基础信息
+    fields:
+      applicant_id: id_card
+      name: name
+      gender: gender
+      birth_date: birth_date
+      hukou_region: hukou_region
+      life_status: life_status
+      system_status: system_status
+      business_role: business_role
+      created_at: created_at
+  employment:
+    table: employment_registration
+    id_field: id_card
+    description: 就业登记信息
+    fields:
+      record_id: record_id
+      applicant_id: id_card
+      company_id: company_id
+      employment_form: employment_form
+      employment_date: employment_date
+      contract_start_date: contract_start_date
+      contract_end_date: contract_end_date
+      sync_date: sync_date
+      is_valid: is_valid
+  unemployment_registration:
+    table: unemployment_registration
+    id_field: id_card
+    description: 失业登记信息
+    fields:
+      record_id: record_id
+      applicant_id: id_card
+      unemployment_date: unemployment_date
+      unemployment_reason: unemployment_reason
+      register_date: register_date
+      cancel_date: cancel_date
+      is_valid: is_valid
+  hardship_certification:
+    table: hardship_certification
+    id_field: id_card
+    description: 就业困难人员认定
+    fields:
+      cert_id: cert_id
+      applicant_id: id_card
+      hardship_category: hardship_category
+      hardship_category_code: hardship_category_code
+      hardship_policy_match: hardship_policy_match
+      apply_date: apply_date
+      certify_org: certify_org
+      cancel_date: cancel_date
+      cancel_reason: cancel_reason
+      is_valid: is_valid
+  social_insurance_payment:
+    table: social_insurance_payment
+    id_field: id_card
+    description: 社保缴费记录
+    fields:
+      payment_id: payment_id
+      applicant_id: id_card
+      company_id: company_id
+      insurance_type: insurance_type
+      pay_month: pay_month
+      insurer_status: insurer_status
+      pay_base: pay_base
+      is_valid: is_valid
+  subsidy_payment_history:
+    table: subsidy_payment_history
+    id_field: id_card
+    description: 历史补贴领取记录
+    fields:
+      payment_id: payment_id
+      applicant_id: id_card
+      policy_code: policy_code
+      apply_start_month: apply_start_month
+      apply_end_month: apply_end_month
+      first_enjoy_month: first_enjoy_month
+      grant_months: grant_months
+      grant_amount: grant_amount
+      grant_date: grant_date
+      is_valid: is_valid
+  company_info:
+    table: company_info
+    id_field: legal_person_id_card
+    description: 企业法人信息
+    fields:
+      company_id: company_id
+      applicant_id: legal_person_id_card
+      company_name: company_name
+      company_type: company_type
+      is_valid: is_valid
+      created_at: created_at
+  company_shareholder:
+    table: company_shareholder
+    id_field: id_card
+    description: 企业股东信息
+    fields:
+      relation_id: relation_id
+      applicant_id: id_card
+      company_id: company_id
+      share_ratio: share_ratio
+      is_valid: is_valid
+  insurance_change_log:
+    table: insurance_change_log
+    id_field: id_card
+    description: 参保身份变更日志
+    fields:
+      change_id: change_id
+      applicant_id: id_card
+      insurance_type: insurance_type
+      old_status: old_status
+      new_status: new_status
+      event_date: event_date
+      related_company_id: related_company_id
+      is_valid: is_valid

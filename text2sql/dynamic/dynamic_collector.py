@@ -2,10 +2,11 @@ from loguru import logger
 from sqlalchemy import text
 
 from cognition.evidence_planner import EvidencePlanner
-from config.database import get_session
+from data_sources.session import get_session_for_data_source
 from evidence.evidence_model import EvidenceBundle, EvidenceItem, classify_evidence_diagnostic
 from text2sql.dynamic.auto_debugger import AutoDebugger
 from text2sql.dynamic.evidence_assembler import EvidenceAssembler
+from runtime.trace import TraceContext
 
 
 class DynamicEvidenceCollector:
@@ -15,14 +16,73 @@ class DynamicEvidenceCollector:
     """
     def __init__(self):
         self.planner = EvidencePlanner()
-        self.auto_debugger = AutoDebugger()
         self.assembler = EvidenceAssembler()
+        self.auto_debugger = AutoDebugger()
+        self._pack = None
+        self._overrides = None
+        self._rule_type_cache: dict[str, str] | None = None
+        self._loaded_policy_id: str | None = None
+
+    def _ensure_pack(self, policy_id: str):
+        """惰性加载 policy pack，仅在 policy_id 变化时重新加载。"""
+        if self._loaded_policy_id == policy_id:
+            return
+        from policy.policy_pack_loader import load_policy_packs
+        from policy.policy_models import CollectorOverrides
+        packs = load_policy_packs()
+        self._pack = packs.get(policy_id)
+        self._overrides = self._pack.collector_overrides if self._pack else CollectorOverrides()
+        self._loaded_policy_id = policy_id
+        self._rule_type_cache = None
+        # 重建 assembler guidance_map
+        guidance_map: dict[str, str] = {}
+        if self._pack:
+            for bucket in (
+                self._pack.structured_rules.basic_conditions,
+                self._pack.structured_rules.exclusion_conditions,
+                self._pack.structured_rules.inference_rules,
+                self._pack.structured_rules.calculation_rules,
+            ):
+                for r in bucket:
+                    if r.assembler_guidance:
+                        guidance_map[r.rule_id] = r.assembler_guidance
+        self.assembler = EvidenceAssembler(guidance_map=guidance_map)
+        # 重建 auto_debugger detail_query_rule_ids
+        detail_ids: set[str] = set()
+        if self._pack:
+            for bucket in (
+                self._pack.structured_rules.basic_conditions,
+                self._pack.structured_rules.exclusion_conditions,
+                self._pack.structured_rules.inference_rules,
+                self._pack.structured_rules.calculation_rules,
+            ):
+                for r in bucket:
+                    if r.requires_detail_query:
+                        detail_ids.add(r.rule_id)
+        self.auto_debugger = AutoDebugger(detail_query_rule_ids=detail_ids)
+
+    def _rule_type_map(self) -> dict[str, str]:
+        """构建 rule_id -> bucket_type ('must'/'exclude'/'flex') 映射。"""
+        if self._rule_type_cache is not None:
+            return self._rule_type_cache
+        m: dict[str, str] = {}
+        if self._pack:
+            for r in self._pack.structured_rules.basic_conditions:
+                m[r.rule_id] = "must"
+            for r in self._pack.structured_rules.exclusion_conditions:
+                m[r.rule_id] = "exclude"
+            for r in self._pack.structured_rules.inference_rules:
+                m[r.rule_id] = "flex"
+            for r in self._pack.structured_rules.calculation_rules:
+                m[r.rule_id] = "flex"
+        self._rule_type_cache = m
+        return m
 
     def _is_must_rule(self, rule_id: str) -> bool:
-        return rule_id.startswith("P001_MUST_")
+        return self._rule_type_map().get(rule_id) == "must"
 
     def _is_exclude_rule(self, rule_id: str) -> bool:
-        return rule_id.startswith("P001_EXCLUDE_")
+        return self._rule_type_map().get(rule_id) == "exclude"
 
     def _is_effective_hit(self, raw_data) -> bool:
         """
@@ -71,216 +131,220 @@ class DynamicEvidenceCollector:
                 assembled.result_summary = assembled.result_summary or "未命中该排除条件记录。"
                 return
 
-    def _is_category_in_policy_scope(self, row: dict) -> bool | None:
-        policy_match = row.get("hardship_policy_match")
+    def _is_category_in_policy_scope(self, row: dict, validator_name: str = "hardship_category_scope") -> bool | None:
+        """根据 policy pack 的 scope_validators 配置判断类别是否在政策范围内。"""
+        validator = (self._overrides.scope_validators or {}).get(validator_name) if self._overrides else None
+        if not validator:
+            return None
+
+        match_field = validator.match_field or "hardship_policy_match"
+        policy_match = row.get(match_field)
         if policy_match in (1, "1", True):
             return True
         if policy_match in (0, "0", False):
             return False
 
-        code = (row.get("hardship_category_code") or "").strip().upper()
-        if code:
-            # Fallback category scope when explicit policy_match is absent.
-            # Keep this list conservative and aligned with current local mock policy semantics.
-            in_scope_codes = {"ED_001", "ED_002", "ED_003"}
-            return code in in_scope_codes
+        code_field = validator.code_field or "hardship_category_code"
+        code = (row.get(code_field) or "").strip().upper()
+        if code and validator.in_scope_codes:
+            return code in set(validator.in_scope_codes)
 
-        category = (row.get("hardship_category") or "").strip()
-        if category:
-            in_scope_labels = {
-                "大龄失业人员",
-                "残疾人员",
-                "离校2年内未就业的高校毕业生",
-            }
-            if category in in_scope_labels:
-                return True
-            return False
+        label_field = validator.label_field or "hardship_category"
+        category = (row.get(label_field) or "").strip()
+        if category and validator.in_scope_labels:
+            return category in set(validator.in_scope_labels)
         return None
 
-    def _recover_flex_002_evidence(self, id_card: str):
+    def _execute_recovery(self, rule_id: str, id_card: str, data_source_id: str = "local_mysql_demo"):
         """
-        Recover P001_FLEX_002 when LLM-generated SQL over-filters category labels.
-        Read the latest valid hardship_certification record directly and decide support
-        by policy_match / category_code / category label fallback.
+        通用回退取证：从 policy pack 的 recovery_strategies 配置驱动。
+        返回 (raw_data, summary, supports) 或 None。
         """
-        sql = """
-            SELECT
-                id_card,
-                hardship_category,
-                hardship_category_code,
-                hardship_policy_match,
-                apply_date,
-                certify_org,
-                is_valid
-            FROM hardship_certification
-            WHERE id_card = :id_card
-              AND is_valid = '1'
-            ORDER BY apply_date DESC
-            LIMIT 1
-        """
-        try:
-            with get_session() as session:
-                row = session.execute(text(sql), {"id_card": id_card}).mappings().first()
-            if not row:
-                return None
-
-            row_dict = dict(row)
-            supports = self._is_category_in_policy_scope(row_dict)
-            code = row_dict.get("hardship_category_code") or "未知"
-            match = row_dict.get("hardship_policy_match")
-            summary = (
-                "按困难认定主记录回退取证："
-                f"类别编码={code}，政策匹配标记={match}，"
-                f"认定日期={row_dict.get('apply_date')}。"
-            )
-            return [row_dict], summary, supports
-        except Exception as exc:
-            logger.warning("[DynamicCollector] P001_FLEX_002 fallback recovery failed: {}", exc)
+        strategy = (self._overrides.recovery_strategies or {}).get(rule_id) if self._overrides else None
+        if not strategy or not strategy.sql:
             return None
-
-    def _recover_flex_005_evidence(self, id_card: str):
-        """
-        Recover P001_FLEX_005 when LLM-generated SQL is rejected by detail guardrail.
-        Return detail rows instead of aggregate-only output.
-        """
-        sql = """
-            SELECT
-                policy_code,
-                apply_start_month,
-                apply_end_month,
-                grant_months,
-                grant_amount,
-                grant_date,
-                is_valid
-            FROM subsidy_payment_history
-            WHERE id_card = :id_card
-              AND is_valid = '1'
-            ORDER BY grant_date DESC, apply_end_month DESC
-        """
         try:
-            with get_session() as session:
-                rows = session.execute(text(sql), {"id_card": id_card}).mappings().all()
+            with get_session_for_data_source(data_source_id) as session:
+                rows = session.execute(text(strategy.sql), {"id_card": id_card}).mappings().all()
             if not rows:
                 return None
             raw_data = [dict(row) for row in rows]
-            summary = f"回退取证成功：共查询到 {len(raw_data)} 条历史补贴明细记录。"
-            return raw_data, summary, True
+            first_row = raw_data[0]
+
+            # 使用 scope_validator 判断 supports_conclusion
+            supports: bool | None = None
+            if strategy.scope_validator:
+                supports = self._is_category_in_policy_scope(first_row, strategy.scope_validator)
+
+            # 生成摘要
+            if strategy.summary_template:
+                try:
+                    summary = strategy.summary_template.format(**first_row)
+                except KeyError:
+                    summary = strategy.summary_template
+            elif strategy.success_summary_template:
+                try:
+                    summary = strategy.success_summary_template.format(row_count=len(raw_data))
+                except KeyError:
+                    summary = strategy.success_summary_template
+            else:
+                summary = f"回退取证成功：共查询到 {len(raw_data)} 条记录。"
+            return raw_data, summary, supports
         except Exception as exc:
-            logger.warning("[DynamicCollector] P001_FLEX_005 fallback recovery failed: {}", exc)
+            logger.warning("[DynamicCollector] {} fallback recovery failed: {}", rule_id, exc)
             return None
 
-    def _resolve_base_volatility_semantics(self, item, raw_data):
-        if item.rule_id != "P001_FLEX_004":
+    def _resolve_volatility_semantics(self, item, raw_data):
+        """通用波动分析：从 policy pack 的 volatility_analyzers 配置驱动。"""
+        analyzer = (self._overrides.volatility_analyzers or {}).get(item.rule_id) if self._overrides else None
+        if not analyzer:
             return None
 
-        pay_bases: list[float] = []
+        value_field = analyzer.value_field
+        values: list[float] = []
         for row in raw_data or []:
-            raw_value = row.get("pay_base")
+            raw_value = row.get(value_field)
             if raw_value in (None, ""):
                 continue
             try:
-                pay_base = float(raw_value)
+                v = float(raw_value)
             except (TypeError, ValueError):
                 continue
-            if pay_base > 0:
-                pay_bases.append(pay_base)
+            if v > 0:
+                values.append(v)
 
-        if len(pay_bases) < 2:
-            return (
-                "缴费基数记录不足，暂无法判断是否存在异常波动；该项仅作为风险观察信号，不单独影响资格结论。",
-                None,
-            )
+        if len(values) < analyzer.min_samples:
+            return (analyzer.insufficient_samples_summary, analyzer.insufficient_samples_supports)
 
         relative_changes: list[float] = []
-        for previous, current in zip(pay_bases, pay_bases[1:]):
+        for previous, current in zip(values, values[1:]):
             if previous <= 0:
                 continue
             relative_changes.append(abs(current - previous) / previous)
 
         if not relative_changes:
-            return (
-                "缴费基数记录可用，但不足以判断波动风险；该项仅作为风险观察信号，不单独影响资格结论。",
-                None,
-            )
+            return (analyzer.insufficient_samples_summary, analyzer.insufficient_samples_supports)
 
         max_change = max(relative_changes)
-        if max_change < 0.05:
-            return (
-                "缴费基数整体稳定，未见异常波动；该项不构成负面证据，仅作为中性观察信息。",
-                None,
-            )
-        if max_change <= 0.20:
-            return (
-                "缴费基数存在轻微波动，但幅度处于正常范围，当前不足以认定为异常风险；该项仅作为中性观察信息。",
-                None,
-            )
-        return (
-            "缴费基数存在较明显波动，提示可能存在身份切换、经营异常或数据异常风险；需结合单位参保、身份切换等证据进一步复核，该项不单独直接否决资格。",
-            None,
-        )
-
-    def _resolve_no_data_semantics(self, item):
-        rule_id = item.rule_id
-        if rule_id == "P001_FLEX_003":
-            return (
-                "未查询到身份切换记录，当前未发现从灵活就业转为单位参保的切换风险。",
-                True,
-            )
-        if rule_id == "P001_FLEX_004":
-            return (
-                "未检出可判定的缴费基数异常波动信号；该项仅用于风险提示，不单独影响资格结论。",
-                True,
-            )
-        if rule_id == "P001_FLEX_005":
-            return (
-                "未查询到历史补贴领取记录，可视为当前没有已享受补贴月数的存量记录。",
-                True,
-            )
+        # thresholds 按 max_change 升序排列，找第一个匹配的
+        for threshold in analyzer.thresholds:
+            if max_change < threshold.max_change:
+                return (threshold.summary, threshold.supports)
+        # 超过最大阈值，用最后一个
+        if analyzer.thresholds:
+            last = analyzer.thresholds[-1]
+            return (last.summary, last.supports)
         return None
 
-    def collect_all(self, id_card: str, policy_id: str = "POLICY_001") -> EvidenceBundle:
+    def _resolve_no_data_semantics(self, item):
+        """从 policy pack 的 rule 元数据读取无数据语义。"""
+        if not self._pack:
+            return None
+        # 在 pack 的四个 bucket 中查找匹配的 rule
+        for bucket in (
+            self._pack.structured_rules.basic_conditions,
+            self._pack.structured_rules.exclusion_conditions,
+            self._pack.structured_rules.inference_rules,
+            self._pack.structured_rules.calculation_rules,
+        ):
+            for r in bucket:
+                if r.rule_id == item.rule_id and r.no_data_summary:
+                    return (r.no_data_summary, r.no_data_supports)
+        return None
+
+    def collect_all(
+        self,
+        id_card: str,
+        policy_id: str = "POLICY_001",
+        data_source_id: str = "local_mysql_demo",
+        trace: TraceContext | None = None,
+    ) -> EvidenceBundle:
         """为非流式接口保留的遗留打包方法"""
         bundle = EvidenceBundle(id_card=id_card)
-        for item in self.collect_stream(id_card, policy_id=policy_id):
+        for item in self.collect_stream(id_card, policy_id=policy_id, data_source_id=data_source_id, trace=trace):
             bundle.items.append(item)
         return bundle
         
-    def collect_stream(self, id_card: str, policy_id: str = "POLICY_001"):
-        logger.info(f"[DynamicCollector] 开启全境动态取证，目标人员：{id_card} policy={policy_id}")
+    def collect_stream(
+        self,
+        id_card: str,
+        policy_id: str = "POLICY_001",
+        data_source_id: str = "local_mysql_demo",
+        trace: TraceContext | None = None,
+    ):
+        logger.info(
+            "[DynamicCollector] 开启全境动态取证，目标人员：{} policy={} data_source={}",
+            id_card,
+            policy_id,
+            data_source_id,
+        )
+        if trace:
+            trace.info(
+                "evidence",
+                "collection_started",
+                "[Evidence] 动态取证启动",
+                policy_id=policy_id,
+                data_source_id=data_source_id,
+            )
         
         # 1. 启动第一层：智能规划网络
         plan = self.planner.plan(person_id=id_card, policy_id=policy_id)
+        if trace:
+            trace.success(
+                "evidence",
+                "plan_created",
+                f"[Evidence] 取证计划生成：{len(plan.items)} 个断点",
+                plan_item_count=len(plan.items),
+            )
         
+        # 确保 policy pack 已加载
+        self._ensure_pack(policy_id)
+
         # 2. 深入第二层：执行与转储
         for item in plan.items:
             evidence_id = item.plan_item_id
+            if trace:
+                trace.info(
+                    "evidence",
+                    "rule_collection_started",
+                    f"[Evidence] 开始取证 {item.rule_id}: {item.rule_name}",
+                    rule_id=item.rule_id,
+                    rule_type=item.rule_type,
+                )
             
             try:
                 # 2.1 浴火执行：撰写 SQL -> 防爆拦截重试 -> 获取原始数据
-                sql, raw_data = self.auto_debugger.execute_with_auto_fix(item, id_card)
+                sql, raw_data = self.auto_debugger.execute_with_auto_fix(
+                    item,
+                    id_card,
+                    data_source_id=data_source_id,
+                )
                 exec_status = "success" if raw_data else "no_data"
                 
                 # 2.2 升维装配：将黑客数据翻译成符合裁决规则的结论总结
                 assembled = self.assembler.assemble(item, raw_data)
-                rule_resolution = self._resolve_base_volatility_semantics(item, raw_data)
+                rule_resolution = self._resolve_volatility_semantics(item, raw_data)
                 if rule_resolution:
                     assembled.result_summary, assembled.supports_conclusion = rule_resolution
 
-                if item.rule_id == "P001_FLEX_002" and exec_status == "no_data":
-                    recovered = self._recover_flex_002_evidence(id_card)
+                # 通用 no_data 回退：检查 recovery_strategies 中 trigger=no_data 的规则
+                recovery_strategy = (self._overrides.recovery_strategies or {}).get(item.rule_id) if self._overrides else None
+                if recovery_strategy and recovery_strategy.trigger == "no_data" and exec_status == "no_data":
+                    recovered = self._execute_recovery(item.rule_id, id_card, data_source_id=data_source_id)
                     if recovered:
                         raw_data, recovered_summary, recovered_supports = recovered
                         exec_status = "success"
                         assembled.result_summary = recovered_summary
                         assembled.supports_conclusion = recovered_supports
-                        sql = (
-                            "/* fallback: recovered from hardship_certification latest valid record */\n"
-                            "SELECT id_card, hardship_category, hardship_category_code, hardship_policy_match, "
-                            "apply_date, certify_org, is_valid\n"
-                            "FROM hardship_certification\n"
-                            f"WHERE id_card = '{id_card}' AND is_valid = '1'\n"
-                            "ORDER BY apply_date DESC LIMIT 1"
-                        )
+                        sql = f"/* fallback: recovered via recovery_strategy for {item.rule_id} */\n{recovery_strategy.sql}"
+                        if trace:
+                            trace.warning(
+                                "evidence",
+                                "fallback_recovered",
+                                f"[Evidence] {item.rule_id} 使用回退策略取证成功",
+                                rule_id=item.rule_id,
+                                row_count=len(raw_data),
+                            )
 
                 if exec_status == "no_data":
                     no_data_resolution = self._resolve_no_data_semantics(item)
@@ -307,11 +371,21 @@ class DynamicEvidenceCollector:
                     diagnostic_detail=diagnostic[2],
                     diagnostic_hint=diagnostic[3],
                 )
+                if trace:
+                    trace.success(
+                        "evidence",
+                        "rule_collection_finished",
+                        f"[Evidence] {item.rule_id} 取证完成：{exec_status}",
+                        rule_id=item.rule_id,
+                        exec_status=exec_status,
+                        row_count=len(raw_data),
+                        supports_conclusion=assembled.supports_conclusion,
+                    )
             except Exception as exc:
-                # Robust fallback for P001_FLEX_005: always try detail recovery first,
-                # regardless of exact exception message formatting.
-                if item.rule_id == "P001_FLEX_005":
-                    recovered = self._recover_flex_005_evidence(id_card)
+                # 通用 exception 回退：检查 recovery_strategies 中 trigger=exception 的规则
+                exception_recovery = (self._overrides.recovery_strategies or {}).get(item.rule_id) if self._overrides else None
+                if exception_recovery and exception_recovery.trigger == "exception":
+                    recovered = self._execute_recovery(item.rule_id, id_card, data_source_id=data_source_id)
                     if recovered:
                         raw_data, recovered_summary, recovered_supports = recovered
                         exec_status = "success"
@@ -322,14 +396,7 @@ class DynamicEvidenceCollector:
                             target_id_card=id_card,
                             target=item.rule_name,
                             category=item.rule_type,
-                            sql=(
-                                "/* fallback: recovered subsidy details after execution exception */\n"
-                                "SELECT policy_code, apply_start_month, apply_end_month, grant_months, "
-                                "grant_amount, grant_date, is_valid\n"
-                                "FROM subsidy_payment_history\n"
-                                f"WHERE id_card = '{id_card}' AND is_valid = '1'\n"
-                                "ORDER BY grant_date DESC, apply_end_month DESC"
-                            ),
+                            sql=f"/* fallback: recovered via exception recovery for {item.rule_id} */\n{exception_recovery.sql}",
                             result_raw=raw_data,
                             result_summary=recovered_summary,
                             supports_conclusion=recovered_supports,
@@ -340,19 +407,27 @@ class DynamicEvidenceCollector:
                             diagnostic_detail=diagnostic[2],
                             diagnostic_hint=diagnostic[3],
                         )
+                        if trace:
+                            trace.warning(
+                                "evidence",
+                                "fallback_recovered",
+                                f"[Evidence] {item.rule_id} 异常后使用回退策略取证成功",
+                                rule_id=item.rule_id,
+                                row_count=len(raw_data),
+                            )
                         yield evidence
                         continue
-                    # No rows is a normal business outcome for historical subsidy details.
+                    # 回退也无数据：使用 no_data 语义
                     no_data_resolution = self._resolve_no_data_semantics(item)
                     summary = (
                         no_data_resolution[0]
                         if no_data_resolution
-                        else "未查询到历史补贴领取记录。"
+                        else exception_recovery.no_data_summary or "未查询到相关记录。"
                     )
                     supports = (
                         no_data_resolution[1]
                         if no_data_resolution
-                        else True
+                        else exception_recovery.no_data_supports
                     )
                     diagnostic = classify_evidence_diagnostic("no_data")
                     evidence = EvidenceItem(
@@ -361,14 +436,7 @@ class DynamicEvidenceCollector:
                         target_id_card=id_card,
                         target=item.rule_name,
                         category=item.rule_type,
-                        sql=(
-                            "/* fallback: no historical subsidy rows */\n"
-                            "SELECT policy_code, apply_start_month, apply_end_month, grant_months, "
-                            "grant_amount, grant_date, is_valid\n"
-                            "FROM subsidy_payment_history\n"
-                            f"WHERE id_card = '{id_card}' AND is_valid = '1'\n"
-                            "ORDER BY grant_date DESC, apply_end_month DESC"
-                        ),
+                        sql=f"/* fallback: no data after exception recovery for {item.rule_id} */\n{exception_recovery.sql}",
                         result_raw=[],
                         result_summary=summary,
                         supports_conclusion=supports,
@@ -379,10 +447,24 @@ class DynamicEvidenceCollector:
                         diagnostic_detail=diagnostic[2],
                         diagnostic_hint=diagnostic[3],
                     )
+                    if trace:
+                        trace.warning(
+                            "evidence",
+                            "fallback_no_data",
+                            f"[Evidence] {item.rule_id} 异常后回退为无数据记录",
+                            rule_id=item.rule_id,
+                        )
                     yield evidence
                     continue
 
                 logger.error(f"[DynamicCollector] 取证线 {item.rule_id} 执行全线崩溃: {exc}")
+                if trace:
+                    trace.danger(
+                        "evidence",
+                        "rule_collection_failed",
+                        f"[Evidence] {item.rule_id} 取证失败：{exc}",
+                        rule_id=item.rule_id,
+                    )
                 diagnostic = classify_evidence_diagnostic("failed", str(exc))
                 evidence = EvidenceItem(
                     evidence_id=evidence_id,
@@ -406,3 +488,5 @@ class DynamicEvidenceCollector:
             yield evidence
             
         logger.info(f"[DynamicCollector] 动态取证落幕。")
+        if trace:
+            trace.success("evidence", "collection_finished", "[Evidence] 动态取证完成")

@@ -1,17 +1,14 @@
 """
-政策路由器 - 根据 policy_id 加载对应政策配置
-数据源: policy_master 表（数据库）
+政策路由器 - 根据 policy_id 加载对应政策配置。
+优先读取 policy_packs，数据库作为兼容回退。
 """
-import json
-from pathlib import Path
 from typing import Dict, Optional, List
 from loguru import logger
 from sqlalchemy import text
 
 from policy.policy_models import PolicyConfig
+from policy.policy_pack_loader import load_policy_configs_from_packs, list_policy_pack_summaries
 from config.database import get_session
-
-_POLICIES_DIR = Path(__file__).resolve().parent.parent / "policies"
 
 # 模块级缓存: 第一次调用时加载, 后续直接读取
 _policy_cache: Dict[str, PolicyConfig] = {}
@@ -19,10 +16,15 @@ _loaded = False
 
 
 def _load_all_policies():
-    """从数据库 policy_master 表加载所有政策"""
+    """从 policy_packs 和数据库 policy_master 表加载所有政策。"""
     global _loaded
     if _loaded:
         return
+
+    pack_configs = load_policy_configs_from_packs()
+    _policy_cache.update(pack_configs)
+    if pack_configs:
+        logger.info("[PolicyRouter] loaded {} policy config(s) from packs", len(pack_configs))
 
     try:
         with get_session() as session:
@@ -77,12 +79,15 @@ def _load_all_policies():
                         calculation_rules=calculation_rules,
                     ),
                 )
+                if config.policy_id in _policy_cache:
+                    logger.debug("[PolicyRouter] database policy overridden by pack: {}", config.policy_id)
+                    continue
                 _policy_cache[config.policy_id] = config
-                logger.debug(f"[PolicyRouter] 已加载: {config.policy_id} ({config.policy_name}), 规则数={len(rule_rows)}")
+                logger.debug("[PolicyRouter] loaded database policy: {}, rules={}", config.policy_id, len(rule_rows))
 
-        logger.info(f"[PolicyRouter] 从数据库加载 {len(_policy_cache)} 个政策配置")
+        logger.info("[PolicyRouter] total loaded policy configs: {}", len(_policy_cache))
     except Exception as e:
-        logger.error(f"[PolicyRouter] 数据库加载失败: {e}")
+        logger.error("[PolicyRouter] database load failed, keeping loaded policy packs: {}", e)
 
     _loaded = True
 
@@ -141,6 +146,11 @@ def list_policies() -> List[Dict]:
         }
         for cfg in _policy_cache.values()
     ]
+
+
+def list_policy_packs() -> List[Dict]:
+    """返回可插拔政策包摘要。"""
+    return list_policy_pack_summaries()
 
 
 def get_all_policy_configs() -> Dict[str, PolicyConfig]:

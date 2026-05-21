@@ -2,6 +2,7 @@
 import { ref, watch, onMounted, onUnmounted, computed } from 'vue'
 import { ElMessage } from 'element-plus'
 import DebateSessionView from './components/DebateSessionView.vue'
+import DataAccessCenter from './components/DataAccessCenter.vue'
 import HistorySessionList from './components/HistorySessionList.vue'
 import ManualSupplementPanel from './components/ManualSupplementPanel.vue'
 import {
@@ -17,6 +18,8 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL ?? 'http://localhost:8000/api
 const HISTORY_URL = `${API_BASE}/debates`
 const STREAM_URL = `${API_BASE}/debate_stream`
 const INTENT_URL = `${API_BASE}/intent`
+const POLICY_PACKS_URL = `${API_BASE}/policy-packs`
+const DATA_SOURCES_URL = `${API_BASE}/data-sources`
 
 const idCardInput = ref('')
 const userQueryInput = ref('')
@@ -43,6 +46,23 @@ const selectedPolicyId = ref('')
 const policyConditions = ref([])
 const policyConditionsMeta = ref(null)
 const conditionsLoading = ref(false)
+const policyPacks = ref([])
+const dataSources = ref([])
+const packCatalogLoading = ref(false)
+const selectedDataSourceId = ref('local_mysql_demo')
+const tablePayloadError = ref('')
+const defaultTablePayload = {
+  records: [
+    {
+      rule_id: 'RULE_001',
+      target: 'employment_status',
+      result_summary: 'employment status exists from table payload',
+      supports_conclusion: true,
+      confidence: 0.9,
+    },
+  ],
+}
+const tablePayloadJson = ref(JSON.stringify(defaultTablePayload, null, 2))
 const ID_CARD_REGEX = /^\d{17}[\dXx]$/
 const moduleGavelUrl = '/image/gov/module-gavel.png'
 
@@ -135,6 +155,23 @@ const policySummary = (reason = '') => {
   return [text.slice(0, 30), text.slice(30, 60) || '请结合条件清单确认']
 }
 
+const policyOptions = computed(() => {
+  const candidates = Array.isArray(intentResult.value?.candidate_policies)
+    ? intentResult.value.candidate_policies
+    : []
+  return candidates
+})
+
+const isTablePayloadDataSourceId = (dataSourceId) => {
+  const source = dataSources.value.find((item) => item.data_source_id === dataSourceId)
+  return dataSourceId === 'table_payload_demo' || source?.type === 'table_payload'
+}
+
+const resetTablePayload = () => {
+  tablePayloadJson.value = JSON.stringify(defaultTablePayload, null, 2)
+  tablePayloadError.value = ''
+}
+
 const conditionStateClass = (cond) => {
   const tag = String(cond?.tag_type || '')
   if (tag === 'success') return 'state-dot--ok'
@@ -166,12 +203,25 @@ const currentViewLabel = computed(() => {
   if (activeTab.value === 'cognition') return '视图二：取证规划中心'
   if (activeTab.value === 'tribunal') return '视图三：多智能体辩论庭'
   if (activeTab.value === 'verdict') return '视图四：裁决结果与补证复核'
+  if (activeTab.value === 'dataAccess') return '数据接入中心'
   return '历史会话'
 })
 
 const flowCompleted = computed(() => {
   const session = activeSession.value
   return Boolean(session?.final_conclusion) || Boolean(session?.completed_at) || session?.status === 'completed'
+})
+
+const canShowManualSupplement = computed(() => {
+  const session = activeSession.value
+  if (!session) return false
+  const clauseResults = session.adjudication_report?.clause_results
+  return (
+    Boolean(session.final_conclusion) ||
+    Boolean(session.adjudication_report && Object.keys(session.adjudication_report).length) ||
+    Boolean(session.arbiter_result && Object.keys(session.arbiter_result).length) ||
+    (Array.isArray(clauseResults) && clauseResults.length > 0)
+  )
 })
 
 const overallFlowStep = computed(() => {
@@ -290,6 +340,55 @@ const readJson = async (response) => {
   }
 }
 
+const fetchPackCatalogs = async () => {
+  packCatalogLoading.value = true
+  try {
+    const [policyResponse, dataSourceResponse] = await Promise.all([
+      fetch(POLICY_PACKS_URL),
+      fetch(DATA_SOURCES_URL),
+    ])
+    const policyPayload = await readJson(policyResponse)
+    const dataSourcePayload = await readJson(dataSourceResponse)
+
+    if (policyResponse.ok && policyPayload?.status === 'success') {
+      policyPacks.value = Array.isArray(policyPayload.data?.policy_packs)
+        ? policyPayload.data.policy_packs
+        : []
+    }
+
+    if (dataSourceResponse.ok && dataSourcePayload?.status === 'success') {
+      dataSources.value = Array.isArray(dataSourcePayload.data?.data_sources)
+        ? dataSourcePayload.data.data_sources
+        : []
+      if (!dataSources.value.some((source) => source.data_source_id === selectedDataSourceId.value)) {
+        selectedDataSourceId.value = dataSources.value[0]?.data_source_id || 'local_mysql_demo'
+      }
+    }
+  } catch {
+    policyPacks.value = []
+    dataSources.value = []
+  } finally {
+    packCatalogLoading.value = false
+  }
+}
+
+const parseTablePayloadInput = (dataSourceId = selectedDataSourceId.value) => {
+  if (!isTablePayloadDataSourceId(dataSourceId)) return null
+  tablePayloadError.value = ''
+  try {
+    const payload = JSON.parse(tablePayloadJson.value || '{}')
+    const hasRecords = Array.isArray(payload.records) && payload.records.length > 0
+    const hasTables = payload.tables && typeof payload.tables === 'object' && Object.keys(payload.tables).length > 0
+    if (!hasRecords && !hasTables) {
+      throw new Error('table_payload 需要 records 或 tables。')
+    }
+    return payload
+  } catch (error) {
+    tablePayloadError.value = error.message || 'table_payload JSON 解析失败。'
+    throw error
+  }
+}
+
 const fetchConditions = async (policyId) => {
   if (!policyId) {
     policyConditions.value = []
@@ -321,6 +420,10 @@ const fetchConditions = async (policyId) => {
 
 watch(selectedPolicyId, (newId) => {
   fetchConditions(newId)
+  const pack = policyPacks.value.find((item) => item.policy_id === newId)
+  if (pack?.default_data_source_id && !liveLoading.value) {
+    selectedDataSourceId.value = pack.default_data_source_id
+  }
 })
 
 const runIntentRecognition = async () => {
@@ -465,6 +568,16 @@ const startStreamDebate = async (options = {}) => {
   const reviewMode = options.reviewMode ?? ''
   const debateOnly = Boolean(options.debateOnly)
   const startTab = options.startTab ?? 'cognition'
+  const requestedDataSourceId = options.dataSourceId ?? selectedDataSourceId.value
+  let collectionContext = null
+  if (!reusedEvidence && isTablePayloadDataSourceId(requestedDataSourceId)) {
+    try {
+      collectionContext = parseTablePayloadInput(requestedDataSourceId)
+    } catch (error) {
+      ElMessage.error(error.message || '表格材料 JSON 无法使用。')
+      return
+    }
+  }
 
   activeTab.value = startTab
   activeIdCard.value = idCard
@@ -473,6 +586,7 @@ const startStreamDebate = async (options = {}) => {
   activeSession.value = {
     ...buildEmptySession(idCard),
     policy_id: requestedPolicyId || '',
+    data_source_id: requestedDataSourceId || '',
     evidence: reusedEvidence ?? [],
     manual_supplements: manualSupplements,
   }
@@ -490,6 +604,12 @@ const startStreamDebate = async (options = {}) => {
     requestBody.confirmed_policy_id = requestedPolicyId
   } else if (userQueryInput.value.trim()) {
     requestBody.user_query = userQueryInput.value.trim()
+  }
+  if (requestedDataSourceId) {
+    requestBody.data_source_id = requestedDataSourceId
+  }
+  if (collectionContext) {
+    requestBody.table_payload = collectionContext
   }
   if (reusedEvidence && reusedEvidence.length > 0) {
     requestBody.reuse_evidence = true
@@ -703,6 +823,7 @@ const rerunSupplementReview = () => {
   startStreamDebate({
     idCard: session.id_card || idCardInput.value,
     policyId: session.policy_id || selectedPolicyId.value,
+    dataSourceId: session.data_source_id || selectedDataSourceId.value,
     evidence,
     debateOnly: true,
     startTab: 'verdict',
@@ -714,6 +835,7 @@ const rerunSupplementReview = () => {
 const restartHistoryDebate = (session) => {
   const idCard = session?.id_card?.trim?.() ?? ''
   const policyId = session?.policy_id ?? ''
+  const dataSourceId = session?.data_source_id ?? selectedDataSourceId.value
   const evidence = Array.isArray(session?.evidence) ? session.evidence : []
   const manualSupplements = Array.isArray(session?.manual_supplements) ? session.manual_supplements : []
 
@@ -726,11 +848,13 @@ const restartHistoryDebate = (session) => {
   userQueryInput.value = ''
   intentResult.value = null
   selectedPolicyId.value = policyId
+  selectedDataSourceId.value = dataSourceId
 
   ElMessage.success('已按历史会话参数重新发起辩论。')
   startStreamDebate({
     idCard,
     policyId,
+    dataSourceId,
     evidence,
     debateOnly: true,
     startTab: 'tribunal',
@@ -746,6 +870,7 @@ const handleBeforeUnload = (e) => {
 }
 
 onMounted(() => {
+  fetchPackCatalogs()
   fetchHistory()
   window.addEventListener('beforeunload', handleBeforeUnload)
 })
@@ -763,12 +888,21 @@ onUnmounted(() => {
           <div class="header-row">
             <div class="gov-title-wrap">
               <div class="brand-block">
-                <img
-                  class="brand-wordmark-logo"
-                  src="./assets/zhicetong-wordmark-cropped.png"
-                  alt="智策通惠民"
-                />
-                <div class="header-subtitle">基于大模型与证据链取证的政务资格审核系统</div>
+                <div class="brand-identity">
+                  <img
+                    class="brand-round-logo"
+                    src="./assets/zhicetong-round-logo.png"
+                    alt="智策通标识"
+                  />
+                  <div class="brand-text-stack">
+                    <img
+                      class="brand-wordmark-logo"
+                      src="./assets/zhicetong-title.png"
+                      alt="智策通"
+                    />
+                    <div class="header-subtitle">基于大模型的多Agent辩论与证据链取证研判系统</div>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="header-right">
@@ -999,12 +1133,8 @@ onUnmounted(() => {
                       </div>
                     </div>
 
-                    <div v-if="!intentResult" class="policy-empty">
-                      <div class="policy-skeleton" v-for="idx in 3" :key="idx">
-                        <div class="skeleton-line skeleton-line--title"></div>
-                        <div class="skeleton-line"></div>
-                        <div class="skeleton-line skeleton-line--short"></div>
-                      </div>
+                    <div v-if="policyOptions.length === 0" class="policy-empty policy-empty--plain">
+                      输入需求并完成意图识别后显示候选政策。
                     </div>
 
                     <el-radio-group
@@ -1013,7 +1143,7 @@ onUnmounted(() => {
                       class="policy-radio-group"
                     >
                       <el-radio
-                        v-for="(policy, idx) in (intentResult.candidate_policies || [])"
+                        v-for="(policy, idx) in policyOptions"
                         :key="policy.policy_id"
                         :value="policy.policy_id"
                         border
@@ -1240,6 +1370,7 @@ onUnmounted(() => {
                 @restart="restartHistoryDebate"
               />
               <ManualSupplementPanel
+                v-if="canShowManualSupplement"
                 :session="activeSession"
                 :disabled="liveLoading || sessionLoading"
                 @submit-supplement="handleSubmitSupplement"
@@ -1261,6 +1392,23 @@ onUnmounted(() => {
               @select="selectHistorySession"
             />
           </div>
+        </el-tab-pane>
+
+        <el-tab-pane label="数据接入" name="dataAccess">
+          <el-scrollbar height="100%">
+            <DataAccessCenter
+              v-model:selected-policy-id="selectedPolicyId"
+              v-model:selected-data-source-id="selectedDataSourceId"
+              v-model:table-payload-json="tablePayloadJson"
+              :policy-packs="policyPacks"
+              :data-sources="dataSources"
+              :table-payload-error="tablePayloadError"
+              :loading="packCatalogLoading"
+              :disabled="liveLoading"
+              @refresh="fetchPackCatalogs"
+              @reset-table-payload="resetTablePayload"
+            />
+          </el-scrollbar>
         </el-tab-pane>
       </el-tabs>
       <el-backtop :right="24" :bottom="24" />
@@ -1376,12 +1524,27 @@ onUnmounted(() => {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+  gap: 4px;
+}
+
+.brand-identity {
+  display: flex;
+  align-items: flex-end;
+  gap: 14px;
+  min-width: 0;
+}
+
+.brand-text-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 2px;
+  min-width: 0;
 }
 
 .brand-wordmark-logo {
-  width: min(380px, 34vw);
-  height: 56px;
+  width: min(245px, 22vw);
+  height: 42px;
   object-fit: contain;
   object-position: left center;
   display: block;
@@ -1389,8 +1552,8 @@ onUnmounted(() => {
 }
 
 .brand-round-logo {
-  width: 72px;
-  height: 72px;
+  width: 74px;
+  height: 74px;
   object-fit: contain;
   flex: 0 0 auto;
   border-radius: 50%;
@@ -1408,6 +1571,7 @@ onUnmounted(() => {
   font-size: 12px;
   color: var(--color-text-secondary);
   letter-spacing: 0;
+  white-space: nowrap;
 }
 
 .top-action-btn {
@@ -1720,7 +1884,7 @@ onUnmounted(() => {
 .flow-cards {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
 }
 
 .flow-card {
@@ -1729,7 +1893,7 @@ onUnmounted(() => {
   background: #fff;
   border: 1px solid var(--color-border);
   box-shadow: none;
-  padding: 11px;
+  padding: 14px;
   transition: var(--ui-transition);
   cursor: pointer;
 }
@@ -1817,7 +1981,7 @@ onUnmounted(() => {
 
 .flow-card-desc {
   margin-top: 4px;
-  font-size: 11px;
+  font-size: 12px;
   color: #64748B;
   line-height: 1.45;
 }
@@ -2256,6 +2420,10 @@ onUnmounted(() => {
   margin-bottom: 4px;
 }
 
+.input-section-head .section-helper {
+  margin-top: 4px;
+}
+
 .input-section {
   background: var(--color-card-bg);
   border: 1px solid var(--color-border);
@@ -2412,49 +2580,13 @@ onUnmounted(() => {
 }
 
 .policy-empty {
-  padding: 8px 0;
-}
-
-.policy-skeleton {
   border: 1px solid rgba(100, 116, 139, 0.18);
   border-radius: 8px;
-  padding: 12px;
-  position: relative;
-}
-
-.policy-skeleton::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 10px;
-  bottom: 10px;
-  width: 3px;
-  border-radius: 2px;
-  background: #9F1D22;
-}
-
-.policy-skeleton + .policy-skeleton {
-  margin-top: 12px;
-}
-
-.skeleton-line {
-  height: 10px;
-  background: linear-gradient(90deg, #F5F7FA 25%, #F5F7FA 50%, #F5F7FA 75%);
-  background-size: 200% 100%;
-  animation: skeletonPulse 1.2s infinite;
-  border-radius: 6px;
-}
-
-.skeleton-line + .skeleton-line {
-  margin-top: 8px;
-}
-
-.skeleton-line--title {
-  width: 60%;
-}
-
-.skeleton-line--short {
-  width: 45%;
+  padding: 28px 16px;
+  color: #64748B;
+  background: #FAFBFC;
+  font-size: 13px;
+  text-align: center;
 }
 
 .policy-radio-group {
@@ -2469,7 +2601,7 @@ onUnmounted(() => {
   height: auto !important;
   margin-right: 0;
   align-items: flex-start;
-  padding: 11px 12px;
+  padding: 14px 16px;
   box-sizing: border-box;
 }
 
@@ -2837,11 +2969,6 @@ onUnmounted(() => {
   background: #fff;
 }
 
-@keyframes skeletonPulse {
-  0% { background-position: 100% 0; }
-  100% { background-position: 0 0; }
-}
-
 /* ===== Tabs 与通用样式 ===== */
 .main-workspace {
   padding: 0;
@@ -2889,6 +3016,7 @@ onUnmounted(() => {
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
+  position: relative;
 }
 
 .dashboard-tabs :deep(.el-tabs__active-bar) {
@@ -2922,6 +3050,12 @@ onUnmounted(() => {
   background: #fff;
   box-shadow: 0 3px 9px rgba(36, 52, 71, 0.12);
   border-color: rgba(255, 255, 255, 0.56);
+}
+
+.dashboard-tabs :deep(#tab-dataAccess) {
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .dashboard-tabs :deep(.el-tabs__item .el-icon) {
@@ -2984,6 +3118,10 @@ onUnmounted(() => {
 
   .input-view-left {
     flex: none;
+  }
+
+  .dashboard-tabs :deep(#tab-dataAccess) {
+    position: static;
   }
 
   .flow-strip {

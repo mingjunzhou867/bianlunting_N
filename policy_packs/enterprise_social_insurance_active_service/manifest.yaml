@@ -1,0 +1,34 @@
+pack_id: enterprise_social_insurance_active_service
+policy_id: POLICY_003
+policy_name: 企业社会保险补贴主动服务（增员筛查）
+policy_type: 主动服务
+version: 1.0.0
+applicant_type: person
+description: 基于当前就业登记、社保缴费、困难认定、失业登记和企业信息数据，筛查企业新增全日制用工人员中的就业困难服务对象和疑似服务线索。
+effective_date:
+expiry_date:
+default_data_source_id: local_mysql_demo
+keywords:
+  - 企业社保补贴
+  - 主动服务
+  - 增员筛查
+  - 就业困难人员
+  - 4050人员
+  - 失业登记
+  - 就业登记
+aliases:
+  - 企业社保主动服务
+  - 增员与困难人员识别
+  - 企业补贴对象筛查
+intent_patterns:
+  - 企业.*社保.*主动服务
+  - 增员.*筛查
+  - 识别.*就业困难.*人员
+  - 筛选.*增员.*名单
+  - 疑似.*困难.*人员
+decision_labels:
+  passed: 可服务
+  failed: 暂不纳入
+  uncertain: 需人工复核
+task_header: 企业社会保险补贴主动服务筛查
+policy_scope: 企业新增用工人员就业困难线索识别与服务提醒
