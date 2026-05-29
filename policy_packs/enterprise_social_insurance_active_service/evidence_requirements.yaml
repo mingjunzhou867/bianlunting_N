@@ -1,7 +1,7 @@
 requirements:
   - requirement_id: recent_enterprise_hire
     rule_id: P003_MUST_001
-    description: 筛查近30天有效全日制企业增员候选名单。
+    description: 查询有效就业登记人员作为主动服务候选名单，不强制限定近30天或全日制。
     entity: employment
     required_fields:
       - id_card
@@ -10,7 +10,7 @@ requirements:
       - employment_date
       - sync_date
       - is_valid
-    expected_signal: recent_full_time_hire
+    expected_signal: active_employment_candidate
     fallback: manual_review
 
   - requirement_id: candidate_person_status
@@ -29,7 +29,7 @@ requirements:
 
   - requirement_id: local_hukou_signal
     rule_id: P003_MUST_002
-    description: 使用人员户籍字段识别本市人员线索。
+    description: 查询人员户籍字段作为本市线索展示，不作为硬过滤条件。
     entity: person
     required_fields:
       - id_card
@@ -68,14 +68,14 @@ requirements:
 
   - requirement_id: recent_unit_payment_absence
     rule_id: P003_INFER_002
-    description: 查询近一年单位缴费记录，作为疑似连续失业或就业困难线索。
+    description: 查询单位缴费记录，作为疑似连续失业或就业困难线索解释依据。
     entity: social_insurance_payment
     required_fields:
       - id_card
       - pay_month
       - insurer_status
       - is_valid
-    expected_signal: no_recent_unit_payment
+    expected_signal: unit_payment_trace_or_absence
     fallback: manual_review
 
   - requirement_id: unemployment_registration_status

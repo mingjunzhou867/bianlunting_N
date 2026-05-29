@@ -210,6 +210,8 @@ def _resolve_clause_reason(item: EvidenceItem, status: str, semantic: dict[str, 
 def _resolve_missing_fields(item: EvidenceItem, status: str, semantic: dict[str, Any]) -> list[str]:
     if status in {CONCLUSION_PASS, CONCLUSION_FAIL}:
         return []
+    if semantic.get("semantic_category") == "exclusion" and not semantic.get("semantic_is_missing_data"):
+        return []
     if item.diagnostic_code == "missing_column":
         return [item.rule_id, "required_column"]
     if item.diagnostic_code == "empty_result":

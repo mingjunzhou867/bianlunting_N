@@ -22,6 +22,8 @@ _SESSION_FACTORIES: dict[str, sessionmaker] = {}
 def _mysql_url_for_data_source(data_source_id: str) -> str:
     if data_source_id == "local_mysql_demo":
         return settings.local_mysql_demo_db_url
+    if data_source_id == "sql_test_1000":
+        return settings.sql_test_1000_db_url
     raise DataSourceSessionError(
         f"No MySQL connection settings registered for data source: {data_source_id}"
     )
@@ -65,7 +67,12 @@ def get_session_for_data_source(data_source_id: str | None = None) -> Generator[
         raise DataSourceSessionError(
             f"Data source type is not executable by SQLAlchemy MySQL session: {source_type}"
         )
-    if connection_ref not in {"config/.env", "config.env", "config/.env:local_mysql_demo"}:
+    if connection_ref not in {
+        "config/.env",
+        "config.env",
+        "config/.env:local_mysql_demo",
+        "config/.env:sql_test_1000",
+    }:
         raise DataSourceSessionError(
             f"Unsupported MySQL connection reference for {resolved_id}: {pack.manifest.connection_ref}"
         )

@@ -1,6 +1,6 @@
 basic_conditions:
   - rule_id: P003_MUST_001
-    description: "筛查近30天有效全日制企业增员人员，作为主动服务候选名单。"
+    description: "查询当前库中的有效就业登记人员，作为企业社保补贴主动服务候选名单；不强制限定近30天或全日制，避免小样本库无结果。"
     sql_template_ref: >
       SELECT er.id_card, p.name, p.gender, p.birth_date, p.hukou_region,
              p.life_status, p.system_status, er.employment_form,
@@ -8,13 +8,10 @@ basic_conditions:
              ci.company_type
       FROM employment_registration er
       JOIN person p ON er.id_card = p.id_card
-      JOIN company_info ci ON er.company_id = ci.company_id
+      LEFT JOIN company_info ci ON er.company_id = ci.company_id
       WHERE er.is_valid = '1'
-        AND er.employment_form = '全日制用工'
-        AND er.employment_date >= DATE_SUB(:system_date, INTERVAL 30 DAY)
-        AND p.life_status = '生存'
         AND p.system_status = '1'
-      ORDER BY er.employment_date DESC
+      ORDER BY er.employment_date DESC, er.sync_date DESC
     requires_detail_query: true
     allowed_fields:
       - employment_registration.id_card
@@ -40,16 +37,15 @@ basic_conditions:
       - company_info
     notes_for_query_generation:
       - "仅使用 employment_registration、person、company_info 中已映射字段。"
+      - "该规则是宽入口候选名单查询，不能直接等同于资格通过。"
       - "当前库没有企业注册地址字段，不能自动判断单位注册地是否属于孝感市。"
 
   - rule_id: P003_MUST_002
-    description: "核查候选人员是否为本市户籍人员；当前数据库只能使用 person.hukou_region 作为本市线索。"
+    description: "查询候选人员户籍、生存状态和系统状态；户籍只作为本市线索展示，不作为硬过滤条件。"
     sql_template_ref: >
       SELECT id_card, name, hukou_region, life_status, system_status
       FROM person
       WHERE id_card = :id_card
-        AND hukou_region LIKE '孝感%'
-        AND life_status = '生存'
         AND system_status = '1'
     requires_detail_query: true
     allowed_fields:
@@ -61,7 +57,8 @@ basic_conditions:
     evidence_targets:
       - person
     notes_for_query_generation:
-      - "这是人员户籍筛查，不等同于企业注册地校验。"
+      - "这是人员户籍线索查询，不等同于企业注册地校验。"
+      - "不要因为 hukou_region 不是孝感或为空就直接排除候选人员。"
 
   - rule_id: P003_MUST_003
     description: "识别已做有效就业困难人员认定的候选人员，并返回困难类别与政策匹配标记。"
@@ -91,19 +88,18 @@ exclusion_conditions: []
 
 inference_rules:
   - rule_id: P003_INFER_001
-    description: "识别疑似4050人员：女性年满40周岁或男性年满50周岁。"
+    description: "查询年龄判断基础数据，并识别是否具备疑似4050人员线索：女性年满40周岁或男性年满50周岁。"
     sql_template_ref: >
       SELECT id_card, name, gender, birth_date,
-             TIMESTAMPDIFF(YEAR, birth_date, :system_date) AS current_age
+             TIMESTAMPDIFF(YEAR, birth_date, :system_date) AS current_age,
+             CASE
+               WHEN gender = '女' AND TIMESTAMPDIFF(YEAR, birth_date, :system_date) >= 40 THEN '疑似4050人员'
+               WHEN gender = '男' AND TIMESTAMPDIFF(YEAR, birth_date, :system_date) >= 50 THEN '疑似4050人员'
+               ELSE '未达到4050年龄线索'
+             END AS age_signal
       FROM person
       WHERE id_card = :id_card
-        AND life_status = '生存'
         AND system_status = '1'
-        AND (
-          (gender = '女' AND TIMESTAMPDIFF(YEAR, birth_date, :system_date) >= 40)
-          OR
-          (gender = '男' AND TIMESTAMPDIFF(YEAR, birth_date, :system_date) >= 50)
-        )
     requires_detail_query: true
     allowed_fields:
       - person.id_card
@@ -114,43 +110,49 @@ inference_rules:
       - person.system_status
     evidence_targets:
       - person
-    no_data_summary: "未达到当前数据库可判断的4050年龄线索。"
+    no_data_summary: "未查询到人员年龄基础数据，无法判断4050年龄线索。"
     no_data_supports: null
 
   - rule_id: P003_INFER_002
-    description: "识别近一年无单位缴费记录的候选人员，作为疑似连续失业或就业困难服务线索。"
+    description: "查询候选人员单位缴费记录，由系统根据最近缴费月份解释是否存在连续失业或就业困难线索；不使用无行聚合直接判定。"
     sql_template_ref: >
-      SELECT id_card, COUNT(*) AS recent_unit_payment_count,
-             MAX(pay_month) AS latest_unit_pay_month
+      SELECT id_card, pay_month, insurance_type, insurer_status,
+             pay_base, company_id, is_valid
       FROM social_insurance_payment
       WHERE id_card = :id_card
         AND insurer_status = '101'
         AND is_valid = '1'
-        AND pay_month >= DATE_FORMAT(DATE_SUB(:system_date, INTERVAL 12 MONTH), '%Y%m')
-      GROUP BY id_card
-    requires_detail_query: false
+      ORDER BY pay_month DESC, insurance_type
+    requires_detail_query: true
     allowed_fields:
       - social_insurance_payment.id_card
       - social_insurance_payment.pay_month
       - social_insurance_payment.insurer_status
+      - social_insurance_payment.insurance_type
+      - social_insurance_payment.pay_base
+      - social_insurance_payment.company_id
       - social_insurance_payment.is_valid
     evidence_targets:
       - social_insurance_payment
-    no_data_summary: "近一年未查询到单位缴费记录，可作为疑似连续失业或就业困难线索，但不能直接等同于政策资格结论。"
+    no_data_summary: "未查询到单位缴费记录，可作为疑似连续失业或就业困难线索，但不能直接等同于政策资格结论。"
     no_data_supports: true
     assembler_guidance: >
-      该规则仅输出主动服务线索；近一年无单位缴费记录不能直接替代失业登记、困难认定或最终资格结论。
+      该规则仅输出主动服务线索；无单位缴费记录或最近单位缴费较早，不能直接替代失业登记、困难认定或最终资格结论。
 
   - rule_id: P003_INFER_003
-    description: "核查是否已有失业登记记录；无记录时输出失业登记提醒。"
+    description: "查询失业登记明细记录；有记录则展示登记时间、注销时间和有效状态，无记录时输出失业登记提醒。"
     sql_template_ref: >
       SELECT record_id, id_card, unemployment_date, unemployment_reason,
              register_date, cancel_date, is_valid
       FROM unemployment_registration
       WHERE id_card = :id_card
-        AND is_valid = '1'
       ORDER BY register_date DESC
-      LIMIT 1
+    normalize_sql_template: >
+      SELECT record_id, id_card, unemployment_date, unemployment_reason,
+             register_date, cancel_date, is_valid
+      FROM unemployment_registration
+      WHERE id_card = :id_card
+      ORDER BY register_date DESC
     requires_detail_query: true
     allowed_fields:
       - unemployment_registration.record_id
@@ -162,18 +164,28 @@ inference_rules:
       - unemployment_registration.is_valid
     evidence_targets:
       - unemployment_registration
+    notes_for_query_generation:
+      - "必须返回失业登记字段级明细，不允许生成 COUNT(*)、EXISTS、GROUP BY 或单一布尔判断。"
+      - "不要默认追加 is_valid = '1'；需要展示有效和已注销记录，由后续规则解释状态。"
+      - "优先使用 normalize_sql_template 中的固定明细 SQL。"
     no_data_summary: "未查询到有效失业登记记录，应提醒经办人员核实是否需要办理或补充失业登记。"
     no_data_supports: null
 
   - rule_id: P003_INFER_004
-    description: "核查候选人员是否已有当前企业有效就业登记；无记录时输出就业登记提醒。"
+    description: "查询就业登记明细记录；展示就业形式、单位、就业日期、同步日期和有效状态，无记录时输出就业登记提醒。"
     sql_template_ref: >
       SELECT record_id, id_card, company_id, employment_form,
              employment_date, contract_start_date, contract_end_date,
              sync_date, is_valid
       FROM employment_registration
       WHERE id_card = :id_card
-        AND is_valid = '1'
+      ORDER BY employment_date DESC, sync_date DESC
+    normalize_sql_template: >
+      SELECT record_id, id_card, company_id, employment_form,
+             employment_date, contract_start_date, contract_end_date,
+             sync_date, is_valid
+      FROM employment_registration
+      WHERE id_card = :id_card
       ORDER BY employment_date DESC, sync_date DESC
     requires_detail_query: true
     allowed_fields:
@@ -188,6 +200,10 @@ inference_rules:
       - employment_registration.is_valid
     evidence_targets:
       - employment
+    notes_for_query_generation:
+      - "必须返回就业登记字段级明细，不允许生成 COUNT(*)、EXISTS、GROUP BY 或单一布尔判断。"
+      - "不要默认追加 is_valid = '1'；需要展示有效和失效记录，由后续规则解释状态。"
+      - "优先使用 normalize_sql_template 中的固定明细 SQL。"
     no_data_summary: "未查询到有效就业登记记录，应提醒经办人员核实就业登记状态。"
     no_data_supports: null
 

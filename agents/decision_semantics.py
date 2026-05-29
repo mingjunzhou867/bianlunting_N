@@ -57,7 +57,14 @@ def build_item_semantics(
     )
     exec_status = str(getattr(item, "exec_status", "") or "")
     supports_conclusion = getattr(item, "supports_conclusion", None)
-    missing_data = exec_status in {"failed", "field_missing", "no_data"}
+    # Empty result means different things for different rule types:
+    # - basic/must-satisfy rules need a positive hit, so no_data is missing.
+    # - exclusion/risk rules are negative checks, so no_data means no risk hit.
+    # - auxiliary rules should not independently force missing on no_data.
+    hard_missing = exec_status in {"failed", "field_missing"}
+    missing_data = hard_missing or (
+        exec_status == "no_data" and category_code == RULE_CATEGORY_BASIC
+    )
 
     if category_code == RULE_CATEGORY_EXCLUSION:
         if supports_conclusion is False:
@@ -66,20 +73,26 @@ def build_item_semantics(
             status = CONCLUSION_FAIL
             display_label = "反向证据"
             tag_type = "danger"
-        elif supports_conclusion is True and (not missing_data or exec_status == "no_data"):
+        elif supports_conclusion is True and not hard_missing:
             evidence_state = EVIDENCE_STATE_HIT
             decision_effect = DECISION_EFFECT_SUPPORT
             status = CONCLUSION_PASS
             display_label = CONCLUSION_PASS
             tag_type = "success"
-        else:
-            evidence_state = EVIDENCE_STATE_NOT_HIT if missing_data else EVIDENCE_STATE_UNKNOWN
-            decision_effect = DECISION_EFFECT_NEUTRAL
+        elif exec_status == "no_data" and not hard_missing:
+            evidence_state = EVIDENCE_STATE_NOT_HIT
+            decision_effect = DECISION_EFFECT_SUPPORT
             status = CLAUSE_STATUS_NO_RISK
             display_label = CLAUSE_STATUS_NO_RISK
-            tag_type = "info" if missing_data else "warning"
+            tag_type = "info"
+        else:
+            evidence_state = EVIDENCE_STATE_MISSING_DATA if hard_missing else EVIDENCE_STATE_UNKNOWN
+            decision_effect = DECISION_EFFECT_NEUTRAL
+            status = CLAUSE_STATUS_UNVERIFIED if hard_missing else CLAUSE_STATUS_NO_RISK
+            display_label = status
+            tag_type = "warning" if hard_missing else "info"
     else:
-        if supports_conclusion is True and (not missing_data or exec_status == "no_data"):
+        if supports_conclusion is True and not hard_missing:
             evidence_state = EVIDENCE_STATE_HIT
             decision_effect = DECISION_EFFECT_SUPPORT
             status = CONCLUSION_PASS
@@ -97,6 +110,12 @@ def build_item_semantics(
             status = CLAUSE_STATUS_UNVERIFIED
             display_label = CLAUSE_STATUS_UNVERIFIED
             tag_type = "warning"
+        elif exec_status == "no_data" and category_code == RULE_CATEGORY_OTHER:
+            evidence_state = EVIDENCE_STATE_NOT_HIT
+            decision_effect = DECISION_EFFECT_NEUTRAL
+            status = CLAUSE_STATUS_NO_RISK
+            display_label = CLAUSE_STATUS_NO_RISK
+            tag_type = "info"
         else:
             evidence_state = EVIDENCE_STATE_UNKNOWN
             decision_effect = DECISION_EFFECT_NEUTRAL

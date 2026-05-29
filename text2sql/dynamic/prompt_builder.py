@@ -368,6 +368,20 @@ class QueryPromptBuilder:
                 "除非问题明确要求有效记录，不要额外追加 is_valid = '1' 或 data_status = '1'。\n"
             )
             lowered = error_msg.lower()
+            if "value_mismatch" in lowered:
+                extra_hint += (
+                    "\n修复提示：结果值不一致但 SQL 可执行时，优先检查三类问题："
+                    "1）是否漏掉问题中明确要求的有效记录过滤 is_valid = '1'；"
+                    "2）是否漏掉或写错 ORDER BY，特别是 pay_month DESC, insurance_type、apply_date DESC、register_date DESC 等稳定排序；"
+                    "3）多表查询中每个有效业务表别名都应在 JOIN ON 或 WHERE 中保留 alias.is_valid = '1'。"
+                    "不要随意增加题目没有要求的新字段、新 JOIN 或 LIMIT。\n"
+                )
+            if "column_mismatch" in lowered:
+                extra_hint += (
+                    "\n修复提示：列不一致时，SELECT 投影必须严格返回错误信息中 gold_columns 列出的字段名和顺序；"
+                    "不要使用中文别名、解释性别名或不同英文别名。"
+                    "如果缺少 register_date、employment_date、insurer_status 等字段，必须补回 SELECT。\n"
+                )
             if "window function" in lowered or "prev_pay_base" in lowered or "next_pay_base" in lowered:
                 extra_hint += (
                     "\n修复提示：这类报错通常意味着你在同一层 WHERE/HAVING 里直接使用了窗口函数别名。"

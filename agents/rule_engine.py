@@ -1,4 +1,4 @@
-"""Deterministic rule engine — hard-rule pre-check before LLM debate."""
+"""Deterministic rule engine: hard-rule pre-check before LLM debate."""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
@@ -34,22 +34,28 @@ class RuleEngineOutput:
     missing: list[RuleCheckResult] = field(default_factory=list)
     unknown: list[RuleCheckResult] = field(default_factory=list)
 
-    # Top-level pre-decision
-    pre_decision: str | None = None  # "PASS" | "FAIL" | None (need debate)
+    pre_decision: str | None = None  # "PASS" | "FAIL" | None
     pre_reason: str = ""
 
     @property
     def has_veto(self) -> bool:
-        """True if any must-satisfy rule failed → one-vote veto."""
-        return any(r.category == RULE_CATEGORY_BASIC for r in self.failed)
+        """True if any must-satisfy or exclusion rule failed."""
+        return any(
+            r.category in {RULE_CATEGORY_BASIC, RULE_CATEGORY_EXCLUSION}
+            for r in self.failed
+        )
 
     @property
     def all_basic_passed(self) -> bool:
         """True if all basic rules passed and no exclusion failures."""
-        basic_results = [r for r in self.passed + self.failed + self.missing
-                         if r.category == RULE_CATEGORY_BASIC]
-        exclusion_failures = [r for r in self.failed
-                              if r.category == RULE_CATEGORY_EXCLUSION]
+        basic_results = [
+            r
+            for r in self.passed + self.failed + self.missing
+            if r.category == RULE_CATEGORY_BASIC
+        ]
+        exclusion_failures = [
+            r for r in self.failed if r.category == RULE_CATEGORY_EXCLUSION
+        ]
         return (
             len(basic_results) > 0
             and all(r.status == "passed" for r in basic_results)
@@ -68,7 +74,7 @@ def check_rule_against_evidence(
             rule_id=rule_id,
             category=category,
             status="missing",
-            reason="未找到匹配的证据",
+            reason="No matching evidence was collected for this rule.",
         )
 
     semantics = build_item_semantics(item, category_hint=category)
@@ -81,42 +87,52 @@ def check_rule_against_evidence(
             category=category,
             status="missing",
             evidence_id=item.evidence_id,
-            reason="证据数据缺失或查询失败",
+            reason="Evidence data is missing or the query failed.",
         )
 
     if category == RULE_CATEGORY_EXCLUSION:
-        # exclusion: supports_conclusion=False means risk found → FAIL
+        # Exclusion rules are negative checks: a hit is a veto; an empty result
+        # means no exclusion risk was found and must not block a PASS.
         if effect == "oppose":
             return RuleCheckResult(
-                rule_id=rule_id, category=category, status="failed",
+                rule_id=rule_id,
+                category=category,
+                status="failed",
                 evidence_id=item.evidence_id,
-                reason="排除条件触发：发现风险证据",
+                reason="Exclusion condition triggered: risk evidence found.",
             )
-        if effect == "support":
+        if effect == "support" or str(getattr(item, "exec_status", "") or "") == "no_data":
             return RuleCheckResult(
-                rule_id=rule_id, category=category, status="passed",
+                rule_id=rule_id,
+                category=category,
+                status="passed",
                 evidence_id=item.evidence_id,
-                reason="排除条件未触发",
+                reason="Exclusion condition not triggered: no risk found.",
             )
     else:
-        # basic / other: supports_conclusion=True means PASS
         if effect == "support":
             return RuleCheckResult(
-                rule_id=rule_id, category=category, status="passed",
+                rule_id=rule_id,
+                category=category,
+                status="passed",
                 evidence_id=item.evidence_id,
-                reason="证据支持结论",
+                reason="Evidence supports the conclusion.",
             )
         if effect == "oppose":
             return RuleCheckResult(
-                rule_id=rule_id, category=category, status="failed",
+                rule_id=rule_id,
+                category=category,
+                status="failed",
                 evidence_id=item.evidence_id,
-                reason="证据反对结论",
+                reason="Evidence opposes the conclusion.",
             )
 
     return RuleCheckResult(
-        rule_id=rule_id, category=category, status="unknown",
+        rule_id=rule_id,
+        category=category,
+        status="unknown",
         evidence_id=getattr(item, "evidence_id", None),
-        reason="证据状态无法确定",
+        reason="Evidence state cannot be determined.",
     )
 
 
@@ -124,22 +140,11 @@ def run_rule_engine(
     bundle: EvidenceBundle,
     structured_rules: Any = None,
 ) -> RuleEngineOutput:
-    """Run deterministic rules against evidence bundle.
-
-    Args:
-        bundle: Collected evidence.
-        structured_rules: PolicyConfig.structured_rules (StructuredRules) with
-            basic_conditions, exclusion_conditions, inference_rules,
-            calculation_rules. If None, checks all bundle items directly.
-
-    Returns:
-        RuleEngineOutput with pre-decision.
-    """
+    """Run deterministic rules against an evidence bundle."""
     output = RuleEngineOutput()
     by_rule = bundle.by_rule
 
-    rules_to_check: list[tuple[str, str]] = []  # (rule_id, category)
-
+    rules_to_check: list[tuple[str, str]] = []
     if structured_rules is not None:
         for rule in getattr(structured_rules, "basic_conditions", []):
             rules_to_check.append((rule.rule_id, RULE_CATEGORY_BASIC))
@@ -151,8 +156,7 @@ def run_rule_engine(
             rules_to_check.append((rule.rule_id, RULE_CATEGORY_OTHER))
     else:
         for item in bundle.items:
-            cat = normalize_rule_category(item.category)
-            rules_to_check.append((item.rule_id, cat))
+            rules_to_check.append((item.rule_id, normalize_rule_category(item.category)))
 
     for rule_id, category in rules_to_check:
         item = by_rule.get(rule_id)
@@ -164,16 +168,21 @@ def run_rule_engine(
             "unknown": output.unknown,
         }[result.status].append(result)
 
-    # Pre-decision logic
     if output.has_veto:
-        failed_basic = [r for r in output.failed
-                        if r.category == RULE_CATEGORY_BASIC]
+        failures = [
+            r
+            for r in output.failed
+            if r.category in {RULE_CATEGORY_BASIC, RULE_CATEGORY_EXCLUSION}
+        ]
         output.pre_decision = "FAIL"
         output.pre_reason = (
-            f"必须满足条件未通过（{', '.join(r.rule_id for r in failed_basic)}），一票否决"
+            "Hard-rule veto triggered: "
+            + ", ".join(r.rule_id for r in failures)
         )
     elif output.all_basic_passed and not output.missing and not output.unknown:
         output.pre_decision = "PASS"
-        output.pre_reason = "所有必须满足条件通过，无排除条件触发，无缺失证据"
+        output.pre_reason = (
+            "All must-satisfy rules passed and no exclusion condition was triggered."
+        )
 
     return output

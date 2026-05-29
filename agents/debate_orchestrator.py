@@ -118,6 +118,19 @@ def project_evidence(bundle: EvidenceBundle, task_header: str = DEFAULT_TASK_HEA
     )
 
 
+def _normalize_evidence_refs(value: Any) -> list[str]:
+    """Normalize LLM-provided evidence references to the internal list contract."""
+    if value is None:
+        return []
+    if isinstance(value, str):
+        refs = [value]
+    elif isinstance(value, list):
+        refs = value
+    else:
+        return []
+    return [str(ref).strip() for ref in refs if ref is not None and str(ref).strip()]
+
+
 class DebateRecord:
     """Internal round record shared by API responses and persistence."""
 
@@ -176,7 +189,7 @@ class DebateRecord:
                 eid = card.card_id.replace("card_", "")
                 evidence_score_map[eid] = card.evidence_score
         for j in judgments:
-            refs = getattr(j, "evidence_refs", [])
+            refs = _normalize_evidence_refs(getattr(j, "evidence_refs", []))
             avg_ev = sum(evidence_score_map.get(r, 0) for r in refs) / max(len(refs), 1)
             self.agent_weights[j.agent_id] = round(j.confidence * 0.6 + (avg_ev / 100) * 0.4, 3)
 
@@ -1141,7 +1154,7 @@ class DebateOrchestrator:
                 )
                 raw_args = [{
                     "arg_text": fallback_text,
-                    "evidence_refs": getattr(judgment, "evidence_refs", []),
+                    "evidence_refs": _normalize_evidence_refs(getattr(judgment, "evidence_refs", [])),
                     "stance": self._infer_argument_stance(judgment, fallback_text).value,
                     "attacks": [],
                     "supported_by": [],
@@ -1169,7 +1182,7 @@ class DebateOrchestrator:
                     }.get(str(raw_stance).strip().lower(), ArgumentStance.INSUFFICIENT)
 
                 # Determine proof_standard from evidence_refs
-                arg_evidence_refs = raw_arg.get("evidence_refs", [])
+                arg_evidence_refs = _normalize_evidence_refs(raw_arg.get("evidence_refs", []))
                 proof_standard = self._infer_proof_standard(
                     arg_evidence_refs, rule_proof_map, card_proof_map,
                 )

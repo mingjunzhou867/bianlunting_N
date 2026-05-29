@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 760" role="img" aria-label="智策通政务审核证据链研判架构图">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f8fbff"/>
+      <stop offset="0.58" stop-color="#eaf4fd"/>
+      <stop offset="1" stop-color="#d7e9f7"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#123c69"/>
+      <stop offset="1" stop-color="#2d7dc9"/>
+    </linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#c99a3f"/>
+      <stop offset="1" stop-color="#efd28a"/>
+    </linearGradient>
+    <filter id="shadow" x="-12%" y="-18%" width="124%" height="140%">
+      <feDropShadow dx="0" dy="14" stdDeviation="18" flood-color="#123c69" flood-opacity="0.14"/>
+    </filter>
+    <style>
+      .title{font:800 32px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#123c69}
+      .sub{font:700 18px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#5f7489}
+      .layer{font:800 20px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#123c69}
+      .node-title{font:800 18px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#123c69}
+      .node-copy{font:600 14px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#5f7489}
+      .white-title{font:850 26px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#fff}
+      .white-copy{font:650 15px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#dcecff}
+      .tag{font:750 15px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#123c69}
+    </style>
+  </defs>
+
+  <rect width="1120" height="760" fill="url(#bg)"/>
+  <g opacity="0.42" stroke="#1d5c9f" stroke-width="1">
+    <path d="M0 95H1120M0 190H1120M0 285H1120M0 380H1120M0 475H1120M0 570H1120M0 665H1120"/>
+    <path d="M112 0V760M224 0V760M336 0V760M448 0V760M560 0V760M672 0V760M784 0V760M896 0V760M1008 0V760"/>
+  </g>
+  <path d="M-60 660L310 290L470 450L175 820Z" fill="#c99a3f" opacity="0.10"/>
+  <path d="M850 -80L1200 210L1200 -80Z" fill="#1d5c9f" opacity="0.12"/>
+
+  <text x="58" y="66" class="title">智策通政务审核证据链研判架构</text>
+  <text x="58" y="98" class="sub">从政策与数据出发，以证据链约束大模型判断，再通过多Agent辩论形成可复核裁决</text>
+
+  <g filter="url(#shadow)">
+    <rect x="52" y="142" width="1016" height="100" rx="8" fill="#ffffff" opacity="0.86" stroke="#c8dced"/>
+    <text x="82" y="177" class="layer">输入层</text>
+    <g>
+      <rect x="188" y="162" width="186" height="56" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+      <text x="213" y="187" class="node-title">用户诉求</text>
+      <text x="213" y="208" class="node-copy">身份证号 / 办事意图</text>
+    </g>
+    <g>
+      <rect x="464" y="162" width="186" height="56" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+      <text x="489" y="187" class="node-title">政策文本</text>
+      <text x="489" y="208" class="node-copy">条款 / 条件 / 排除项</text>
+    </g>
+    <g>
+      <rect x="740" y="162" width="238" height="56" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+      <text x="765" y="187" class="node-title">业务数据库</text>
+      <text x="765" y="208" class="node-copy">人员 / 就业 / 社保 / 补贴记录</text>
+    </g>
+  </g>
+
+  <g stroke="#c99a3f" stroke-width="3" fill="none" opacity="0.78">
+    <path d="M560 244V280"/>
+    <path d="M560 396V432"/>
+    <path d="M560 548V584"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="52" y="282" width="1016" height="112" rx="8" fill="#ffffff" opacity="0.9" stroke="#c8dced"/>
+    <text x="82" y="322" class="layer">理解与取证层</text>
+    <g>
+      <rect x="210" y="304" width="158" height="68" rx="6" fill="#eef7ff" stroke="#bcd5ea"/>
+      <text x="235" y="331" class="node-title">意图识别</text>
+      <text x="235" y="354" class="node-copy">匹配办事场景</text>
+    </g>
+    <g>
+      <rect x="414" y="304" width="158" height="68" rx="6" fill="#eef7ff" stroke="#bcd5ea"/>
+      <text x="439" y="331" class="node-title">政策匹配</text>
+      <text x="439" y="354" class="node-copy">抽取审核条件</text>
+    </g>
+    <g>
+      <rect x="618" y="304" width="158" height="68" rx="6" fill="#fff7e6" stroke="#e2c278"/>
+      <text x="643" y="331" class="node-title">Text-to-SQL</text>
+      <text x="643" y="354" class="node-copy">生成取证查询</text>
+    </g>
+    <g>
+      <rect x="822" y="304" width="158" height="68" rx="6" fill="#fff7e6" stroke="#e2c278"/>
+      <text x="847" y="331" class="node-title">证据卡片</text>
+      <text x="847" y="354" class="node-copy">事实 / 诊断 / 来源</text>
+    </g>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="52" y="432" width="1016" height="116" rx="8" fill="#ffffff" opacity="0.9" stroke="#c8dced"/>
+    <text x="82" y="474" class="layer">多Agent研判层</text>
+    <rect x="236" y="454" width="172" height="72" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+    <text x="258" y="481" class="node-title">严格合规Agent</text>
+    <text x="258" y="504" class="node-copy">强调条款边界</text>
+    <rect x="474" y="454" width="172" height="72" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+    <text x="496" y="481" class="node-title">业务友好Agent</text>
+    <text x="496" y="504" class="node-copy">识别可解释空间</text>
+    <rect x="712" y="454" width="172" height="72" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+    <text x="734" y="481" class="node-title">审计挑战Agent</text>
+    <text x="734" y="504" class="node-copy">发现冲突与缺口</text>
+    <path d="M408 490H474M646 490H712" stroke="#2d7dc9" stroke-width="3" opacity="0.55"/>
+  </g>
+
+  <g filter="url(#shadow)">
+    <rect x="52" y="584" width="1016" height="112" rx="8" fill="#ffffff" opacity="0.9" stroke="#c8dced"/>
+    <text x="82" y="626" class="layer">裁决与复核层</text>
+    <g>
+      <rect x="244" y="606" width="178" height="68" rx="6" fill="url(#blue)"/>
+      <text x="268" y="634" class="white-title">仲裁裁决</text>
+      <text x="268" y="656" class="white-copy">汇总观点并给出结论</text>
+    </g>
+    <g>
+      <rect x="486" y="606" width="178" height="68" rx="6" fill="#f7fbff" stroke="#d5e5f2"/>
+      <text x="510" y="634" class="node-title">证据链报告</text>
+      <text x="510" y="656" class="node-copy">条款 / SQL / 数据回溯</text>
+    </g>
+    <g>
+      <rect x="728" y="606" width="178" height="68" rx="6" fill="#fff7e6" stroke="#e2c278"/>
+      <text x="752" y="634" class="node-title">人工复核</text>
+      <text x="752" y="656" class="node-copy">补证覆盖与留痕</text>
+    </g>
+  </g>
+
+  <g>
+    <rect x="790" y="58" width="250" height="46" rx="23" fill="#fff" opacity="0.78" stroke="#d5e5f2"/>
+    <circle cx="815" cy="81" r="8" fill="url(#gold)"/>
+    <text x="834" y="87" class="tag">政策约束 + 数据取证 + 辩论仲裁</text>
+  </g>
+</svg>

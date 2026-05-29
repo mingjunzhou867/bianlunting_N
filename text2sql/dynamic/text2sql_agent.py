@@ -4,6 +4,7 @@ from typing import Optional
 
 from config.llm_client import llm_chat
 from text2sql.dynamic.prompt_builder import QueryPromptBuilder
+from text2sql.dynamic.sql_postprocessor import postprocess_generated_sql
 from cognition.evidence_planner import EvidencePlanItem
 from privacy.sanitizer import sanitize_for_llm
 
@@ -58,8 +59,8 @@ class Text2SQLAgent:
         """
         match = re.search(r"```[sS][qQ][lL]\s*(.*?)\s*```", text, re.DOTALL)
         if match:
-            return match.group(1).strip()
+            return postprocess_generated_sql(match.group(1).strip())
             
         # 如果模型没有遵守 markdown 格式，尝试退化处理
         logger.warning("模型未输出 markdown sql 块，尝试直接清理并返回原文")
-        return text.strip("` \n")
+        return postprocess_generated_sql(text.strip("` \n"))

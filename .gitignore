@@ -10,6 +10,9 @@ __pycache__/
 .venv/
 .pytest_cache/
 .test_tmp/
+tests/
+test_new/
+data_source_packs/sql_test_1000/
 rag/.tmp/
 rag/outputs/
 venv/
@@ -25,10 +28,9 @@ build/
 
 # 评测结果（数据量大，按需提交）
 evaluation/results/
-tests/agents_test/outputs/*
-!tests/agents_test/outputs/.gitkeep
 generated_reports/*.tmp
 generated_reports/*.draft.pdf
+scripts/generate_sql_experiment_report_figures.py
 
 # 日志
 *.log

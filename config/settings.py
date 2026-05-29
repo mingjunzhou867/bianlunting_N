@@ -54,6 +54,12 @@ class Settings(BaseSettings):
     local_mysql_demo_db_password: str = ""
     local_mysql_demo_db_name: str = "zhicetong_t2s"
     local_mysql_demo_db_charset: str = "utf8mb4"
+    sql_test_1000_db_host: str = ""
+    sql_test_1000_db_port: int = 0
+    sql_test_1000_db_user: str = ""
+    sql_test_1000_db_password: str = ""
+    sql_test_1000_db_name: str = "zhicetong_t2s_1000"
+    sql_test_1000_db_charset: str = "utf8mb4"
 
     # ----------------------------------------------------------
     # 系统运行参数
@@ -84,6 +90,23 @@ class Settings(BaseSettings):
         password = self.local_mysql_demo_db_password if self.local_mysql_demo_db_password else self.db_password
         name = self.local_mysql_demo_db_name or "zhicetong_t2s"
         charset = self.local_mysql_demo_db_charset or self.db_charset
+        return f"mysql+pymysql://{user}:{password}@{host}:{port}/{name}?charset={charset}"
+
+    @property
+    def sql_test_1000_db_url(self) -> str:
+        """SQLAlchemy URL for the isolated 1000-case SQL test database."""
+        host = self.sql_test_1000_db_host or self.local_mysql_demo_db_host or self.db_host
+        port = self.sql_test_1000_db_port or self.local_mysql_demo_db_port or self.db_port
+        user = self.sql_test_1000_db_user or self.local_mysql_demo_db_user or self.db_user
+        password = (
+            self.sql_test_1000_db_password
+            if self.sql_test_1000_db_password
+            else self.local_mysql_demo_db_password
+            if self.local_mysql_demo_db_password
+            else self.db_password
+        )
+        name = self.sql_test_1000_db_name or "zhicetong_t2s_1000"
+        charset = self.sql_test_1000_db_charset or self.local_mysql_demo_db_charset or self.db_charset
         return f"mysql+pymysql://{user}:{password}@{host}:{port}/{name}?charset={charset}"
 
     @property
