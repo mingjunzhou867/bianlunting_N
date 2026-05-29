@@ -1,0 +1,28 @@
+{
+  "case_file": "D:\\AI\\bysj_t2s-master-N\\test_new\\测试原始数据\\sql_test_1000_full_20260522_170343.json",
+  "data_source_id": "sql_test_1000",
+  "limit": 500,
+  "category": "",
+  "elapsed_seconds": 3089.81,
+  "output_dir": "D:\\AI\\bysj_t2s-master-N\\test_new\\outputs\\four_chain_20260524_192655",
+  "launcher_python": "D:\\AI\\bysj_t2s-master-N\\.venv\\Scripts\\python.exe",
+  "child_python": "D:\\AI\\bysj_t2s-master-N\\.venv\\Scripts\\python.exe",
+  "chains": {
+    "direct_llm": {
+      "returncode": 0,
+      "log": "D:\\AI\\bysj_t2s-master-N\\test_new\\outputs\\four_chain_20260524_192655\\direct_llm\\direct_llm.log"
+    },
+    "schema_llm": {
+      "returncode": 0,
+      "log": "D:\\AI\\bysj_t2s-master-N\\test_new\\outputs\\four_chain_20260524_192655\\schema_llm\\schema_llm.log"
+    },
+    "no_repair": {
+      "returncode": 0,
+      "log": "D:\\AI\\bysj_t2s-master-N\\test_new\\outputs\\four_chain_20260524_192655\\no_repair\\no_repair.log"
+    },
+    "full_harness": {
+      "returncode": 0,
+      "log": "D:\\AI\\bysj_t2s-master-N\\test_new\\outputs\\four_chain_20260524_192655\\full_harness\\full_harness.log"
+    }
+  }
+}

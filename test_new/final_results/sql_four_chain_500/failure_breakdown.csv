@@ -1,0 +1,5 @@
+﻿method,syntax_error_count,result_mismatch_count,structural_warning_count,remaining_failure_count
+Direct LLM,500,0,0,500
+Schema-aware LLM,23,377,0,400
+Harness w/o Repair,0,250,148,250
+Full SQL Harness,0,49,84,49

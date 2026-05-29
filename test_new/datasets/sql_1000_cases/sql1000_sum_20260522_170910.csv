@@ -1,0 +1,3609 @@
+﻿case_id,category,question,gold_sql,first_generated_sql,final_generated_sql,first_generation_success,first_syntax_pass,first_execution_success,first_result_match,retry_triggered,retry_count,retry_success,final_success,final_syntax_pass,final_execution_success,final_result_match,first_latency_ms,total_latency_ms,failure_reason,error_message,has_structural_warnings,structural_warnings
+sum_test:A1000_0001,sum_test,统计身份证号'420902197207030030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197207030030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197207030030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197207030030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5642.682499998045,10869.070999997348,,,False,[]
+sum_test:A1000_0002,sum_test,计算身份证号为'420902197105100070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197105100070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197105100070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197105100070';",True,True,True,False,True,1,True,True,True,True,True,11727.906799998891,16120.296799999778,,,False,[]
+sum_test:A1000_0003,sum_test,统计身份证号为'420902198412130110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198412130110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198412130110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198412130110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,8277.26459999758,23087.387800002034,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0004,sum_test,查询身份证号'420902197907140150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197907140150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197907140150' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197907140150';",True,True,True,False,True,1,True,True,True,True,True,8831.693000000087,13973.205099999177,,,False,[]
+sum_test:A1000_0005,sum_test,统计身份证号为'420902197504280190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197504280190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197504280190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197504280190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,6074.322299999039,11712.337999997544,,,False,[]
+sum_test:A1000_0006,sum_test,统计身份证号'420902198404110230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198404110230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198404110230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198404110230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4137.333300001046,12622.91600000026,,,False,[]
+sum_test:A1000_0007,sum_test,计算身份证号为'420902198403110270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198403110270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198403110270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198403110270';",True,True,True,False,True,1,True,True,True,True,True,14407.463100000314,25296.839099999488,,,False,[]
+sum_test:A1000_0008,sum_test,统计身份证号为'420902197412050310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197412050310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197412050310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197412050310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,8262.946899998497,26089.602500000183,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0009,sum_test,查询身份证号'420902197101270350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197101270350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197101270350' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197101270350';",True,True,True,False,True,1,True,True,True,True,True,9414.602700002433,16849.628399999347,,,False,[]
+sum_test:A1000_0010,sum_test,统计身份证号为'420902197906140390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197906140390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197906140390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197906140390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4835.720200000651,9999.95409999974,,,False,[]
+sum_test:A1000_0011,sum_test,统计身份证号'420902197612060430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197612060430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197612060430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197612060430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5753.163099998346,12250.939800000197,,,False,[]
+sum_test:A1000_0012,sum_test,计算身份证号为'420902198512080470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198512080470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198512080470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198512080470'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,12888.661499997397,19874.555000002147,,,False,[]
+sum_test:A1000_0013,sum_test,统计身份证号为'420902198006230510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198006230510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198006230510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198006230510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6090.855400001601,18353.22029999952,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0014,sum_test,查询身份证号'420902198005110550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198005110550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198005110550' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198005110550';",True,True,True,False,True,1,True,True,True,True,True,8123.918600002071,13921.331399997143,,,False,[]
+sum_test:A1000_0015,sum_test,统计身份证号为'420902197308240590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197308240590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197308240590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197308240590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4923.444600000948,9950.532399998337,,,False,[]
+sum_test:A1000_0016,sum_test,统计身份证号'420902197911130630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197911130630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197911130630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197911130630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6591.672599999583,13045.13020000013,,,False,[]
+sum_test:A1000_0017,sum_test,计算身份证号为'420902197404270670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197404270670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197404270670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197404270670';",True,True,True,False,True,1,True,True,True,True,True,10720.736700000998,20369.796800001495,,,False,[]
+sum_test:A1000_0018,sum_test,统计身份证号为'420902197604150710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197604150710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197604150710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197604150710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6853.975999998511,16692.395499998383,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0019,sum_test,查询身份证号'420902198010090750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198010090750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198010090750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198010090750';",True,True,True,False,True,1,True,True,True,True,True,5792.94519999894,10154.736800002865,,,False,[]
+sum_test:A1000_0020,sum_test,统计身份证号为'420902198505180790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198505180790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198505180790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198505180790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5626.985099999729,10445.846200000233,,,False,[]
+sum_test:A1000_0021,sum_test,统计身份证号'420902197604240830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197604240830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197604240830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197604240830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,9257.105099997716,14012.389100000291,,,False,[]
+sum_test:A1000_0022,sum_test,计算身份证号为'420902198411160870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198411160870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198411160870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198411160870';",True,True,True,False,True,1,True,True,True,True,True,7883.253600000899,11782.157099998585,,,False,[]
+sum_test:A1000_0023,sum_test,统计身份证号为'420902197907260910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197907260910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197907260910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197907260910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,7406.689399998868,14780.035800002224,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0024,sum_test,查询身份证号'420902198308010950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198308010950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198308010950'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198308010950';",True,True,True,False,True,1,True,True,True,True,True,6262.533400000393,16698.123699999996,,,False,[]
+sum_test:A1000_0025,sum_test,统计身份证号为'420902197409230990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197409230990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197409230990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197409230990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,7065.721700000722,14398.1137999981,,,False,[]
+sum_test:A1000_0026,sum_test,统计身份证号'420902197303171030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197303171030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197303171030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197303171030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3395.1374999996915,7376.5780000030645,,,False,[]
+sum_test:A1000_0027,sum_test,计算身份证号为'420902198201021070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198201021070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198201021070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198201021070';",True,True,True,False,True,1,True,True,True,True,True,13287.297300001228,20524.731900000916,,,False,[]
+sum_test:A1000_0028,sum_test,统计身份证号为'420902197801051110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197801051110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197801051110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197801051110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6253.161399999954,23782.51520000049,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0029,sum_test,查询身份证号'420902198410081150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198410081150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198410081150'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198410081150';",True,True,True,False,True,1,True,True,True,True,True,10020.940800000972,15375.115999999252,,,False,[]
+sum_test:A1000_0030,sum_test,统计身份证号为'420902197107231190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197107231190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197107231190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197107231190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5743.751800000609,9575.447900002473,,,False,[]
+sum_test:A1000_0031,sum_test,统计身份证号'420902198008021230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198008021230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198008021230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198008021230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4465.782400002354,10592.430999997305,,,False,[]
+sum_test:A1000_0032,sum_test,计算身份证号为'420902197611091270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197611091270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197611091270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197611091270'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,10001.50500000018,17506.24600000083,,,False,[]
+sum_test:A1000_0033,sum_test,统计身份证号为'420902197801051310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197801051310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197801051310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197801051310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5796.698699999979,16799.728800000594,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0034,sum_test,查询身份证号'420902198010281350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198010281350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198010281350'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198010281350';",True,True,True,False,True,1,True,True,True,True,True,7702.029300002323,13234.73279999962,,,False,[]
+sum_test:A1000_0035,sum_test,统计身份证号为'420902198210131390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198210131390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198210131390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198210131390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,9800.966200000403,14141.270700001769,,,False,[]
+sum_test:A1000_0036,sum_test,统计身份证号'420902197702271430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197702271430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197702271430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197702271430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5070.760700000392,11135.292399998434,,,False,[]
+sum_test:A1000_0037,sum_test,计算身份证号为'420902197401191470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197401191470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197401191470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197401191470';",True,True,True,False,True,1,True,True,True,True,True,8206.655599999067,14513.905099996919,,,False,[]
+sum_test:A1000_0038,sum_test,统计身份证号为'420902197707231510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197707231510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197707231510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197707231510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,12377.774399999907,24162.491700000828,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0039,sum_test,查询身份证号'420902197111171550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197111171550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197111171550' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197111171550';",True,True,True,False,True,1,True,True,True,True,True,5668.024999999034,10976.122199997917,,,False,[]
+sum_test:A1000_0040,sum_test,统计身份证号为'420902197109151590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197109151590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197109151590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197109151590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,9620.580199996766,14782.68559999924,,,False,[]
+sum_test:A1000_0041,sum_test,统计身份证号'420902197202131630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197202131630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS distinct_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197202131630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197202131630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5065.355400001863,10574.988200001826,,,False,[]
+sum_test:A1000_0042,sum_test,计算身份证号为'420902197901201670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197901201670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197901201670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197901201670';",True,True,True,False,True,1,True,True,True,True,True,5186.972899999091,10173.204200000328,,,False,[]
+sum_test:A1000_0043,sum_test,统计身份证号为'420902198602141710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198602141710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198602141710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198602141710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,3875.084399998741,17564.74530000196,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0044,sum_test,查询身份证号'420902198508251750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198508251750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198508251750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198508251750';",True,True,True,False,True,1,True,True,True,True,True,10848.50120000192,17323.04970000041,,,False,[]
+sum_test:A1000_0045,sum_test,统计身份证号为'420902198406091790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198406091790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198406091790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198406091790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,2062.3426000020117,7933.916300000419,,,False,[]
+sum_test:A1000_0046,sum_test,统计身份证号'420902198302101830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198302101830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198302101830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198302101830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4091.7829999998503,8463.775399999577,,,False,[]
+sum_test:A1000_0047,sum_test,计算身份证号为'420902198512171870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198512171870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198512171870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198512171870';",True,True,True,False,True,1,True,True,True,True,True,7298.764899998787,11524.980300000607,,,False,[]
+sum_test:A1000_0048,sum_test,统计身份证号为'420902198509091910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198509091910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198509091910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198509091910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,7464.909700000135,22860.729599997285,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0049,sum_test,查询身份证号'420902198007141950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198007141950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198007141950' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198007141950';",True,True,True,False,True,1,True,True,True,True,True,5293.529400001717,10860.585499998706,,,False,[]
+sum_test:A1000_0050,sum_test,统计身份证号为'420902197901251990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197901251990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197901251990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197901251990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,6247.188900000765,10979.053200000635,,,False,[]
+sum_test:A1000_0051,sum_test,统计身份证号'420902198309242030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198309242030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198309242030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198309242030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4422.909299999446,8905.83940000215,,,False,[]
+sum_test:A1000_0052,sum_test,计算身份证号为'420902197710152070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197710152070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197710152070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197710152070';",True,True,True,False,True,1,True,True,True,True,True,8571.204700001545,11947.27839999905,,,False,[]
+sum_test:A1000_0053,sum_test,统计身份证号为'420902198606082110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198606082110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months,
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198606082110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months,
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198606082110';",True,True,True,False,True,2,False,False,True,True,False,10566.866799999843,18086.15540000028,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0054,sum_test,查询身份证号'420902197209012150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197209012150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197209012150'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197209012150';",True,True,True,False,True,1,True,True,True,True,True,4252.4163000016415,9223.025700001017,,,False,[]
+sum_test:A1000_0055,sum_test,统计身份证号为'420902197104272190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197104272190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197104272190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197104272190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5481.335100001161,9737.65430000276,,,False,[]
+sum_test:A1000_0056,sum_test,统计身份证号'420902198607012230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198607012230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198607012230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198607012230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4244.539999999688,8418.493299999682,,,False,[]
+sum_test:A1000_0057,sum_test,计算身份证号为'420902198611232270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198611232270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198611232270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198611232270';",True,True,True,False,True,1,True,True,True,True,True,6995.695200002956,14222.411499998998,,,False,[]
+sum_test:A1000_0058,sum_test,统计身份证号为'420902198002252310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198002252310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198002252310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198002252310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5517.050700000254,16570.998700000928,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0059,sum_test,查询身份证号'420902198602222350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198602222350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198602222350'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198602222350';",True,True,True,False,True,1,True,True,True,True,True,4219.586400002299,8402.791199998319,,,False,[]
+sum_test:A1000_0060,sum_test,统计身份证号为'420902197901252390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197901252390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197901252390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197901252390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4409.757400000672,11152.376800000638,,,False,[]
+sum_test:A1000_0061,sum_test,统计身份证号'420902198008132430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198008132430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198008132430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198008132430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6788.658099998429,11943.008099999133,,,False,[]
+sum_test:A1000_0062,sum_test,计算身份证号为'420902197106192470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197106192470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197106192470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197106192470';",True,True,True,False,True,1,True,True,True,True,True,5315.964599998551,10738.610600001266,,,False,[]
+sum_test:A1000_0063,sum_test,统计身份证号为'420902197304012510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197304012510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197304012510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197304012510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6298.135699998966,14697.77090000207,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0064,sum_test,查询身份证号'420902197502162550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197502162550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197502162550'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197502162550';",True,True,True,False,True,1,True,True,True,True,True,5372.289900002215,12159.694099998887,,,False,[]
+sum_test:A1000_0065,sum_test,统计身份证号为'420902198110072590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198110072590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198110072590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198110072590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4539.341499999864,9406.527300001471,,,False,[]
+sum_test:A1000_0066,sum_test,统计身份证号'420902198008102630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198008102630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198008102630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198008102630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4773.511200000939,8677.433899996686,,,False,[]
+sum_test:A1000_0067,sum_test,计算身份证号为'420902198510102670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198510102670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198510102670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198510102670';",True,True,True,False,True,1,True,True,True,True,True,5080.084299999726,11747.925300001953,,,False,[]
+sum_test:A1000_0068,sum_test,统计身份证号为'420902197608102710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197608102710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197608102710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197608102710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6464.0935999996145,20441.673699999228,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0069,sum_test,查询身份证号'420902198409102750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198409102750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198409102750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198409102750';",True,True,True,False,True,1,True,True,True,True,True,7332.5077000008605,11453.95980000103,,,False,[]
+sum_test:A1000_0070,sum_test,统计身份证号为'420902197903112790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197903112790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197903112790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197903112790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4065.3645000020333,9515.296699999453,,,False,[]
+sum_test:A1000_0071,sum_test,统计身份证号'420902197301102830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197301102830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197301102830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197301102830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3847.595300001558,7683.222100000421,,,False,[]
+sum_test:A1000_0072,sum_test,计算身份证号为'420902198607282870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198607282870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198607282870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198607282870'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4990.036499999405,9478.863800002728,,,False,[]
+sum_test:A1000_0073,sum_test,统计身份证号为'420902197208112910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197208112910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197208112910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197208112910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6899.305099999765,15045.033799997327,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0074,sum_test,查询身份证号'420902197904072950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197904072950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197904072950' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197904072950';",True,True,True,False,True,1,True,True,True,True,True,4878.045600002224,10101.21000000072,,,False,[]
+sum_test:A1000_0075,sum_test,统计身份证号为'420902197306062990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197306062990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197306062990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197306062990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4969.577500000014,9077.567000000272,,,False,[]
+sum_test:A1000_0076,sum_test,统计身份证号'420902197304243030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197304243030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS distinct_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197304243030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197304243030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6598.66780000084,10049.932400001126,,,False,[]
+sum_test:A1000_0077,sum_test,计算身份证号为'420902198505143070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198505143070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198505143070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198505143070'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,7077.579400000104,13341.330200000812,,,False,[]
+sum_test:A1000_0078,sum_test,统计身份证号为'420902197807143110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197807143110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197807143110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197807143110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5762.402000000293,22319.240899996657,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0079,sum_test,查询身份证号'420902198105213150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198105213150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198105213150' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198105213150';",True,True,True,False,True,1,True,True,True,True,True,5522.6976000012655,10598.984099997324,,,False,[]
+sum_test:A1000_0080,sum_test,统计身份证号为'420902197711253190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197711253190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197711253190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197711253190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,7733.193700001721,10809.845200001291,,,False,[]
+sum_test:A1000_0081,sum_test,统计身份证号'420902197702053230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197702053230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197702053230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197702053230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3920.1743000012357,8052.859999999782,,,False,[]
+sum_test:A1000_0082,sum_test,计算身份证号为'420902197707023270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197707023270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197707023270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197707023270'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6627.436099999613,11227.25949999949,,,False,[]
+sum_test:A1000_0083,sum_test,统计身份证号为'420902198310123310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198310123310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198310123310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198310123310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5720.046599999478,15765.409100000397,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0084,sum_test,查询身份证号'420902198308043350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198308043350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198308043350' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198308043350';",True,True,True,False,True,1,True,True,True,True,True,6197.963899998285,8874.689600001147,,,False,[]
+sum_test:A1000_0085,sum_test,统计身份证号为'420902198303193390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198303193390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198303193390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198303193390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3544.483099998615,7107.53769999792,,,False,[]
+sum_test:A1000_0086,sum_test,统计身份证号'420902198208143430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198208143430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198208143430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198208143430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3609.3225000004168,6191.631499998039,,,False,[]
+sum_test:A1000_0087,sum_test,计算身份证号为'420902197704063470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197704063470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197704063470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197704063470'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,7240.942000000359,12540.297499999724,,,False,[]
+sum_test:A1000_0088,sum_test,统计身份证号为'420902197409013510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197409013510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197409013510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197409013510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5144.072900002357,21427.58540000068,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0089,sum_test,查询身份证号'420902197101143550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197101143550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197101143550'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197101143550';",True,True,True,False,True,1,True,True,True,True,True,5384.500699998171,8188.896800002112,,,False,[]
+sum_test:A1000_0090,sum_test,统计身份证号为'420902197101113590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197101113590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197101113590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197101113590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3821.6057999998156,9252.380800000537,,,False,[]
+sum_test:A1000_0091,sum_test,统计身份证号'420902197101253630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197101253630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197101253630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197101253630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4109.363799998391,8788.034299999708,,,False,[]
+sum_test:A1000_0092,sum_test,计算身份证号为'420902198201103670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198201103670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198201103670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198201103670';",True,True,True,False,True,1,True,True,True,True,True,5416.478299997834,11031.019599999127,,,False,[]
+sum_test:A1000_0093,sum_test,统计身份证号为'420902198009103710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198009103710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198009103710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198009103710';",True,True,True,False,True,2,False,False,True,True,False,6432.416800002102,14459.561500003474,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0094,sum_test,查询身份证号'420902198302083750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198302083750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198302083750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198302083750';",True,True,True,False,True,1,True,True,True,True,True,8367.122399999062,11381.265500000154,,,False,[]
+sum_test:A1000_0095,sum_test,统计身份证号为'420902198111043790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198111043790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198111043790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198111043790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4603.5429000003205,8803.42440000095,,,False,[]
+sum_test:A1000_0096,sum_test,统计身份证号'420902197704053830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197704053830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197704053830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197704053830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6224.34880000219,11280.763400001888,,,False,[]
+sum_test:A1000_0097,sum_test,计算身份证号为'420902198411283870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198411283870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198411283870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198411283870';",True,True,True,False,True,1,True,True,True,True,True,9993.843899999774,14196.573199998966,,,False,[]
+sum_test:A1000_0098,sum_test,统计身份证号为'420902197601163910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197601163910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197601163910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197601163910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,8987.83949999779,17286.70090000014,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0099,sum_test,查询身份证号'420902198609013950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198609013950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198609013950'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198609013950';",True,True,True,False,True,1,True,True,True,True,True,4668.347499999072,8981.150700001308,,,False,[]
+sum_test:A1000_0100,sum_test,统计身份证号为'420902198106233990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198106233990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198106233990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198106233990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3863.583700000163,8609.416499999497,,,False,[]
+sum_test:A1000_0101,sum_test,统计身份证号'420902197507184030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197507184030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197507184030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197507184030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4774.694899999304,9486.778200000117,,,False,[]
+sum_test:A1000_0102,sum_test,计算身份证号为'420902198512194070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198512194070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198512194070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198512194070';",True,True,True,False,True,1,True,True,True,True,True,6464.58469999925,12071.009899998899,,,False,[]
+sum_test:A1000_0103,sum_test,统计身份证号为'420902198408164110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198408164110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198408164110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198408164110';",True,True,True,False,True,2,False,False,True,True,False,6584.230700002081,16591.284799997084,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0104,sum_test,查询身份证号'420902198511194150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198511194150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198511194150' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198511194150';",True,True,True,False,True,1,True,True,True,True,True,5943.689299998368,10371.854100001656,,,False,[]
+sum_test:A1000_0105,sum_test,统计身份证号为'420902197707134190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197707134190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197707134190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197707134190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5267.962000001717,11859.747899998183,,,False,[]
+sum_test:A1000_0106,sum_test,统计身份证号'420902197410224230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197410224230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197410224230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197410224230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6486.162900000636,10391.279400002531,,,False,[]
+sum_test:A1000_0107,sum_test,计算身份证号为'420902197203134270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197203134270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197203134270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197203134270';",True,True,True,False,True,1,True,True,True,True,True,4760.830000002898,13794.117199999164,,,False,[]
+sum_test:A1000_0108,sum_test,统计身份证号为'420902197311104310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197311104310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197311104310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197311104310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5110.992800000531,20880.898499999603,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0109,sum_test,查询身份证号'420902197108174350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197108174350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197108174350'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197108174350';",True,True,True,False,True,1,True,True,True,True,True,5122.052300001087,8807.547899999918,,,False,[]
+sum_test:A1000_0110,sum_test,统计身份证号为'420902198104104390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198104104390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198104104390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198104104390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5336.041499998828,7921.358700001292,,,False,[]
+sum_test:A1000_0111,sum_test,统计身份证号'420902197312224430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197312224430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197312224430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197312224430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,2160.2843000000576,7777.569300000323,,,False,[]
+sum_test:A1000_0112,sum_test,计算身份证号为'420902197912064470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197912064470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197912064470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197912064470';",True,True,True,False,True,1,True,True,True,True,True,10231.264700003521,16643.539299999247,,,False,[]
+sum_test:A1000_0113,sum_test,统计身份证号为'420902198307014510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198307014510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198307014510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198307014510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,7098.90760000053,18491.773400000966,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0114,sum_test,查询身份证号'420902198504104550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198504104550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_records
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198504104550'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198504104550';",True,True,True,False,True,1,True,True,True,True,True,11337.653700000374,15907.112700002472,,,False,[]
+sum_test:A1000_0115,sum_test,统计身份证号为'420902198211124590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198211124590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198211124590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198211124590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,6114.886600000318,10898.080700000719,,,False,[]
+sum_test:A1000_0116,sum_test,统计身份证号'420902197608224630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197608224630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197608224630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197608224630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6579.337999999552,11254.086599998118,,,False,[]
+sum_test:A1000_0117,sum_test,计算身份证号为'420902198309224670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198309224670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198309224670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198309224670';",True,True,True,False,True,1,True,True,True,True,True,5550.342499998806,10894.062200000917,,,False,[]
+sum_test:A1000_0118,sum_test,统计身份证号为'420902198205174710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198205174710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198205174710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198205174710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,9584.762900001806,19711.717599999247,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0119,sum_test,查询身份证号'420902198203274750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198203274750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198203274750'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198203274750';",True,True,True,False,True,1,True,True,True,True,True,6154.712100000324,13334.439599999314,,,False,[]
+sum_test:A1000_0120,sum_test,统计身份证号为'420902197210014790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197210014790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197210014790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197210014790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3900.3637000023446,7755.846100000781,,,False,[]
+sum_test:A1000_0121,sum_test,统计身份证号'420902197312234830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197312234830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197312234830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197312234830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4429.623100000754,8615.235100001883,,,False,[]
+sum_test:A1000_0122,sum_test,计算身份证号为'420902197504254870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197504254870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197504254870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197504254870';",True,True,True,False,True,1,True,True,True,True,True,8678.253099998983,19498.444999997446,,,False,[]
+sum_test:A1000_0123,sum_test,统计身份证号为'420902198009014910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198009014910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198009014910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198009014910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5122.564799999964,15849.647899998672,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0124,sum_test,查询身份证号'420902198612034950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198612034950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198612034950' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198612034950';",True,True,True,False,True,1,True,True,True,True,True,8540.526099997805,12763.09460000266,,,False,[]
+sum_test:A1000_0125,sum_test,统计身份证号为'420902198404284990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198404284990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198404284990' 
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198404284990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,6350.995900000271,11595.804000000498,,,False,[]
+sum_test:A1000_0126,sum_test,统计身份证号'420902197711215030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197711215030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197711215030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197711215030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4351.154200001474,9843.74299999763,,,False,[]
+sum_test:A1000_0127,sum_test,计算身份证号为'420902197501085070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197501085070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197501085070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197501085070';",True,True,True,False,True,1,True,True,True,True,True,5900.191100001393,10987.183400000504,,,False,[]
+sum_test:A1000_0128,sum_test,统计身份证号为'420902197202195110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197202195110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197202195110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197202195110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4364.208900002268,17330.90749999974,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0129,sum_test,查询身份证号'420902198608215150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198608215150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198608215150' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198608215150';",True,True,True,False,True,1,True,True,True,True,True,4445.92399999965,9636.148099998536,,,False,[]
+sum_test:A1000_0130,sum_test,统计身份证号为'420902197706075190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197706075190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197706075190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197706075190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,7028.308400000242,10712.391100001696,,,False,[]
+sum_test:A1000_0131,sum_test,统计身份证号'420902198212255230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198212255230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198212255230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198212255230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5527.521800002432,11006.640700001299,,,False,[]
+sum_test:A1000_0132,sum_test,计算身份证号为'420902198105025270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198105025270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198105025270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198105025270';",True,True,True,False,True,1,True,True,True,True,True,5923.954199999571,11089.739999999438,,,False,[]
+sum_test:A1000_0133,sum_test,统计身份证号为'420902197607065310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197607065310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197607065310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197607065310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4817.655599999853,15345.79709999889,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0134,sum_test,查询身份证号'420902198106205350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198106205350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198106205350' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198106205350';",True,True,True,False,True,1,True,True,True,True,True,10354.703900000459,15245.890799997142,,,False,[]
+sum_test:A1000_0135,sum_test,统计身份证号为'420902197401195390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197401195390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197401195390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197401195390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5396.6873999997915,11301.398299998255,,,False,[]
+sum_test:A1000_0136,sum_test,统计身份证号'420902197501035430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197501035430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197501035430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197501035430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5653.360600001179,8817.038299999695,,,False,[]
+sum_test:A1000_0137,sum_test,计算身份证号为'420902197809265470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197809265470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197809265470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197809265470';",True,True,True,False,True,1,True,True,True,True,True,4514.15089999864,14647.017399998731,,,False,[]
+sum_test:A1000_0138,sum_test,统计身份证号为'420902198107215510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198107215510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198107215510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198107215510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4934.423599999718,14815.49719999748,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0139,sum_test,查询身份证号'420902197902105550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197902105550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197902105550' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197902105550';",True,True,True,False,True,1,True,True,True,True,True,4203.9135999984865,8685.273299997789,,,False,[]
+sum_test:A1000_0140,sum_test,统计身份证号为'420902197106275590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197106275590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197106275590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197106275590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,6029.380600000877,9186.056399998051,,,False,[]
+sum_test:A1000_0141,sum_test,统计身份证号'420902198508125630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198508125630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198508125630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198508125630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,7681.931999999506,11662.211599999864,,,False,[]
+sum_test:A1000_0142,sum_test,计算身份证号为'420902198402245670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198402245670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402245670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402245670'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,11064.508200001,15463.08190000127,,,False,[]
+sum_test:A1000_0143,sum_test,统计身份证号为'420902197102145710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197102145710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197102145710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197102145710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,3712.83929999845,21870.96399999791,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0144,sum_test,查询身份证号'420902197512065750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197512065750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197512065750'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197512065750';",True,True,True,False,True,1,True,True,True,True,True,5053.5366000003705,10383.199700001569,,,False,[]
+sum_test:A1000_0145,sum_test,统计身份证号为'420902197304115790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197304115790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197304115790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197304115790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5688.3976999997685,10027.303300001222,,,False,[]
+sum_test:A1000_0146,sum_test,统计身份证号'420902198606095830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198606095830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198606095830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198606095830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,6153.7363000024925,10518.524399998569,,,False,[]
+sum_test:A1000_0147,sum_test,计算身份证号为'420902198204165870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198204165870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198204165870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198204165870';",True,True,True,False,True,1,True,True,True,True,True,6081.067799997982,12421.92040000009,,,False,[]
+sum_test:A1000_0148,sum_test,统计身份证号为'420902197101025910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197101025910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197101025910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197101025910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4361.889200001315,14258.701099999598,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0149,sum_test,查询身份证号'420902197108265950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197108265950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197108265950' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197108265950';",True,True,True,False,True,1,True,True,True,True,True,5697.422099998221,10314.531600000919,,,False,[]
+sum_test:A1000_0150,sum_test,统计身份证号为'420902197801115990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197801115990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197801115990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197801115990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3101.915799998096,5867.602899998019,,,False,[]
+sum_test:A1000_0151,sum_test,统计身份证号'420902198309266030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198309266030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198309266030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198309266030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3815.2016999993066,8705.290500001865,,,False,[]
+sum_test:A1000_0152,sum_test,计算身份证号为'420902197707106070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197707106070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197707106070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197707106070';",True,True,True,False,True,1,True,True,True,True,True,4471.075699999346,10382.231200001115,,,False,[]
+sum_test:A1000_0153,sum_test,统计身份证号为'420902197806026110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197806026110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197806026110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197806026110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4296.641500000987,13317.504200000258,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0154,sum_test,查询身份证号'420902198302066150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198302066150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198302066150'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198302066150';",True,True,True,False,True,1,True,True,True,True,True,6272.418900000048,11934.996899999533,,,False,[]
+sum_test:A1000_0155,sum_test,统计身份证号为'420902197711226190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197711226190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197711226190' 
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197711226190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5200.203099997452,8854.558600000018,,,False,[]
+sum_test:A1000_0156,sum_test,统计身份证号'420902197302086230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197302086230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197302086230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197302086230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4788.892500000657,9084.879400001228,,,False,[]
+sum_test:A1000_0157,sum_test,计算身份证号为'420902197301046270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197301046270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197301046270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197301046270';",True,True,True,False,True,1,True,True,True,True,True,5467.24660000109,11705.468099997233,,,False,[]
+sum_test:A1000_0158,sum_test,统计身份证号为'420902197703166310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197703166310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197703166310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197703166310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6289.334000000963,14814.461199999641,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0159,sum_test,查询身份证号'420902198102026350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198102026350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198102026350'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198102026350';",True,True,True,False,True,1,True,True,True,True,True,4647.594800000661,8284.840800002712,,,False,[]
+sum_test:A1000_0160,sum_test,统计身份证号为'420902198104046390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198104046390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198104046390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198104046390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4121.867400001065,8739.884700000403,,,False,[]
+sum_test:A1000_0161,sum_test,统计身份证号'420902198602266430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198602266430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198602266430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198602266430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,2847.2624000023643,7873.3083000006445,,,False,[]
+sum_test:A1000_0162,sum_test,计算身份证号为'420902197304226470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197304226470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197304226470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197304226470';",True,True,True,False,True,1,True,True,True,True,True,4050.7723999980954,9799.60139999821,,,False,[]
+sum_test:A1000_0163,sum_test,统计身份证号为'420902197707196510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197707196510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197707196510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197707196510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4557.313400000567,13985.316900001635,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0164,sum_test,查询身份证号'420902197303026550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197303026550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197303026550'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197303026550';",True,True,True,False,True,1,True,True,True,True,True,3879.0322999993805,7638.106599999446,,,False,[]
+sum_test:A1000_0165,sum_test,统计身份证号为'420902198408156590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198408156590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198408156590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198408156590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,6113.043099998322,9794.129699999758,,,False,[]
+sum_test:A1000_0166,sum_test,统计身份证号'420902198405066630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198405066630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198405066630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198405066630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3526.5303000014683,8496.626000000106,,,False,[]
+sum_test:A1000_0167,sum_test,计算身份证号为'420902198502116670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198502116670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198502116670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198502116670';",True,True,True,False,True,1,True,True,True,True,True,5830.323499998485,10729.784700000891,,,False,[]
+sum_test:A1000_0168,sum_test,统计身份证号为'420902198409196710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198409196710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198409196710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198409196710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4719.154800000979,14016.514700000698,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0169,sum_test,查询身份证号'420902198408236750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198408236750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198408236750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198408236750';",True,True,True,False,True,1,True,True,True,True,True,5327.504900000349,11275.766200000362,,,False,[]
+sum_test:A1000_0170,sum_test,统计身份证号为'420902197110096790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197110096790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197110096790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197110096790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,5854.774600000383,9230.521699999372,,,False,[]
+sum_test:A1000_0171,sum_test,统计身份证号'420902198304206830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198304206830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198304206830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198304206830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,5185.893400001078,10876.475600001868,,,False,[]
+sum_test:A1000_0172,sum_test,计算身份证号为'420902198604056870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198604056870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198604056870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198604056870'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4213.229999997566,7561.094199998479,,,False,[]
+sum_test:A1000_0173,sum_test,统计身份证号为'420902197605226910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197605226910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197605226910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197605226910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,3396.806900000229,14153.13089999836,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0174,sum_test,查询身份证号'420902197911206950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197911206950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197911206950' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197911206950';",True,True,True,False,True,1,True,True,True,True,True,4863.818100002391,8792.818499998248,,,False,[]
+sum_test:A1000_0175,sum_test,统计身份证号为'420902197911016990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197911016990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197911016990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197911016990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4461.21249999851,11231.8617000019,,,False,[]
+sum_test:A1000_0176,sum_test,统计身份证号'420902197109197030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197109197030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197109197030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197109197030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4079.887599997164,8373.241400000552,,,False,[]
+sum_test:A1000_0177,sum_test,计算身份证号为'420902198210207070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198210207070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198210207070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198210207070';",True,True,True,False,True,1,True,True,True,True,True,5790.935500001069,11029.850199996872,,,False,[]
+sum_test:A1000_0178,sum_test,统计身份证号为'420902197808227110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197808227110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197808227110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197808227110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,6753.375500000402,17816.644099999394,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0179,sum_test,查询身份证号'420902197607147150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197607147150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197607147150' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197607147150';",True,True,True,False,True,1,True,True,True,True,True,5208.616500000062,9887.349799999356,,,False,[]
+sum_test:A1000_0180,sum_test,统计身份证号为'420902198502237190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198502237190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198502237190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198502237190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,2773.860199999035,7054.085900002974,,,False,[]
+sum_test:A1000_0181,sum_test,统计身份证号'420902197502147230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197502147230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197502147230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197502147230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3570.429700001114,7978.79489999832,,,False,[]
+sum_test:A1000_0182,sum_test,计算身份证号为'420902198109247270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198109247270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198109247270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198109247270';",True,True,True,False,True,1,True,True,True,True,True,5779.06670000084,11720.491600000969,,,False,[]
+sum_test:A1000_0183,sum_test,统计身份证号为'420902197604207310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197604207310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197604207310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197604207310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,3336.3054000001284,12594.653600001038,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0184,sum_test,查询身份证号'420902198310047350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198310047350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198310047350' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198310047350';",True,True,True,False,True,1,True,True,True,True,True,3280.0382999994326,7186.322599998675,,,False,[]
+sum_test:A1000_0185,sum_test,统计身份证号为'420902197802207390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197802207390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197802207390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197802207390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3414.676000000327,7377.6509999988775,,,False,[]
+sum_test:A1000_0186,sum_test,统计身份证号'420902198011067430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198011067430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198011067430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198011067430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4567.271899999469,7034.662300000491,,,False,[]
+sum_test:A1000_0187,sum_test,计算身份证号为'420902197511097470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197511097470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197511097470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197511097470';",True,True,True,False,True,1,True,True,True,True,True,4378.605999998399,10890.020099999674,,,False,[]
+sum_test:A1000_0188,sum_test,统计身份证号为'420902198404237510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198404237510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198404237510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198404237510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,2867.6028000008955,10458.432799998263,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0189,sum_test,查询身份证号'420902197612107550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197612107550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197612107550'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197612107550';",True,True,True,False,True,1,True,True,True,True,True,3024.0410000005795,11481.210900001315,,,False,[]
+sum_test:A1000_0190,sum_test,统计身份证号为'420902197110057590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197110057590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197110057590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197110057590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,2905.31159999955,6083.657600000151,,,False,[]
+sum_test:A1000_0191,sum_test,统计身份证号'420902198502267630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198502267630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198502267630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198502267630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4625.835599999846,7350.833300002705,,,False,[]
+sum_test:A1000_0192,sum_test,计算身份证号为'420902197803017670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197803017670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197803017670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197803017670';",True,True,True,False,True,1,True,True,True,True,True,5440.435900000011,10298.918100001174,,,False,[]
+sum_test:A1000_0193,sum_test,统计身份证号为'420902198206127710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198206127710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198206127710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198206127710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,3024.6416999980283,10894.344199998159,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0194,sum_test,查询身份证号'420902198605067750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198605067750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198605067750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198605067750';",True,True,True,False,True,1,True,True,True,True,True,4563.7060000008205,7390.850299998419,,,False,[]
+sum_test:A1000_0195,sum_test,统计身份证号为'420902198603027790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198603027790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198603027790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198603027790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3059.794200002216,7870.392799999536,,,False,[]
+sum_test:A1000_0196,sum_test,统计身份证号'420902197709057830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197709057830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197709057830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197709057830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3406.1961000006704,9802.119399999356,,,False,[]
+sum_test:A1000_0197,sum_test,计算身份证号为'420902197803097870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197803097870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197803097870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197803097870';",True,True,True,False,True,1,True,True,True,True,True,5746.826800001145,9430.093400002079,,,False,[]
+sum_test:A1000_0198,sum_test,统计身份证号为'420902197804257910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197804257910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197804257910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197804257910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5227.929800003039,13752.600800002256,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0199,sum_test,查询身份证号'420902197405207950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197405207950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197405207950'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197405207950';",True,True,True,False,True,1,True,True,True,True,True,4974.888400000054,9409.626200002094,,,False,[]
+sum_test:A1000_0200,sum_test,统计身份证号为'420902197511097990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197511097990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197511097990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197511097990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3354.3721999994887,7008.850599999278,,,False,[]
+sum_test:A1000_0201,sum_test,统计身份证号'420902198310068030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198310068030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198310068030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198310068030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4402.575699998124,8120.068000000174,,,False,[]
+sum_test:A1000_0202,sum_test,计算身份证号为'420902197106188070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197106188070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197106188070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197106188070';",True,True,True,False,True,1,True,True,True,True,True,5501.990900000237,9434.078800000862,,,False,[]
+sum_test:A1000_0203,sum_test,统计身份证号为'420902197901168110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197901168110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197901168110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197901168110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4947.539299999335,13753.653399999166,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0204,sum_test,查询身份证号'420902197104208150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197104208150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197104208150'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197104208150';",True,True,True,False,True,1,True,True,True,True,True,4346.3967999996385,8493.087599999853,,,False,[]
+sum_test:A1000_0205,sum_test,统计身份证号为'420902197706178190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197706178190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197706178190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197706178190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3876.831500001572,8820.313699998223,,,False,[]
+sum_test:A1000_0206,sum_test,统计身份证号'420902197307268230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197307268230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197307268230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197307268230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3924.23190000045,11138.233300000138,,,False,[]
+sum_test:A1000_0207,sum_test,计算身份证号为'420902197112278270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197112278270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197112278270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197112278270';",True,True,True,False,True,1,True,True,True,True,True,3917.1391000018048,8982.225600000675,,,False,[]
+sum_test:A1000_0208,sum_test,统计身份证号为'420902197207158310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197207158310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197207158310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197207158310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4420.450099998561,15913.145099999383,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0209,sum_test,查询身份证号'420902198511148350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198511148350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198511148350'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198511148350';",True,True,True,False,True,1,True,True,True,True,True,5768.563699999504,9792.080500003067,,,False,[]
+sum_test:A1000_0210,sum_test,统计身份证号为'420902197605128390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197605128390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197605128390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197605128390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4436.573800001497,8454.267299999628,,,False,[]
+sum_test:A1000_0211,sum_test,统计身份证号'420902197507068430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197507068430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197507068430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197507068430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3747.5822000014887,9358.541399997193,,,False,[]
+sum_test:A1000_0212,sum_test,计算身份证号为'420902197911048470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197911048470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197911048470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197911048470';",True,True,True,False,True,1,True,True,True,True,True,6037.505199998122,10477.78180000023,,,False,[]
+sum_test:A1000_0213,sum_test,统计身份证号为'420902198109078510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198109078510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198109078510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198109078510'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4322.9538000014145,12121.634399998584,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0214,sum_test,查询身份证号'420902198511038550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198511038550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198511038550' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198511038550';",True,True,True,False,True,1,True,True,True,True,True,5047.12550000113,8707.582600000023,,,False,[]
+sum_test:A1000_0215,sum_test,统计身份证号为'420902197403098590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197403098590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197403098590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197403098590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3373.4748999995645,7671.364099998755,,,False,[]
+sum_test:A1000_0216,sum_test,统计身份证号'420902197411088630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197411088630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197411088630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197411088630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3987.4942999995255,8329.467800002021,,,False,[]
+sum_test:A1000_0217,sum_test,计算身份证号为'420902198402038670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198402038670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402038670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402038670';",True,True,True,False,True,1,True,True,True,True,True,6768.434200002957,12402.740900000936,,,False,[]
+sum_test:A1000_0218,sum_test,统计身份证号为'420902198403188710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198403188710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198403188710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198403188710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5893.78079999733,14296.52250000072,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0219,sum_test,查询身份证号'420902198411128750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198411128750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198411128750'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198411128750';",True,True,True,False,True,1,True,True,True,True,True,6919.5214999999735,13537.351599999965,,,False,[]
+sum_test:A1000_0220,sum_test,统计身份证号为'420902197808118790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197808118790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197808118790' 
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197808118790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4716.690799999924,9530.834599998343,,,False,[]
+sum_test:A1000_0221,sum_test,统计身份证号'420902198102148830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198102148830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198102148830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198102148830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3831.6212999998243,9649.408900000708,,,False,[]
+sum_test:A1000_0222,sum_test,计算身份证号为'420902197803278870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197803278870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197803278870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197803278870';",True,True,True,False,True,1,True,True,True,True,True,5044.758100000763,9664.63609999846,,,False,[]
+sum_test:A1000_0223,sum_test,统计身份证号为'420902198304178910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198304178910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198304178910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198304178910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5450.263900002028,13836.668900003133,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0224,sum_test,查询身份证号'420902197606028950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197606028950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197606028950' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197606028950';",True,True,True,False,True,1,True,True,True,True,True,3942.86369999827,8069.186700002319,,,False,[]
+sum_test:A1000_0225,sum_test,统计身份证号为'420902197907028990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197907028990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197907028990' 
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197907028990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4864.928599999985,8038.924799999222,,,False,[]
+sum_test:A1000_0226,sum_test,统计身份证号'420902198407089030'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198407089030' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198407089030'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198407089030'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,4547.043299997313,6897.299799999018,,,False,[]
+sum_test:A1000_0227,sum_test,计算身份证号为'420902198207189070'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198207189070' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198207189070'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198207189070';",True,True,True,False,True,1,True,True,True,True,True,4706.68730000034,9542.06879999765,,,False,[]
+sum_test:A1000_0228,sum_test,统计身份证号为'420902197702259110'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197702259110' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197702259110'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197702259110'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4884.751800000231,15139.350499997818,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0229,sum_test,查询身份证号'420902198305089150'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198305089150' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198305089150' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198305089150';",True,True,True,False,True,1,True,True,True,True,True,6750.016999998479,9908.273900000495,,,False,[]
+sum_test:A1000_0230,sum_test,统计身份证号为'420902198002139190'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198002139190' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198002139190'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198002139190'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4617.411100000027,8123.533100002533,,,False,[]
+sum_test:A1000_0231,sum_test,统计身份证号'420902198112049230'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198112049230' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198112049230'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198112049230'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,2765.484799998376,8822.834099999454,,,False,[]
+sum_test:A1000_0232,sum_test,计算身份证号为'420902198011089270'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198011089270' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198011089270'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198011089270';",True,True,True,False,True,1,True,True,True,True,True,5600.286500000948,10445.90849999804,,,False,[]
+sum_test:A1000_0233,sum_test,统计身份证号为'420902198407199310'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198407199310' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198407199310'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198407199310'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,3713.6597000026086,10583.205899998575,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0234,sum_test,查询身份证号'420902197310169350'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197310169350' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197310169350' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197310169350';",True,True,True,False,True,1,True,True,True,True,True,4488.860199999181,7879.161099997873,,,False,[]
+sum_test:A1000_0235,sum_test,统计身份证号为'420902197209019390'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197209019390' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197209019390'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197209019390'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3315.0622000030125,6747.519900000043,,,False,[]
+sum_test:A1000_0236,sum_test,统计身份证号'420902197705159430'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197705159430' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197705159430'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197705159430'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,2720.3645999979926,7021.102799997607,,,False,[]
+sum_test:A1000_0237,sum_test,计算身份证号为'420902197412029470'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197412029470' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197412029470'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197412029470';",True,True,True,False,True,1,True,True,True,True,True,4394.726099999389,8636.316799998895,,,False,[]
+sum_test:A1000_0238,sum_test,统计身份证号为'420902198209069510'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902198209069510' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months,
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198209069510'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months,
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902198209069510';",True,True,True,False,True,2,False,False,True,True,False,4443.593299998611,10361.158899999282,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0239,sum_test,查询身份证号'420902197402019550'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197402019550' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197402019550'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197402019550';",True,True,True,False,True,1,True,True,True,True,True,4315.316200001689,8196.072299997468,,,False,[]
+sum_test:A1000_0240,sum_test,统计身份证号为'420902198402019590'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198402019590' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402019590'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402019590'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,9474.84439999971,12557.194200002414,,,False,[]
+sum_test:A1000_0241,sum_test,统计身份证号'420902198308069630'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902198308069630' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902198308069630'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902198308069630'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,2997.3327000006975,6517.548199997691,,,False,[]
+sum_test:A1000_0242,sum_test,计算身份证号为'420902197701239670'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902197701239670' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197701239670'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197701239670'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,8438.051799999812,14391.928900000494,,,False,[]
+sum_test:A1000_0243,sum_test,统计身份证号为'420902197902259710'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197902259710' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197902259710'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197902259710'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,4488.716799998656,14341.077199998836,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0244,sum_test,查询身份证号'420902197102169750'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902197102169750' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month, 
+  COUNT(*) AS total_valid_payments
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197102169750' 
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month, 
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197102169750';",True,True,True,False,True,1,True,True,True,True,True,4983.860500000446,8805.663700000878,,,False,[]
+sum_test:A1000_0245,sum_test,统计身份证号为'420902198012029790'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902198012029790' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198012029790'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type,
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198012029790'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,4142.056199998478,7290.825200001564,,,False,[]
+sum_test:A1000_0246,sum_test,统计身份证号'420902197903179830'有效社保缴费覆盖了多少个不同缴费月份。,SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count FROM social_insurance_payment WHERE id_card = '420902197903179830' AND is_valid = '1';,"SELECT COUNT(DISTINCT pay_month) AS valid_payment_months
+FROM social_insurance_payment
+WHERE id_card = '420902197903179830'
+  AND is_valid = '1';","SELECT COUNT(DISTINCT pay_month) AS valid_payment_month_count
+FROM social_insurance_payment
+WHERE id_card = '420902197903179830'
+  AND is_valid = '1';",True,True,True,False,True,1,True,True,True,True,True,3338.0695000014384,8244.964899997285,,,False,[]
+sum_test:A1000_0247,sum_test,计算身份证号为'420902198402139870'的有效社保缴费记录数量、最低缴费基数、最高缴费基数和平均缴费基数。,"SELECT COUNT(*) AS record_count, MIN(pay_base) AS min_pay_base, MAX(pay_base) AS max_pay_base, AVG(pay_base) AS avg_pay_base FROM social_insurance_payment WHERE id_card = '420902198402139870' AND is_valid = '1';","SELECT 
+  COUNT(*) AS payment_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402139870'
+  AND is_valid = '1';","SELECT 
+  COUNT(*) AS record_count,
+  MIN(pay_base) AS min_pay_base,
+  MAX(pay_base) AS max_pay_base,
+  AVG(pay_base) AS avg_pay_base
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198402139870';",True,True,True,False,True,1,True,True,True,True,True,5413.456099999166,10553.305100002035,,,False,[]
+sum_test:A1000_0248,sum_test,统计身份证号为'420902197611039910'的有效补贴历史中累计发放月数和累计发放金额。,"SELECT COALESCE(SUM(grant_months), 0) AS total_grant_months, COALESCE(SUM(grant_amount), 0) AS total_grant_amount FROM subsidy_payment_history WHERE id_card = '420902197611039910' AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197611039910'
+  AND is_valid = '1';","SELECT 
+  SUM(grant_months) AS total_grant_months, 
+  SUM(grant_amount) AS total_grant_amount
+FROM 
+  subsidy_payment_history
+WHERE 
+  id_card = '420902197611039910'
+  AND is_valid = '1';",True,True,True,False,True,2,False,False,True,True,False,5438.659899999038,13950.171200001932,result_mismatch,"value_mismatch: gold_rows=1, generated_rows=1",False,[]
+sum_test:A1000_0249,sum_test,查询身份证号'420902198504229950'的最新有效社保缴费月份，并统计有效缴费流水总数。,"SELECT MAX(pay_month) AS latest_pay_month, COUNT(*) AS payment_record_count FROM social_insurance_payment WHERE id_card = '420902198504229950' AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_valid_pay_month,
+  COUNT(*) AS valid_payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198504229950'
+  AND is_valid = '1';","SELECT 
+  MAX(pay_month) AS latest_pay_month,
+  COUNT(*) AS payment_record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902198504229950';",True,True,True,False,True,1,True,True,True,True,True,2597.4648000010347,6728.503500002262,,,False,[]
+sum_test:A1000_0250,sum_test,统计身份证号为'420902197512279990'的有效社保缴费记录中，各险种分别有多少条记录。,"SELECT insurance_type, COUNT(*) AS payment_count FROM social_insurance_payment WHERE id_card = '420902197512279990' AND is_valid = '1' GROUP BY insurance_type ORDER BY insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS record_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197512279990'
+  AND is_valid = '1'
+GROUP BY 
+  insurance_type;","SELECT 
+  insurance_type, 
+  COUNT(*) AS payment_count
+FROM 
+  social_insurance_payment
+WHERE 
+  id_card = '420902197512279990'
+GROUP BY 
+  insurance_type;",True,True,True,False,True,1,True,True,True,True,True,3125.645300002361,6174.340699999448,,,False,[]

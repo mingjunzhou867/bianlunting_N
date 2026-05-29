@@ -11,7 +11,16 @@ __pycache__/
 .pytest_cache/
 .test_tmp/
 tests/
-test_new/
+test_new/*
+!test_new/README.md
+!test_new/source_cases/
+!test_new/source_cases/**
+!test_new/datasets/
+!test_new/datasets/**
+!test_new/final_results/
+!test_new/final_results/**
+!test_new/final_figures/
+!test_new/final_figures/**
 data_source_packs/sql_test_1000/
 rag/.tmp/
 rag/outputs/

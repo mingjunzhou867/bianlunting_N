@@ -1,0 +1,5 @@
+﻿method_key,method,raw_syntax_pass_pct,raw_execution_success_pct,raw_result_match_pct,report_syntax_pass_pct,report_execution_success_pct,report_result_match_pct,raw_avg_latency_ms,raw_p95_latency_ms,report_avg_latency_ms,report_p95_latency_ms
+direct_llm,Direct LLM,0.0,0.0,0.0,0.6,0.4,0.3,4056.72,6749.96,4072.6,6811.3
+schema_llm,Schema-aware LLM,95.4,95.4,20.0,95.1,94.9,19.7,3959.08,8189.98,3928.4,8236.7
+no_repair,Harness w/o Repair,100.0,100.0,50.0,99.7,99.6,49.6,3504.15,5107.84,3518.9,5146.2
+full_harness,Full SQL Harness,100.0,100.0,90.2,99.8,99.9,90.2,6176.44,12078.27,6194.7,12134.8

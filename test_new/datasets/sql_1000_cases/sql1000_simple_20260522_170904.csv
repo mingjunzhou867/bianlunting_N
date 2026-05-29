@@ -1,0 +1,4041 @@
+﻿case_id,category,question,gold_sql,first_generated_sql,final_generated_sql,first_generation_success,first_syntax_pass,first_execution_success,first_result_match,retry_triggered,retry_count,retry_success,final_success,final_syntax_pass,final_execution_success,final_result_match,first_latency_ms,total_latency_ms,failure_reason,error_message,has_structural_warnings,structural_warnings
+simple_test:S1000_0001,simple_test,帮我查看身份证号'420902197608010010'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197608010010';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197608010010';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197608010010';",True,True,True,True,False,0,False,True,True,True,True,8783.884399999806,8806.34789999749,,,False,[]
+simple_test:S1000_0002,simple_test,查一下'420902197908280050'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197908280050';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197908280050';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197908280050';",True,True,True,True,False,0,False,True,True,True,True,9143.251399997098,9144.277800001873,,,False,[]
+simple_test:S1000_0003,simple_test,核对身份证号为'420902198001120090'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198001120090';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198001120090';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198001120090';",True,True,True,True,False,0,False,True,True,True,True,3975.0142000011692,3978.2725000004575,,,False,[]
+simple_test:S1000_0004,simple_test,查询身份证号为'420902198506210130'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198506210130';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198506210130';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198506210130';",True,True,True,True,False,0,False,True,True,True,True,6971.36689999752,6975.513299999875,,,False,[]
+simple_test:S1000_0005,simple_test,帮我查看身份证号'420902197903170170'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197903170170';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197903170170';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197903170170';",True,True,True,True,False,0,False,True,True,True,True,8246.631900001375,8248.53240000084,,,False,[]
+simple_test:S1000_0006,simple_test,查一下'420902198410210210'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198410210210';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198410210210';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198410210210';",True,True,True,True,False,0,False,True,True,True,True,3465.5099999981758,3468.079399997805,,,False,[]
+simple_test:S1000_0007,simple_test,核对身份证号为'420902197307140250'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197307140250';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197307140250';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197307140250';",True,True,True,True,False,0,False,True,True,True,True,6127.195600001869,6130.300099997839,,,False,[]
+simple_test:S1000_0008,simple_test,查询身份证号为'420902197109260290'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197109260290';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197109260290';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197109260290';",True,True,True,True,False,0,False,True,True,True,True,5107.468599999265,5109.272699999565,,,False,[]
+simple_test:S1000_0009,simple_test,帮我查看身份证号'420902197505060330'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197505060330';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197505060330';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197505060330';",True,True,True,True,False,0,False,True,True,True,True,7013.144600001397,7014.417300000787,,,False,[]
+simple_test:S1000_0010,simple_test,查一下'420902197902230370'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197902230370';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197902230370';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197902230370';",True,True,True,True,False,0,False,True,True,True,True,6472.184499998548,6473.54869999981,,,False,[]
+simple_test:S1000_0011,simple_test,核对身份证号为'420902197907150410'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197907150410';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197907150410';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197907150410';",True,True,True,True,False,0,False,True,True,True,True,5178.831099998206,5180.73799999911,,,False,[]
+simple_test:S1000_0012,simple_test,查询身份证号为'420902198504060450'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198504060450';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198504060450';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198504060450';",True,True,True,True,False,0,False,True,True,True,True,7205.141400001594,7207.8884999973525,,,False,[]
+simple_test:S1000_0013,simple_test,帮我查看身份证号'420902197112050490'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197112050490';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197112050490';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197112050490';",True,True,True,True,False,0,False,True,True,True,True,5818.395900001633,5821.0058999975445,,,False,[]
+simple_test:S1000_0014,simple_test,查一下'420902197109170530'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197109170530';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197109170530';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197109170530';",True,True,True,True,False,0,False,True,True,True,True,5684.955100001389,5687.13900000148,,,False,[]
+simple_test:S1000_0015,simple_test,核对身份证号为'420902198311140570'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198311140570';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198311140570';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198311140570';",True,True,True,True,False,0,False,True,True,True,True,5898.072700001649,5899.2097999980615,,,False,[]
+simple_test:S1000_0016,simple_test,查询身份证号为'420902197408080610'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197408080610';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197408080610';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197408080610';",True,True,True,True,False,0,False,True,True,True,True,4820.498500001122,4823.753199998464,,,False,[]
+simple_test:S1000_0017,simple_test,帮我查看身份证号'420902198202120650'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198202120650';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198202120650';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198202120650';",True,True,True,True,False,0,False,True,True,True,True,5101.533100001689,5118.21300000156,,,False,[]
+simple_test:S1000_0018,simple_test,查一下'420902197210150690'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197210150690';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197210150690';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197210150690';",True,True,True,True,False,0,False,True,True,True,True,3674.0530999995826,3676.804099999572,,,False,[]
+simple_test:S1000_0019,simple_test,核对身份证号为'420902198205220730'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198205220730';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198205220730';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198205220730';",True,True,True,True,False,0,False,True,True,True,True,2756.4535999990767,2759.6532000025036,,,False,[]
+simple_test:S1000_0020,simple_test,查询身份证号为'420902198012090770'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198012090770';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198012090770';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198012090770';",True,True,True,True,False,0,False,True,True,True,True,7724.767700001394,7726.957700000639,,,False,[]
+simple_test:S1000_0021,simple_test,帮我查看身份证号'420902198408280810'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198408280810';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198408280810';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198408280810';",True,True,True,True,False,0,False,True,True,True,True,7938.630299999204,7940.7599000005575,,,False,[]
+simple_test:S1000_0022,simple_test,查一下'420902197305080850'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197305080850';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197305080850';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197305080850';",True,True,True,True,False,0,False,True,True,True,True,4837.114100002509,4839.251499997772,,,False,[]
+simple_test:S1000_0023,simple_test,核对身份证号为'420902197408140890'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197408140890';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197408140890';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197408140890';",True,True,True,True,False,0,False,True,True,True,True,5823.240099998657,5825.472399999853,,,False,[]
+simple_test:S1000_0024,simple_test,查询身份证号为'420902197108140930'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197108140930';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197108140930';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197108140930';",True,True,True,True,False,0,False,True,True,True,True,4110.595399997692,4111.856100000296,,,False,[]
+simple_test:S1000_0025,simple_test,帮我查看身份证号'420902197806060970'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197806060970';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197806060970';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197806060970';",True,True,True,True,False,0,False,True,True,True,True,9154.164300001867,9155.783300000621,,,False,[]
+simple_test:S1000_0026,simple_test,查一下'420902198205221010'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198205221010';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198205221010';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198205221010';",True,True,True,True,False,0,False,True,True,True,True,6302.865500001644,6304.037000001699,,,False,[]
+simple_test:S1000_0027,simple_test,核对身份证号为'420902198311281050'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198311281050';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198311281050';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198311281050';",True,True,True,True,False,0,False,True,True,True,True,4764.825500002189,4765.815599999769,,,False,[]
+simple_test:S1000_0028,simple_test,查询身份证号为'420902197506251090'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197506251090';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197506251090';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197506251090';",True,True,True,True,False,0,False,True,True,True,True,4914.5395000014105,4915.388299999904,,,False,[]
+simple_test:S1000_0029,simple_test,帮我查看身份证号'420902198207271130'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198207271130';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198207271130';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198207271130';",True,True,True,True,False,0,False,True,True,True,True,2880.0615000000107,2881.4882000006037,,,False,[]
+simple_test:S1000_0030,simple_test,查一下'420902198609251170'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198609251170';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198609251170';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198609251170';",True,True,True,True,False,0,False,True,True,True,True,6531.826600003114,6534.150399998907,,,False,[]
+simple_test:S1000_0031,simple_test,核对身份证号为'420902198109201210'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198109201210';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198109201210';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198109201210';",True,True,True,True,False,0,False,True,True,True,True,4849.860800000897,4851.368400002684,,,False,[]
+simple_test:S1000_0032,simple_test,查询身份证号为'420902197708201250'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197708201250';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197708201250';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197708201250';",True,True,True,True,False,0,False,True,True,True,True,4670.449400000507,4672.083000001294,,,False,[]
+simple_test:S1000_0033,simple_test,帮我查看身份证号'420902197510141290'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197510141290';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197510141290';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197510141290';",True,True,True,True,False,0,False,True,True,True,True,6928.9227000008395,6930.796500000724,,,False,[]
+simple_test:S1000_0034,simple_test,查一下'420902197311211330'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197311211330';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197311211330';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197311211330';",True,True,True,True,False,0,False,True,True,True,True,5507.859200002713,5510.06580000103,,,False,[]
+simple_test:S1000_0035,simple_test,核对身份证号为'420902198503271370'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198503271370';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198503271370';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198503271370';",True,True,True,True,False,0,False,True,True,True,True,3353.7275999988196,3356.1509999999544,,,False,[]
+simple_test:S1000_0036,simple_test,查询身份证号为'420902197409121410'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197409121410';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197409121410';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197409121410';",True,True,True,True,False,0,False,True,True,True,True,6625.821800000267,6629.44509999943,,,False,[]
+simple_test:S1000_0037,simple_test,帮我查看身份证号'420902197509171450'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197509171450';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197509171450';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197509171450';",True,True,True,True,False,0,False,True,True,True,True,6705.039100001159,6712.621800001216,,,False,[]
+simple_test:S1000_0038,simple_test,查一下'420902197402261490'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197402261490';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197402261490';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197402261490';",True,True,True,True,False,0,False,True,True,True,True,6882.25120000061,6886.514399997395,,,False,[]
+simple_test:S1000_0039,simple_test,核对身份证号为'420902197409031530'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197409031530';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197409031530';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197409031530';",True,True,True,True,False,0,False,True,True,True,True,6274.451900000713,6277.025100000174,,,False,[]
+simple_test:S1000_0040,simple_test,查询身份证号为'420902197308091570'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197308091570';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197308091570';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197308091570';",True,True,True,True,False,0,False,True,True,True,True,5524.464599999192,5527.567900000577,,,False,[]
+simple_test:S1000_0041,simple_test,帮我查看身份证号'420902197412131610'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197412131610';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197412131610';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197412131610';",True,True,True,True,False,0,False,True,True,True,True,11237.433800000872,11239.804199998616,,,False,[]
+simple_test:S1000_0042,simple_test,查一下'420902198206221650'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198206221650';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198206221650';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198206221650';",True,True,True,True,False,0,False,True,True,True,True,6639.033800001926,6639.981500000431,,,False,[]
+simple_test:S1000_0043,simple_test,核对身份证号为'420902197704041690'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197704041690';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197704041690';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197704041690';",True,True,True,True,False,0,False,True,True,True,True,4711.691500000597,4713.216200001625,,,False,[]
+simple_test:S1000_0044,simple_test,查询身份证号为'420902198003101730'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198003101730';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198003101730';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198003101730';",True,True,True,True,False,0,False,True,True,True,True,3211.5262000006624,3214.4067000008363,,,False,[]
+simple_test:S1000_0045,simple_test,帮我查看身份证号'420902197609091770'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197609091770';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197609091770';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197609091770';",True,True,True,True,False,0,False,True,True,True,True,5284.818399999494,5297.599300000002,,,False,[]
+simple_test:S1000_0046,simple_test,查一下'420902197702281810'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197702281810';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197702281810';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197702281810';",True,True,True,True,False,0,False,True,True,True,True,4789.230300000781,4792.133599999943,,,False,[]
+simple_test:S1000_0047,simple_test,核对身份证号为'420902198209061850'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198209061850';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198209061850';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198209061850';",True,True,True,True,False,0,False,True,True,True,True,3522.9858999991848,3525.4262999987986,,,False,[]
+simple_test:S1000_0048,simple_test,查询身份证号为'420902197711241890'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197711241890';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197711241890';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197711241890';",True,True,True,True,False,0,False,True,True,True,True,8026.796599999216,8028.735500000039,,,False,[]
+simple_test:S1000_0049,simple_test,帮我查看身份证号'420902197912211930'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197912211930';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197912211930';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197912211930';",True,True,True,True,False,0,False,True,True,True,True,5811.927599999763,5814.251899999363,,,False,[]
+simple_test:S1000_0050,simple_test,查一下'420902198008091970'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198008091970';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198008091970';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198008091970';",True,True,True,True,False,0,False,True,True,True,True,4211.597100002109,4215.5765000024985,,,False,[]
+simple_test:S1000_0051,simple_test,核对身份证号为'420902197505192010'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197505192010';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197505192010';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197505192010';",True,True,True,True,False,0,False,True,True,True,True,3959.456799999316,3962.3804000002565,,,False,[]
+simple_test:S1000_0052,simple_test,查询身份证号为'420902198304172050'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198304172050';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198304172050';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198304172050';",True,True,True,True,False,0,False,True,True,True,True,5107.797100001335,5120.981599997322,,,False,[]
+simple_test:S1000_0053,simple_test,帮我查看身份证号'420902197211252090'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197211252090';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197211252090';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197211252090';",True,True,True,True,False,0,False,True,True,True,True,6724.715799999103,6727.938600000925,,,False,[]
+simple_test:S1000_0054,simple_test,查一下'420902197105082130'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197105082130';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197105082130';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197105082130';",True,True,True,True,False,0,False,True,True,True,True,6654.948200000945,6658.65919999851,,,False,[]
+simple_test:S1000_0055,simple_test,核对身份证号为'420902197312142170'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197312142170';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197312142170';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197312142170';",True,True,True,True,False,0,False,True,True,True,True,3843.301500000962,3845.897100000002,,,False,[]
+simple_test:S1000_0056,simple_test,查询身份证号为'420902197607242210'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197607242210';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197607242210';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197607242210';",True,True,True,True,False,0,False,True,True,True,True,6173.797100000229,6175.556999998662,,,False,[]
+simple_test:S1000_0057,simple_test,帮我查看身份证号'420902197705202250'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197705202250';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197705202250';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197705202250';",True,True,True,True,False,0,False,True,True,True,True,5630.810299997393,5632.147500000428,,,False,[]
+simple_test:S1000_0058,simple_test,查一下'420902197709282290'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197709282290';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197709282290';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197709282290';",True,True,True,True,False,0,False,True,True,True,True,4563.104699998803,4564.229200001137,,,False,[]
+simple_test:S1000_0059,simple_test,核对身份证号为'420902198307062330'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198307062330';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198307062330';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198307062330';",True,True,True,True,False,0,False,True,True,True,True,3028.298299999733,3041.233899999497,,,False,[]
+simple_test:S1000_0060,simple_test,查询身份证号为'420902197809122370'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197809122370';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197809122370';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197809122370';",True,True,True,True,False,0,False,True,True,True,True,5125.231999998505,5126.611899999261,,,False,[]
+simple_test:S1000_0061,simple_test,帮我查看身份证号'420902197104102410'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197104102410';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197104102410';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197104102410';",True,True,True,True,False,0,False,True,True,True,True,4460.479599998507,4462.666600000375,,,False,[]
+simple_test:S1000_0062,simple_test,查一下'420902197403012450'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197403012450';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197403012450';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197403012450';",True,True,True,True,False,0,False,True,True,True,True,4213.938799999596,4216.129100001126,,,False,[]
+simple_test:S1000_0063,simple_test,核对身份证号为'420902198402042490'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198402042490';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198402042490';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198402042490';",True,True,True,True,False,0,False,True,True,True,True,5967.445899997983,5968.591500000912,,,False,[]
+simple_test:S1000_0064,simple_test,查询身份证号为'420902197711152530'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197711152530';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197711152530';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197711152530';",True,True,True,True,False,0,False,True,True,True,True,5064.698400001362,5067.193300001236,,,False,[]
+simple_test:S1000_0065,simple_test,帮我查看身份证号'420902198106112570'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198106112570';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198106112570';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198106112570';",True,True,True,True,False,0,False,True,True,True,True,4510.370299998613,4515.135400000872,,,False,[]
+simple_test:S1000_0066,simple_test,查一下'420902197412082610'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197412082610';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197412082610';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197412082610';",True,True,True,True,False,0,False,True,True,True,True,4435.8398000003945,4439.4772999985435,,,False,[]
+simple_test:S1000_0067,simple_test,核对身份证号为'420902197504142650'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197504142650';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197504142650';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197504142650';",True,True,True,True,False,0,False,True,True,True,True,4146.955200001685,4149.833100000251,,,False,[]
+simple_test:S1000_0068,simple_test,查询身份证号为'420902198604102690'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198604102690';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198604102690';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198604102690';",True,True,True,True,False,0,False,True,True,True,True,7925.9591000009095,7928.847000002861,,,False,[]
+simple_test:S1000_0069,simple_test,帮我查看身份证号'420902197710142730'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197710142730';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197710142730';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197710142730';",True,True,True,True,False,0,False,True,True,True,True,5595.185100002709,5599.213699999382,,,False,[]
+simple_test:S1000_0070,simple_test,查一下'420902197611052770'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197611052770';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197611052770';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197611052770';",True,True,True,True,False,0,False,True,True,True,True,10584.536999998818,10587.340199999744,,,False,[]
+simple_test:S1000_0071,simple_test,核对身份证号为'420902198411012810'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198411012810';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198411012810';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198411012810';",True,True,True,True,False,0,False,True,True,True,True,5938.886900003126,5940.551599996979,,,False,[]
+simple_test:S1000_0072,simple_test,查询身份证号为'420902198009082850'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198009082850';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198009082850';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198009082850';",True,True,True,True,False,0,False,True,True,True,True,6693.094700000074,6696.905799999513,,,False,[]
+simple_test:S1000_0073,simple_test,帮我查看身份证号'420902198604112890'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198604112890';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198604112890';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198604112890';",True,True,True,True,False,0,False,True,True,True,True,6465.620299997681,6481.11119999885,,,False,[]
+simple_test:S1000_0074,simple_test,查一下'420902197110012930'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197110012930';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197110012930';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197110012930';",True,True,True,True,False,0,False,True,True,True,True,9945.727400001488,9949.572400000761,,,False,[]
+simple_test:S1000_0075,simple_test,核对身份证号为'420902197408142970'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197408142970';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197408142970';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197408142970';",True,True,True,True,False,0,False,True,True,True,True,4265.237299998262,4267.526899999211,,,False,[]
+simple_test:S1000_0076,simple_test,查询身份证号为'420902197703083010'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197703083010';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197703083010';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197703083010';",True,True,True,True,False,0,False,True,True,True,True,7564.18720000147,7565.898099997867,,,False,[]
+simple_test:S1000_0077,simple_test,帮我查看身份证号'420902197406053050'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197406053050';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197406053050';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197406053050';",True,True,True,True,False,0,False,True,True,True,True,4969.998600001418,4972.125200001756,,,False,[]
+simple_test:S1000_0078,simple_test,查一下'420902198304173090'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198304173090';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198304173090';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198304173090';",True,True,True,True,False,0,False,True,True,True,True,6657.993299999362,6658.9929000001575,,,False,[]
+simple_test:S1000_0079,simple_test,核对身份证号为'420902198304103130'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198304103130';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198304103130';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198304103130';",True,True,True,True,False,0,False,True,True,True,True,5851.592099999834,5852.941699999064,,,False,[]
+simple_test:S1000_0080,simple_test,查询身份证号为'420902197403243170'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197403243170';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197403243170';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197403243170';",True,True,True,True,False,0,False,True,True,True,True,5014.398899998923,5020.134999998845,,,False,[]
+simple_test:S1000_0081,simple_test,帮我查看身份证号'420902198212173210'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198212173210';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198212173210';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198212173210';",True,True,True,True,False,0,False,True,True,True,True,4580.125100001169,4581.263100000797,,,False,[]
+simple_test:S1000_0082,simple_test,查一下'420902198307073250'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198307073250';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198307073250';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198307073250';",True,True,True,True,False,0,False,True,True,True,True,4573.751700001594,4575.473500000953,,,False,[]
+simple_test:S1000_0083,simple_test,核对身份证号为'420902197803173290'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197803173290';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197803173290';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197803173290';",True,True,True,True,False,0,False,True,True,True,True,5476.603999999497,5477.913900002022,,,False,[]
+simple_test:S1000_0084,simple_test,查询身份证号为'420902197701243330'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197701243330';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197701243330';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197701243330';",True,True,True,True,False,0,False,True,True,True,True,4204.866799998854,4206.428699999378,,,False,[]
+simple_test:S1000_0085,simple_test,帮我查看身份证号'420902197308053370'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197308053370';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197308053370';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197308053370';",True,True,True,True,False,0,False,True,True,True,True,8993.763099999342,8995.548700000654,,,False,[]
+simple_test:S1000_0086,simple_test,查一下'420902197404163410'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197404163410';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197404163410';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197404163410';",True,True,True,True,False,0,False,True,True,True,True,4127.240300000267,4128.7434000005305,,,False,[]
+simple_test:S1000_0087,simple_test,核对身份证号为'420902198306043450'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198306043450';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198306043450';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198306043450';",True,True,True,True,False,0,False,True,True,True,True,21242.637100000138,21247.673400001077,,,False,[]
+simple_test:S1000_0088,simple_test,查询身份证号为'420902197301223490'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197301223490';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197301223490';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197301223490';",True,True,True,True,False,0,False,True,True,True,True,4172.336600000563,4174.080500000855,,,False,[]
+simple_test:S1000_0089,simple_test,帮我查看身份证号'420902197110273530'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197110273530';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197110273530';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197110273530';",True,True,True,True,False,0,False,True,True,True,True,4562.128099998517,4564.511399999901,,,False,[]
+simple_test:S1000_0090,simple_test,查一下'420902197712063570'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197712063570';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197712063570';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197712063570';",True,True,True,True,False,0,False,True,True,True,True,5821.253699999943,5824.123200000031,,,False,[]
+simple_test:S1000_0091,simple_test,核对身份证号为'420902197909133610'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197909133610';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197909133610';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197909133610';",True,True,True,True,False,0,False,True,True,True,True,3690.2153000010003,3692.2558000005665,,,False,[]
+simple_test:S1000_0092,simple_test,查询身份证号为'420902197404113650'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197404113650';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197404113650';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197404113650';",True,True,True,True,False,0,False,True,True,True,True,5424.338400000124,5426.464600001054,,,False,[]
+simple_test:S1000_0093,simple_test,帮我查看身份证号'420902198310033690'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198310033690';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198310033690';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198310033690';",True,True,True,True,False,0,False,True,True,True,True,7269.107699998131,7273.280599998543,,,False,[]
+simple_test:S1000_0094,simple_test,查一下'420902197311203730'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197311203730';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197311203730';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197311203730';",True,True,True,True,False,0,False,True,True,True,True,6046.207999999751,6047.886899999867,,,False,[]
+simple_test:S1000_0095,simple_test,核对身份证号为'420902197411013770'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197411013770';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197411013770';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197411013770';",True,True,True,True,False,0,False,True,True,True,True,5054.8271000006935,5056.44239999674,,,False,[]
+simple_test:S1000_0096,simple_test,查询身份证号为'420902198103133810'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198103133810';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198103133810';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198103133810';",True,True,True,True,False,0,False,True,True,True,True,5121.082400000887,5123.244400001568,,,False,[]
+simple_test:S1000_0097,simple_test,帮我查看身份证号'420902198503163850'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198503163850';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198503163850';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198503163850';",True,True,True,True,False,0,False,True,True,True,True,6879.134499999054,6880.332700002327,,,False,[]
+simple_test:S1000_0098,simple_test,查一下'420902197902233890'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197902233890';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197902233890';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197902233890';",True,True,True,True,False,0,False,True,True,True,True,3555.640200000198,3557.057799996983,,,False,[]
+simple_test:S1000_0099,simple_test,核对身份证号为'420902198102063930'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198102063930';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198102063930';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198102063930';",True,True,True,True,False,0,False,True,True,True,True,4561.810800001695,4564.568500001769,,,False,[]
+simple_test:S1000_0100,simple_test,查询身份证号为'420902198101033970'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198101033970';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198101033970';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198101033970';",True,True,True,True,False,0,False,True,True,True,True,7265.40930000192,7270.9259999974165,,,False,[]
+simple_test:S1000_0101,simple_test,帮我查看身份证号'420902198407254010'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198407254010';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198407254010';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198407254010';",True,True,True,True,False,0,False,True,True,True,True,6712.2420000014245,6715.514799998346,,,False,[]
+simple_test:S1000_0102,simple_test,查一下'420902198406164050'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198406164050';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198406164050';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198406164050';",True,True,True,True,False,0,False,True,True,True,True,4760.1476999989245,4762.301700000535,,,False,[]
+simple_test:S1000_0103,simple_test,核对身份证号为'420902197406274090'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197406274090';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197406274090';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197406274090';",True,True,True,True,False,0,False,True,True,True,True,6066.454099996918,6068.569200000638,,,False,[]
+simple_test:S1000_0104,simple_test,查询身份证号为'420902198312104130'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198312104130';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198312104130';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198312104130';",True,True,True,True,False,0,False,True,True,True,True,4600.3132999976515,4603.60159999982,,,False,[]
+simple_test:S1000_0105,simple_test,帮我查看身份证号'420902197907134170'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197907134170';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197907134170';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197907134170';",True,True,True,True,False,0,False,True,True,True,True,3814.319400000386,3816.9065000001865,,,False,[]
+simple_test:S1000_0106,simple_test,查一下'420902197902224210'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197902224210';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197902224210';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197902224210';",True,True,True,True,False,0,False,True,True,True,True,3248.0750999966403,3249.920700000075,,,False,[]
+simple_test:S1000_0107,simple_test,核对身份证号为'420902197206044250'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197206044250';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197206044250';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197206044250';",True,True,True,True,False,0,False,True,True,True,True,4590.231199999835,4591.60250000059,,,False,[]
+simple_test:S1000_0108,simple_test,查询身份证号为'420902197912204290'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197912204290';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197912204290';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197912204290';",True,True,True,True,False,0,False,True,True,True,True,5073.185799999919,5075.683300001401,,,False,[]
+simple_test:S1000_0109,simple_test,帮我查看身份证号'420902197107094330'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197107094330';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197107094330';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197107094330';",True,True,True,True,False,0,False,True,True,True,True,4792.168500000116,4794.661899999483,,,False,[]
+simple_test:S1000_0110,simple_test,查一下'420902197708164370'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197708164370';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197708164370';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197708164370';",True,True,True,True,False,0,False,True,True,True,True,5713.136099999247,5714.771599999949,,,False,[]
+simple_test:S1000_0111,simple_test,核对身份证号为'420902197603044410'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197603044410';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197603044410';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197603044410';",True,True,True,True,False,0,False,True,True,True,True,2713.59499999744,2714.84209999835,,,False,[]
+simple_test:S1000_0112,simple_test,查询身份证号为'420902197108144450'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197108144450';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197108144450';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197108144450';",True,True,True,True,False,0,False,True,True,True,True,4172.247999998945,4173.223300000245,,,False,[]
+simple_test:S1000_0113,simple_test,帮我查看身份证号'420902197301274490'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197301274490';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197301274490';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197301274490';",True,True,True,True,False,0,False,True,True,True,True,3862.7667000000656,3863.999099998182,,,False,[]
+simple_test:S1000_0114,simple_test,查一下'420902197505084530'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197505084530';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197505084530';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197505084530';",True,True,True,True,False,0,False,True,True,True,True,4000.04429999899,4002.7526000012585,,,False,[]
+simple_test:S1000_0115,simple_test,核对身份证号为'420902197203224570'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197203224570';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197203224570';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197203224570';",True,True,True,True,False,0,False,True,True,True,True,7844.7515000007115,7854.357200001687,,,False,[]
+simple_test:S1000_0116,simple_test,查询身份证号为'420902198002014610'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198002014610';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198002014610';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198002014610';",True,True,True,True,False,0,False,True,True,True,True,3519.275499998912,3521.1363000016718,,,False,[]
+simple_test:S1000_0117,simple_test,帮我查看身份证号'420902197110184650'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197110184650';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197110184650';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197110184650';",True,True,True,True,False,0,False,True,True,True,True,7551.095200000418,7552.3977000011655,,,False,[]
+simple_test:S1000_0118,simple_test,查一下'420902197807074690'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197807074690';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197807074690';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197807074690';",True,True,True,True,False,0,False,True,True,True,True,3699.772399999347,3702.279900000576,,,False,[]
+simple_test:S1000_0119,simple_test,核对身份证号为'420902197405054730'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197405054730';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197405054730';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197405054730';",True,True,True,True,False,0,False,True,True,True,True,3960.7930000020133,3963.7169999987236,,,False,[]
+simple_test:S1000_0120,simple_test,查询身份证号为'420902198507124770'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198507124770';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198507124770';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198507124770';",True,True,True,True,False,0,False,True,True,True,True,4238.7382999986585,4241.373200002272,,,False,[]
+simple_test:S1000_0121,simple_test,帮我查看身份证号'420902198103124810'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198103124810';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198103124810';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198103124810';",True,True,True,True,False,0,False,True,True,True,True,5126.007799997751,5127.668100001756,,,False,[]
+simple_test:S1000_0122,simple_test,查一下'420902197309264850'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197309264850';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197309264850';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197309264850';",True,True,True,True,False,0,False,True,True,True,True,5216.408299998875,5217.830400000821,,,False,[]
+simple_test:S1000_0123,simple_test,核对身份证号为'420902197811234890'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197811234890';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197811234890';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197811234890';",True,True,True,True,False,0,False,True,True,True,True,11355.22199999832,11359.251199999562,,,False,[]
+simple_test:S1000_0124,simple_test,查询身份证号为'420902197609064930'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197609064930';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197609064930';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197609064930';",True,True,True,True,False,0,False,True,True,True,True,4777.161800000613,4781.19499999957,,,False,[]
+simple_test:S1000_0125,simple_test,帮我查看身份证号'420902198601214970'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198601214970';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198601214970';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198601214970';",True,True,True,True,False,0,False,True,True,True,True,6399.287000000186,6401.480900000024,,,False,[]
+simple_test:S1000_0126,simple_test,查一下'420902198107185010'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198107185010';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198107185010';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198107185010';",True,True,True,True,False,0,False,True,True,True,True,4856.930300000386,4858.952599999611,,,False,[]
+simple_test:S1000_0127,simple_test,核对身份证号为'420902197401165050'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197401165050';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197401165050';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197401165050';",True,True,True,True,False,0,False,True,True,True,True,10457.27590000024,10459.026299999095,,,False,[]
+simple_test:S1000_0128,simple_test,查询身份证号为'420902197910045090'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197910045090';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197910045090';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197910045090';",True,True,True,True,False,0,False,True,True,True,True,3092.140800003108,3094.4564000019454,,,False,[]
+simple_test:S1000_0129,simple_test,帮我查看身份证号'420902197711275130'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197711275130';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197711275130';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197711275130';",True,True,True,True,False,0,False,True,True,True,True,5764.155800003209,5766.345400003047,,,False,[]
+simple_test:S1000_0130,simple_test,查一下'420902198211115170'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198211115170';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198211115170';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198211115170';",True,True,True,True,False,0,False,True,True,True,True,6227.300500002457,6229.772200000298,,,False,[]
+simple_test:S1000_0131,simple_test,核对身份证号为'420902197704115210'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197704115210';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197704115210';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197704115210';",True,True,True,True,False,0,False,True,True,True,True,4596.3026999997965,4598.170299999765,,,False,[]
+simple_test:S1000_0132,simple_test,查询身份证号为'420902198007175250'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198007175250';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198007175250';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198007175250';",True,True,True,True,False,0,False,True,True,True,True,4547.6051999976335,4549.879000001965,,,False,[]
+simple_test:S1000_0133,simple_test,帮我查看身份证号'420902198008025290'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198008025290';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198008025290';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198008025290';",True,True,True,True,False,0,False,True,True,True,True,6020.170799998596,6021.636400000716,,,False,[]
+simple_test:S1000_0134,simple_test,查一下'420902197910125330'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197910125330';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197910125330';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197910125330';",True,True,True,True,False,0,False,True,True,True,True,3649.8475999978837,3651.627600000211,,,False,[]
+simple_test:S1000_0135,simple_test,核对身份证号为'420902198506105370'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198506105370';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198506105370';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198506105370';",True,True,True,True,False,0,False,True,True,True,True,4137.6511999988,4139.184999999998,,,False,[]
+simple_test:S1000_0136,simple_test,查询身份证号为'420902197802175410'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197802175410';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197802175410';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197802175410';",True,True,True,True,False,0,False,True,True,True,True,3853.4827000003133,3854.584900000191,,,False,[]
+simple_test:S1000_0137,simple_test,帮我查看身份证号'420902197508045450'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197508045450';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197508045450';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197508045450';",True,True,True,True,False,0,False,True,True,True,True,4284.141300002375,4285.409200001595,,,False,[]
+simple_test:S1000_0138,simple_test,查一下'420902197309285490'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197309285490';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197309285490';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197309285490';",True,True,True,True,False,0,False,True,True,True,True,4378.111099998932,4379.73719999718,,,False,[]
+simple_test:S1000_0139,simple_test,核对身份证号为'420902198503285530'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198503285530';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198503285530';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198503285530';",True,True,True,True,False,0,False,True,True,True,True,4434.027700001025,4435.8624999986205,,,False,[]
+simple_test:S1000_0140,simple_test,查询身份证号为'420902198512075570'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198512075570';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198512075570';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198512075570';",True,True,True,True,False,0,False,True,True,True,True,7287.385199997516,7288.975799998298,,,False,[]
+simple_test:S1000_0141,simple_test,帮我查看身份证号'420902197108245610'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197108245610';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197108245610';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197108245610';",True,True,True,True,False,0,False,True,True,True,True,4947.692199999437,4949.733800000104,,,False,[]
+simple_test:S1000_0142,simple_test,查一下'420902198110135650'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198110135650';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198110135650';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198110135650';",True,True,True,True,False,0,False,True,True,True,True,3690.223199999309,3693.00579999981,,,False,[]
+simple_test:S1000_0143,simple_test,核对身份证号为'420902198004095690'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198004095690';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198004095690';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198004095690';",True,True,True,True,False,0,False,True,True,True,True,3684.5991000009235,3689.43070000023,,,False,[]
+simple_test:S1000_0144,simple_test,查询身份证号为'420902197102155730'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197102155730';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197102155730';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197102155730';",True,True,True,True,False,0,False,True,True,True,True,6438.407499997993,6441.12479999967,,,False,[]
+simple_test:S1000_0145,simple_test,帮我查看身份证号'420902197804045770'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197804045770';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197804045770';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197804045770';",True,True,True,True,False,0,False,True,True,True,True,5338.719700001093,5342.36410000085,,,False,[]
+simple_test:S1000_0146,simple_test,查一下'420902198612245810'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198612245810';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198612245810';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198612245810';",True,True,True,True,False,0,False,True,True,True,True,4688.900699999067,4692.174600000726,,,False,[]
+simple_test:S1000_0147,simple_test,核对身份证号为'420902198302265850'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198302265850';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198302265850';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198302265850';",True,True,True,True,False,0,False,True,True,True,True,3437.8488000002108,3440.1743000016722,,,False,[]
+simple_test:S1000_0148,simple_test,查询身份证号为'420902197305245890'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197305245890';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197305245890';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197305245890';",True,True,True,True,False,0,False,True,True,True,True,3224.9606999976095,3226.2029999983497,,,False,[]
+simple_test:S1000_0149,simple_test,帮我查看身份证号'420902198204215930'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198204215930';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198204215930';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198204215930';",True,True,True,True,False,0,False,True,True,True,True,3709.379200001422,3710.4466000018874,,,False,[]
+simple_test:S1000_0150,simple_test,查一下'420902198403095970'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198403095970';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198403095970';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198403095970';",True,True,True,True,False,0,False,True,True,True,True,3818.5014000009687,3819.4874999971944,,,False,[]
+simple_test:S1000_0151,simple_test,核对身份证号为'420902198311166010'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198311166010';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198311166010';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198311166010';",True,True,True,True,False,0,False,True,True,True,True,4028.209299998707,4029.7673999994004,,,False,[]
+simple_test:S1000_0152,simple_test,查询身份证号为'420902198604176050'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198604176050';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198604176050';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198604176050';",True,True,True,True,False,0,False,True,True,True,True,7556.161299999076,7558.104499999899,,,False,[]
+simple_test:S1000_0153,simple_test,帮我查看身份证号'420902197511206090'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197511206090';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197511206090';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197511206090';",True,True,True,True,False,0,False,True,True,True,True,5407.260899999528,5408.691499997076,,,False,[]
+simple_test:S1000_0154,simple_test,查一下'420902197704076130'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197704076130';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197704076130';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197704076130';",True,True,True,True,False,0,False,True,True,True,True,3797.711100000015,3798.9524000004167,,,False,[]
+simple_test:S1000_0155,simple_test,核对身份证号为'420902197201156170'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197201156170';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197201156170';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197201156170';",True,True,True,True,False,0,False,True,True,True,True,3774.8075000017707,3776.8381999994745,,,False,[]
+simple_test:S1000_0156,simple_test,查询身份证号为'420902197602066210'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197602066210';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197602066210';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197602066210';",True,True,True,True,False,0,False,True,True,True,True,3724.9611000006553,3726.8739999999525,,,False,[]
+simple_test:S1000_0157,simple_test,帮我查看身份证号'420902198206226250'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198206226250';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198206226250';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198206226250';",True,True,True,True,False,0,False,True,True,True,True,3964.6518000008655,3969.716299998254,,,False,[]
+simple_test:S1000_0158,simple_test,查一下'420902198611236290'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198611236290';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198611236290';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198611236290';",True,True,True,True,False,0,False,True,True,True,True,3690.100600000733,3691.127099998994,,,False,[]
+simple_test:S1000_0159,simple_test,核对身份证号为'420902197812156330'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197812156330';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197812156330';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197812156330';",True,True,True,True,False,0,False,True,True,True,True,3396.4534000006097,3397.7493999991566,,,False,[]
+simple_test:S1000_0160,simple_test,查询身份证号为'420902198605156370'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198605156370';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198605156370';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198605156370';",True,True,True,True,False,0,False,True,True,True,True,4253.352499999892,4254.704599999968,,,False,[]
+simple_test:S1000_0161,simple_test,帮我查看身份证号'420902197501246410'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197501246410';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197501246410';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197501246410';",True,True,True,True,False,0,False,True,True,True,True,3883.523200001946,3885.9912999978405,,,False,[]
+simple_test:S1000_0162,simple_test,查一下'420902197605056450'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197605056450';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197605056450';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197605056450';",True,True,True,True,False,0,False,True,True,True,True,4996.950900000229,5000.4348999973445,,,False,[]
+simple_test:S1000_0163,simple_test,核对身份证号为'420902198212106490'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198212106490';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198212106490';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198212106490';",True,True,True,True,False,0,False,True,True,True,True,2493.6495999972976,2496.4828999982274,,,False,[]
+simple_test:S1000_0164,simple_test,查询身份证号为'420902197908196530'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197908196530';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197908196530';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197908196530';",True,True,True,True,False,0,False,True,True,True,True,4806.818599998223,4825.884800000495,,,False,[]
+simple_test:S1000_0165,simple_test,帮我查看身份证号'420902197702056570'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197702056570';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197702056570';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197702056570';",True,True,True,True,False,0,False,True,True,True,True,4857.1976000021095,4860.336200003076,,,False,[]
+simple_test:S1000_0166,simple_test,查一下'420902197708016610'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197708016610';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197708016610';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197708016610';",True,True,True,True,False,0,False,True,True,True,True,5260.467000000062,5263.104999998177,,,False,[]
+simple_test:S1000_0167,simple_test,核对身份证号为'420902198001116650'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198001116650';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198001116650';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198001116650';",True,True,True,True,False,0,False,True,True,True,True,3373.42450000142,3376.6132999990077,,,False,[]
+simple_test:S1000_0168,simple_test,查询身份证号为'420902197201256690'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197201256690';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197201256690';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197201256690';",True,True,True,True,False,0,False,True,True,True,True,5922.46189999787,5925.435999997717,,,False,[]
+simple_test:S1000_0169,simple_test,帮我查看身份证号'420902197112266730'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197112266730';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197112266730';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197112266730';",True,True,True,True,False,0,False,True,True,True,True,5520.089699999517,5522.603299999901,,,False,[]
+simple_test:S1000_0170,simple_test,查一下'420902198603096770'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198603096770';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198603096770';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198603096770';",True,True,True,True,False,0,False,True,True,True,True,3371.888800000306,3374.4769000004453,,,False,[]
+simple_test:S1000_0171,simple_test,核对身份证号为'420902197711246810'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197711246810';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197711246810';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197711246810';",True,True,True,True,False,0,False,True,True,True,True,6423.319300000003,6451.346099998773,,,False,[]
+simple_test:S1000_0172,simple_test,查询身份证号为'420902197112246850'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197112246850';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197112246850';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197112246850';",True,True,True,True,False,0,False,True,True,True,True,3982.5438000007125,3987.1744999982184,,,False,[]
+simple_test:S1000_0173,simple_test,帮我查看身份证号'420902197806116890'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197806116890';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197806116890';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197806116890';",True,True,True,True,False,0,False,True,True,True,True,3676.0075999991386,3678.887999998551,,,False,[]
+simple_test:S1000_0174,simple_test,查一下'420902198306026930'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198306026930';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198306026930';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198306026930';",True,True,True,True,False,0,False,True,True,True,True,3534.9807999991754,3537.0016999986547,,,False,[]
+simple_test:S1000_0175,simple_test,核对身份证号为'420902197911106970'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197911106970';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197911106970';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197911106970';",True,True,True,True,False,0,False,True,True,True,True,3861.1238000012236,3863.2708999975875,,,False,[]
+simple_test:S1000_0176,simple_test,查询身份证号为'420902197110207010'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197110207010';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197110207010';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197110207010';",True,True,True,True,False,0,False,True,True,True,True,4950.844099999813,4953.009500000917,,,False,[]
+simple_test:S1000_0177,simple_test,帮我查看身份证号'420902197906097050'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197906097050';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197906097050';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197906097050';",True,True,True,True,False,0,False,True,True,True,True,3704.7436000029847,3708.455200001481,,,False,[]
+simple_test:S1000_0178,simple_test,查一下'420902198112167090'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198112167090';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198112167090';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198112167090';",True,True,True,True,False,0,False,True,True,True,True,4556.110900000931,4557.162299999618,,,False,[]
+simple_test:S1000_0179,simple_test,核对身份证号为'420902198411197130'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198411197130';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198411197130';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198411197130';",True,True,True,True,False,0,False,True,True,True,True,4204.422700000578,4207.13650000107,,,False,[]
+simple_test:S1000_0180,simple_test,查询身份证号为'420902197602127170'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197602127170';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197602127170';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197602127170';",True,True,True,True,False,0,False,True,True,True,True,3643.9102000003913,3646.7434000005596,,,False,[]
+simple_test:S1000_0181,simple_test,帮我查看身份证号'420902197703047210'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197703047210';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197703047210';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197703047210';",True,True,True,True,False,0,False,True,True,True,True,4538.770799998019,4540.953299998364,,,False,[]
+simple_test:S1000_0182,simple_test,查一下'420902197206167250'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197206167250';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197206167250';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197206167250';",True,True,True,True,False,0,False,True,True,True,True,3681.4784000016516,3682.8142999984266,,,False,[]
+simple_test:S1000_0183,simple_test,核对身份证号为'420902198407087290'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198407087290';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198407087290';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198407087290';",True,True,True,True,False,0,False,True,True,True,True,4019.6575000009034,4022.614800000156,,,False,[]
+simple_test:S1000_0184,simple_test,查询身份证号为'420902198106097330'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198106097330';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198106097330';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198106097330';",True,True,True,True,False,0,False,True,True,True,True,5054.959299999609,5059.877600000618,,,False,[]
+simple_test:S1000_0185,simple_test,帮我查看身份证号'420902197411187370'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197411187370';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197411187370';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197411187370';",True,True,True,True,False,0,False,True,True,True,True,4277.0414000005985,4279.898499997216,,,False,[]
+simple_test:S1000_0186,simple_test,查一下'420902197104227410'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197104227410';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197104227410';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197104227410';",True,True,True,True,False,0,False,True,True,True,True,2959.063900001638,2961.4853000020958,,,False,[]
+simple_test:S1000_0187,simple_test,核对身份证号为'420902197806167450'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197806167450';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197806167450';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197806167450';",True,True,True,True,False,0,False,True,True,True,True,5865.079700000933,5867.747400003282,,,False,[]
+simple_test:S1000_0188,simple_test,查询身份证号为'420902197102167490'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197102167490';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197102167490';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197102167490';",True,True,True,True,False,0,False,True,True,True,True,4468.562899997778,4470.6730999969295,,,False,[]
+simple_test:S1000_0189,simple_test,帮我查看身份证号'420902198508117530'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198508117530';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198508117530';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198508117530';",True,True,True,True,False,0,False,True,True,True,True,3834.260899999208,3835.707400001411,,,False,[]
+simple_test:S1000_0190,simple_test,查一下'420902197302217570'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197302217570';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197302217570';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197302217570';",True,True,True,True,False,0,False,True,True,True,True,3837.107499999547,3838.2289000001037,,,False,[]
+simple_test:S1000_0191,simple_test,核对身份证号为'420902197611277610'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197611277610';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197611277610';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197611277610';",True,True,True,True,False,0,False,True,True,True,True,2872.813199999655,2873.6347000012756,,,False,[]
+simple_test:S1000_0192,simple_test,查询身份证号为'420902198210027650'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198210027650';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198210027650';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198210027650';",True,True,True,True,False,0,False,True,True,True,True,3889.033700001164,3889.9864999984857,,,False,[]
+simple_test:S1000_0193,simple_test,帮我查看身份证号'420902197904117690'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197904117690';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197904117690';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197904117690';",True,True,True,True,False,0,False,True,True,True,True,2839.6224999996775,2840.534700000717,,,False,[]
+simple_test:S1000_0194,simple_test,查一下'420902197702267730'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197702267730';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197702267730';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197702267730';",True,True,True,True,False,0,False,True,True,True,True,4444.060600002558,4447.010799998679,,,False,[]
+simple_test:S1000_0195,simple_test,核对身份证号为'420902198504097770'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198504097770';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198504097770';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902198504097770';",True,True,True,True,False,0,False,True,True,True,True,3449.5958000006794,3453.5141000014846,,,False,[]
+simple_test:S1000_0196,simple_test,查询身份证号为'420902197510117810'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197510117810';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197510117810';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197510117810';",True,True,True,True,False,0,False,True,True,True,True,3697.4537999994936,3700.537599997915,,,False,[]
+simple_test:S1000_0197,simple_test,帮我查看身份证号'420902197907017850'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197907017850';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197907017850';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197907017850';",True,True,True,True,False,0,False,True,True,True,True,3540.00829999859,3543.314800001099,,,False,[]
+simple_test:S1000_0198,simple_test,查一下'420902197111147890'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197111147890';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197111147890';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197111147890';",True,True,True,True,False,0,False,True,True,True,True,3932.2170999985246,3934.7741000019596,,,False,[]
+simple_test:S1000_0199,simple_test,核对身份证号为'420902197609017930'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197609017930';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197609017930';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197609017930';",True,True,True,True,False,0,False,True,True,True,True,8304.59449999762,8306.91189999925,,,False,[]
+simple_test:S1000_0200,simple_test,查询身份证号为'420902198002057970'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198002057970';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198002057970';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198002057970';",True,True,True,True,False,0,False,True,True,True,True,5128.7034999986645,5130.256000000372,,,False,[]
+simple_test:S1000_0201,simple_test,帮我查看身份证号'420902197106168010'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197106168010';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197106168010';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197106168010';",True,True,True,True,False,0,False,True,True,True,True,4513.007099998504,4514.36140000078,,,False,[]
+simple_test:S1000_0202,simple_test,查一下'420902197607118050'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197607118050';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197607118050';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197607118050';",True,True,True,True,False,0,False,True,True,True,True,3317.393400000583,3319.3534999991243,,,False,[]
+simple_test:S1000_0203,simple_test,核对身份证号为'420902197809148090'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197809148090';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197809148090';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197809148090';",True,True,True,True,False,0,False,True,True,True,True,3248.2496999982686,3251.0065999995277,,,False,[]
+simple_test:S1000_0204,simple_test,查询身份证号为'420902197209048130'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197209048130';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197209048130';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197209048130';",True,True,True,True,False,0,False,True,True,True,True,3677.002499996888,3679.5187999996415,,,False,[]
+simple_test:S1000_0205,simple_test,帮我查看身份证号'420902198301058170'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198301058170';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198301058170';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198301058170';",True,True,True,True,False,0,False,True,True,True,True,5539.011200002278,5554.4191999979375,,,False,[]
+simple_test:S1000_0206,simple_test,查一下'420902197509288210'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197509288210';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197509288210';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197509288210';",True,True,True,True,False,0,False,True,True,True,True,4924.696000001859,4926.2285999975575,,,False,[]
+simple_test:S1000_0207,simple_test,核对身份证号为'420902198012258250'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198012258250';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198012258250';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198012258250';",True,True,True,True,False,0,False,True,True,True,True,3208.829199997126,3211.0850999997638,,,False,[]
+simple_test:S1000_0208,simple_test,查询身份证号为'420902197205088290'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197205088290';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197205088290';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197205088290';",True,True,True,True,False,0,False,True,True,True,True,4789.074000000255,4792.430800000147,,,False,[]
+simple_test:S1000_0209,simple_test,帮我查看身份证号'420902197912128330'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197912128330';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197912128330';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197912128330';",True,True,True,True,False,0,False,True,True,True,True,4418.756700000813,4420.883799997682,,,False,[]
+simple_test:S1000_0210,simple_test,查一下'420902197810068370'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197810068370';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197810068370';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197810068370';",True,True,True,True,False,0,False,True,True,True,True,5031.710800001747,5033.61859999859,,,False,[]
+simple_test:S1000_0211,simple_test,核对身份证号为'420902198109118410'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198109118410';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198109118410';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198109118410';",True,True,True,True,False,0,False,True,True,True,True,2932.455400001345,2933.732900000905,,,False,[]
+simple_test:S1000_0212,simple_test,查询身份证号为'420902198306198450'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198306198450';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198306198450';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198306198450';",True,True,True,True,False,0,False,True,True,True,True,6870.206800002052,6872.070999997959,,,False,[]
+simple_test:S1000_0213,simple_test,帮我查看身份证号'420902197807078490'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197807078490';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197807078490';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197807078490';",True,True,True,True,False,0,False,True,True,True,True,4309.851400001207,4310.926900001505,,,False,[]
+simple_test:S1000_0214,simple_test,查一下'420902197707118530'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197707118530';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197707118530';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197707118530';",True,True,True,True,False,0,False,True,True,True,True,3229.6607999996922,3231.4329000000726,,,False,[]
+simple_test:S1000_0215,simple_test,核对身份证号为'420902198206248570'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198206248570';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198206248570';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198206248570';",True,True,True,True,False,0,False,True,True,True,True,5066.416100002243,5068.348500000866,,,False,[]
+simple_test:S1000_0216,simple_test,查询身份证号为'420902198510288610'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198510288610';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198510288610';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198510288610';",True,True,True,True,False,0,False,True,True,True,True,5123.656100000517,5125.332499999786,,,False,[]
+simple_test:S1000_0217,simple_test,帮我查看身份证号'420902197411208650'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197411208650';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197411208650';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902197411208650';",True,True,True,True,False,0,False,True,True,True,True,6372.834599998896,6374.537199997576,,,False,[]
+simple_test:S1000_0218,simple_test,查一下'420902197704078690'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197704078690';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197704078690';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197704078690';",True,True,True,True,False,0,False,True,True,True,True,2368.5936000001675,2370.3490999978385,,,False,[]
+simple_test:S1000_0219,simple_test,核对身份证号为'420902197602028730'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197602028730';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197602028730';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197602028730';",True,True,True,True,False,0,False,True,True,True,True,6391.45500000086,6393.604400000186,,,False,[]
+simple_test:S1000_0220,simple_test,查询身份证号为'420902197612288770'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197612288770';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197612288770';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197612288770';",True,True,True,True,False,0,False,True,True,True,True,5257.141299996874,5260.139199999685,,,False,[]
+simple_test:S1000_0221,simple_test,帮我查看身份证号'420902198407268810'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198407268810';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198407268810';","SELECT 
+  name, 
+  birth_date, 
+  system_status, 
+  business_role
+FROM 
+  person
+WHERE 
+  id_card = '420902198407268810';",True,True,True,True,False,0,False,True,True,True,True,3516.491999998834,3519.0899000008358,,,False,[]
+simple_test:S1000_0222,simple_test,查一下'420902197908088850'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197908088850';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197908088850';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197908088850';",True,True,True,True,False,0,False,True,True,True,True,3508.9621000006446,3509.7686999979487,,,False,[]
+simple_test:S1000_0223,simple_test,核对身份证号为'420902197310208890'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197310208890';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197310208890';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197310208890';",True,True,True,True,False,0,False,True,True,True,True,2851.1586999993597,2852.1838999986358,,,False,[]
+simple_test:S1000_0224,simple_test,查询身份证号为'420902197305048930'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197305048930';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197305048930';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197305048930';",True,True,True,True,False,0,False,True,True,True,True,3784.9193999973068,3785.7944999996107,,,False,[]
+simple_test:S1000_0225,simple_test,帮我查看身份证号'420902197606078970'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197606078970';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197606078970';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197606078970';",True,True,True,True,False,0,False,True,True,True,True,5854.4935999998415,5855.602999999974,,,False,[]
+simple_test:S1000_0226,simple_test,查一下'420902198605179010'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198605179010';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198605179010';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198605179010';",True,True,True,True,False,0,False,True,True,True,True,4066.657799998211,4067.6453999985824,,,False,[]
+simple_test:S1000_0227,simple_test,核对身份证号为'420902198410069050'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198410069050';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198410069050';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198410069050';",True,True,True,True,False,0,False,True,True,True,True,7139.5953000028385,7140.956200000801,,,False,[]
+simple_test:S1000_0228,simple_test,查询身份证号为'420902197608139090'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197608139090';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197608139090';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197608139090';",True,True,True,True,False,0,False,True,True,True,True,6377.141799999663,6378.859399999783,,,False,[]
+simple_test:S1000_0229,simple_test,帮我查看身份证号'420902197611269130'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197611269130';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197611269130';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197611269130';",True,True,True,True,False,0,False,True,True,True,True,5455.5985999977565,5457.763099999283,,,False,[]
+simple_test:S1000_0230,simple_test,查一下'420902198503229170'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198503229170';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198503229170';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198503229170';",True,True,True,True,False,0,False,True,True,True,True,4441.097399998398,4442.56459999815,,,False,[]
+simple_test:S1000_0231,simple_test,核对身份证号为'420902197304079210'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197304079210';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197304079210';","SELECT id_card, name, system_status
+FROM person
+WHERE id_card = '420902197304079210';",True,True,True,True,False,0,False,True,True,True,True,2338.416499998857,2339.2595000004803,,,False,[]
+simple_test:S1000_0232,simple_test,查询身份证号为'420902197903069250'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197903069250';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197903069250';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197903069250';",True,True,True,True,False,0,False,True,True,True,True,3791.998099997727,3793.1476999983715,,,False,[]
+simple_test:S1000_0233,simple_test,帮我查看身份证号'420902197407119290'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197407119290';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197407119290';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197407119290';",True,True,True,True,False,0,False,True,True,True,True,3595.519200000126,3596.669499998825,,,False,[]
+simple_test:S1000_0234,simple_test,查一下'420902197707139330'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197707139330';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197707139330';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197707139330';",True,True,True,True,False,0,False,True,True,True,True,3391.4820999998483,3394.4302999989304,,,False,[]
+simple_test:S1000_0235,simple_test,核对身份证号为'420902197101059370'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197101059370';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197101059370';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197101059370';",True,True,True,True,False,0,False,True,True,True,True,4250.804600000265,4252.54700000005,,,False,[]
+simple_test:S1000_0236,simple_test,查询身份证号为'420902197701289410'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197701289410';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197701289410';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197701289410';",True,True,True,True,False,0,False,True,True,True,True,5213.276399997994,5214.22259999963,,,False,[]
+simple_test:S1000_0237,simple_test,帮我查看身份证号'420902198312059450'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902198312059450';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198312059450';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902198312059450';",True,True,True,True,False,0,False,True,True,True,True,4022.1266000007745,4023.4386999982235,,,False,[]
+simple_test:S1000_0238,simple_test,查一下'420902197808129490'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197808129490';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197808129490';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197808129490';",True,True,True,True,False,0,False,True,True,True,True,5682.442900000751,5683.921699997882,,,False,[]
+simple_test:S1000_0239,simple_test,核对身份证号为'420902197311259530'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197311259530';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197311259530';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197311259530';",True,True,True,True,False,0,False,True,True,True,True,2367.425299999013,2369.531399999687,,,False,[]
+simple_test:S1000_0240,simple_test,查询身份证号为'420902198310239570'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902198310239570';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198310239570';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902198310239570';",True,True,True,True,False,0,False,True,True,True,True,5152.706000000762,5154.185600000346,,,False,[]
+simple_test:S1000_0241,simple_test,帮我查看身份证号'420902197303149610'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197303149610';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197303149610';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197303149610';",True,True,True,True,False,0,False,True,True,True,True,3444.9538000008033,3446.8765999990865,,,False,[]
+simple_test:S1000_0242,simple_test,查一下'420902198003119650'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198003119650';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198003119650';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198003119650';",True,True,True,True,False,0,False,True,True,True,True,3439.7188000002643,3441.58729999981,,,False,[]
+simple_test:S1000_0243,simple_test,核对身份证号为'420902198203089690'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902198203089690';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198203089690';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902198203089690';",True,True,True,True,False,0,False,True,True,True,True,3342.595500002062,3343.6392999974487,,,False,[]
+simple_test:S1000_0244,simple_test,查询身份证号为'420902197212019730'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197212019730';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197212019730';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197212019730';",True,True,True,True,False,0,False,True,True,True,True,3618.3772000003955,3621.4156999994884,,,False,[]
+simple_test:S1000_0245,simple_test,帮我查看身份证号'420902197704289770'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197704289770';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197704289770';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197704289770';",True,True,True,True,False,0,False,True,True,True,True,2805.391800000507,2807.8138999990188,,,False,[]
+simple_test:S1000_0246,simple_test,查一下'420902198207089810'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902198207089810';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198207089810';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902198207089810';",True,True,True,True,False,0,False,True,True,True,True,2876.4183999992383,2877.8450999998313,,,False,[]
+simple_test:S1000_0247,simple_test,核对身份证号为'420902197311229850'的人员是否存在于人员主表中，返回身份证号、姓名和数据标识。,"SELECT id_card, name, system_status FROM person WHERE id_card = '420902197311229850';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197311229850';","SELECT 
+  id_card, 
+  name, 
+  system_status
+FROM 
+  person
+WHERE 
+  id_card = '420902197311229850';",True,True,True,True,False,0,False,True,True,True,True,3120.826999998826,3121.945399998367,,,False,[]
+simple_test:S1000_0248,simple_test,查询身份证号为'420902197804189890'的人员基础信息，返回身份证号、姓名、性别、生存状态和户籍地区。,"SELECT id_card, name, gender, life_status, hukou_region FROM person WHERE id_card = '420902197804189890';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197804189890';","SELECT 
+  id_card, 
+  name, 
+  gender, 
+  life_status, 
+  hukou_region
+FROM 
+  person
+WHERE 
+  id_card = '420902197804189890';",True,True,True,True,False,0,False,True,True,True,True,10014.4552999991,10015.29870000013,,,False,[]
+simple_test:S1000_0249,simple_test,帮我查看身份证号'420902197604099930'对应人员的姓名、出生日期、系统状态和工商角色。,"SELECT name, birth_date, system_status, business_role FROM person WHERE id_card = '420902197604099930';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197604099930';","SELECT 
+  p.name, 
+  p.birth_date, 
+  p.system_status, 
+  p.business_role
+FROM 
+  person p
+WHERE 
+  p.id_card = '420902197604099930';",True,True,True,True,False,0,False,True,True,True,True,4985.097000000678,4986.51400000017,,,False,[]
+simple_test:S1000_0250,simple_test,查一下'420902197504169970'这个人的姓名、性别、户籍所在地和生存状态。,"SELECT name, gender, hukou_region, life_status FROM person WHERE id_card = '420902197504169970';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197504169970';","SELECT 
+  name, 
+  gender, 
+  hukou_region, 
+  life_status 
+FROM 
+  person 
+WHERE 
+  id_card = '420902197504169970';",True,True,True,True,False,0,False,True,True,True,True,3761.430200000177,3764.353399998072,,,False,[]
