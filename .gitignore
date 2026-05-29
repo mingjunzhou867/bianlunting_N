@@ -11,6 +11,9 @@ __pycache__/
 .pytest_cache/
 .test_tmp/
 tests/
+.planning/
+brand-video/
+generated_reports/
 test_new/*
 !test_new/README.md
 !test_new/source_cases/
@@ -40,6 +43,15 @@ evaluation/results/
 generated_reports/*.tmp
 generated_reports/*.draft.pdf
 scripts/generate_sql_experiment_report_figures.py
+scripts/generate_chapter6_figures.py
+scripts/generate_engineering_module_figure.py
+scripts/generate_system_test_ppt_figures.py
+scripts/test-backend.ps1
+scripts/test-frontend.ps1
+fix_report.py
+gen_ppt.js
+intent-recognition-animation-demo.html
+*.docx
 
 # 日志
 *.log
@@ -54,3 +66,20 @@ frontend/dist/
 .agents/
 .codex/
 .claude/
+
+# Report-only/generated assets kept locally but not in the clean repository.
+智策通.png
+docs/chapter6_figures/
+docs/chatgpt_image_prompts.md
+docs/saved-session-history.md
+docs/engineering_module_layers.*
+docs/human_collaboration_traceability_loop.svg
+docs/innovation_application_value.svg
+docs/multi_agent_debate_arbitration.svg
+docs/policy_understanding_rule_organization.svg
+docs/system_overall_architecture.svg
+docs/text2sql_evidence_chain.svg
+frontend/src/__tests__/
+frontend/src/components/HelloWorld.vue
+frontend/src/assets/vite.svg
+frontend/src/assets/vue.svg
