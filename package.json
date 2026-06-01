@@ -1,7 +1,7 @@
 {
-  "name": "zhicetong_t2s",
+  "name": "bianlunting",
   "version": "1.0.0",
-  "description": "本项目面向基层政务服务、社会保险补贴资格认定、政策主动服务筛查等场景，构建了一套“自然语言意图理解 + Text-to-SQL 自动取证 + 证据卡片结构化表达 + 多智能体辩论式裁决 + 可视化复核”的智能评审系统。",
+  "description": "An evidence-grounded multi-agent policy review framework for Chinese local governance scenarios.",
   "main": "gen_ppt.js",
   "directories": {
     "doc": "docs",
@@ -12,15 +12,21 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mingjunzhou867/bianlunting.git"
+    "url": "git+https://github.com/mingjunzhou867/bianlunting_N.git"
   },
-  "keywords": [],
+  "keywords": [
+    "multi-agent",
+    "policy-review",
+    "text-to-sql",
+    "evidence-grounded",
+    "governance"
+  ],
   "author": "",
-  "license": "ISC",
+  "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/mingjunzhou867/bianlunting/issues"
+    "url": "https://github.com/mingjunzhou867/bianlunting_N/issues"
   },
-  "homepage": "https://github.com/mingjunzhou867/bianlunting#readme",
+  "homepage": "https://github.com/mingjunzhou867/bianlunting_N#readme",
   "dependencies": {
     "pptxgenjs": "^4.0.1",
     "react": "^19.2.5",
